@@ -124,7 +124,6 @@
       return '<li class="ph reveal" style="--i:' + (i % 5) + '">' +
         '<button type="button" class="ph__btn" data-ph="' + i + '" aria-label="Agrandir la photo' + (p.legende ? ' : ' + PZ.esc(p.legende) : '') + '">' +
         '<img src="' + PZ.esc(p.src) + '" srcset="' + PZ.esc(p.srcset) + '" sizes="(max-width: 760px) 80vw, (max-width: 1200px) 50vw, 600px" width="' + p.largeur + '" height="' + p.hauteur + '" alt="' + PZ.esc(alt) + '" loading="lazy" decoding="async">' +
-        (p.legende ? '<span class="ph__cap">' + PZ.esc(p.legende) + '</span>' : '') +
         '</button></li>';
     }).join('');
     sec.hidden = false;
@@ -136,7 +135,7 @@
   function setupLightbox(photos, ul) {
     var dlg = $('[data-lightbox]');
     if (!dlg || typeof dlg.showModal !== 'function') return;
-    var img = $('[data-lb-img]', dlg), cap = $('[data-lb-cap]', dlg), count = $('[data-lb-count]', dlg);
+    var img = $('[data-lb-img]', dlg), count = $('[data-lb-count]', dlg);
     var idx = 0, startX = null, opener = null;
     function show(i, dir) {
       idx = (i + photos.length) % photos.length;
@@ -146,7 +145,6 @@
       img.src = p.grande; img.removeAttribute('srcset');
       img.alt = p.legende ? p.legende + ', pizza de la Piazzetta' : 'Pizza de la Piazzetta';
       img.classList.add(dir > 0 ? 'lb-in-r' : dir < 0 ? 'lb-in-l' : 'lb-in');
-      cap.textContent = p.legende || '';
       count.textContent = photos.length > 1 ? (idx + 1) + ' / ' + photos.length : '';
       dlg.classList.toggle('is-single', photos.length < 2);
     }
