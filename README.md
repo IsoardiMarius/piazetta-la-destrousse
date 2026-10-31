@@ -36,12 +36,11 @@ La carte A4 s'ajuste toute seule pour tenir sur une page, même si vous ajoutez 
 
 ## Publication sur GitHub Pages
 
-Le fichier [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) vérifie la carte, génère le PDF puis publie le site à chaque modification de la branche `main`.
+Le fichier [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) vérifie la carte, génère le PDF puis publie le site **à chaque push sur la branche par défaut** du dépôt (celle que GitHub propose quand on modifie un fichier en ligne). Rien d'autre à faire : modifier `carte.js` suffit.
 
-Activation, à faire une seule fois :
-
-1. Dans le dépôt GitHub : **Settings › Pages › Build and deployment › Source** : choisir **GitHub Actions**.
-2. Fusionner ces changements dans `main` (ou lancer le workflow à la main : **Actions › Publier le site › Run workflow**).
+- Suivre une publication : onglet **Actions › Publier le site**.
+- Relancer à la main : **Actions › Publier le site › Run workflow**.
+- Réglage GitHub nécessaire (déjà en place) : **Settings › Pages › Source : GitHub Actions**.
 
 Adresse du site : `https://isoardimarius.github.io/piazetta-la-destrousse/`
 

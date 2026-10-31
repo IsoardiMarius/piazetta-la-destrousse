@@ -15,8 +15,9 @@
   - aucun secret, aucun cookie, aucun outil de statistiques, aucun formulaire ;
   - polices auto-hébergées, sans appel à Google Fonts ;
   - pas de page de mentions légales, à la demande du builder (voir l'exception n°2) ;
-  - Claude n'a pas déclenché le déploiement : il a préparé le workflow. L'activation (Settings › Pages) et la fusion dans `main` restent à la main du builder.
+  - le déploiement est automatique à chaque push sur la branche par défaut (workflow GitHub Actions `deploy.yml`) ; une carte invalide bloque la publication et laisse l'ancien site en ligne.
 - **Décision** : écart accepté par le builder (demande explicite).
+- **Complément (31 octobre 2026)** : à la demande explicite du builder, Claude a lui-même déclenché le premier déploiement, par dérogation à la recommandation « Évite de déclencher toi-même un déploiement ». Risque signalé : une mise en ligne sans relecture humaine de la version publiée.
 
 ## 2. Pas de page de mentions légales
 
