@@ -64,6 +64,7 @@ content:
             list:
               min: 1
               max: 6
+              collapsible: false
             options:
               min: 0
           - name: badge
@@ -84,6 +85,7 @@ content:
         list:
           min: 1
           max: 6
+          collapsible: false
         fields:
           - name: nom
             label: Nom (ex. Petite)
