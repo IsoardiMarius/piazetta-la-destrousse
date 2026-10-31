@@ -1,11 +1,11 @@
 [
   {
     "image": "/photos/1-atlantique.webp",
-    "legende": "Pizza Atlantique",
     "description": "Pizza Atlantique"
   },
   {
     "image": "/photos/2-royale.webp",
+    "legende": "Pizza Royale",
     "description": "Pizza Royale"
   },
   {
