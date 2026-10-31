@@ -1,9 +1,9 @@
 {
   "horaires": {
-    "mardi": "18h-22h",
-    "jeudi": "18h-22h",
-    "vendredi": "18h-22h",
-    "samedi": "18h-22h",
-    "mercredi": "18h-22h"
+    "mardi": "18h-22h30",
+    "jeudi": "18h-22h30",
+    "vendredi": "18h-01h",
+    "samedi": "18h-01h",
+    "mercredi": "18h-22h30"
   }
 }
