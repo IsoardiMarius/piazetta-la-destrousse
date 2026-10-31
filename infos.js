@@ -76,9 +76,9 @@ window.INFOS = {
   /* Adresses complètes des pages (copiées depuis le navigateur).
      Laissez "" si la pizzeria n'y est pas : rien ne s'affiche. */
   reseaux: {
-    facebook:  "",
+    facebook:  "https://www.facebook.com/p/PiazzettaDestrousse-Pizzeria-61593981164995/",
     instagram: "",
-    uberEats:  "",
+    uberEats:  "https://www.ubereats.com/fr/store/piazzetta-destrousse/3hAM1KrBRzO7w2VnZtQnDQ",
   },
 
   /* ------------------------------------------------------------------------

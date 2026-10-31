@@ -7,9 +7,10 @@ Le site est optimisé : titres, descriptions, fiche « Restaurant » pour Google
 | Où | Ce qu'on trouve | À faire |
 | --- | --- | --- |
 | Site | **Piazzetta La Destrousse**, 842 avenue de la Doulia, 13112 La Destrousse, 06 40 92 51 76, du mardi au samedi 18h–22h | Référence : c'est ce qu'il faut recopier partout |
-| Uber Eats | **« Piazzetta Destrousse »**, 842 avenue de la Doulia, ouverture à 18h | Renommer en **« Piazzetta La Destrousse »** dans Uber Eats Manager |
+| [Uber Eats](https://www.ubereats.com/fr/store/piazzetta-destrousse/3hAM1KrBRzO7w2VnZtQnDQ) | **« Piazzetta Destrousse »**, 842 avenue de la Doulia, ouverture à 18h | Renommer en **« Piazzetta La Destrousse »** dans Uber Eats Manager |
+| [Facebook](https://www.facebook.com/p/PiazzettaDestrousse-Pizzeria-61593981164995/) | Page **« PiazzettaDestrousse - Pizzeria »** | Renommer en **« Piazzetta La Destrousse »** et vérifier adresse, téléphone, horaires et lien vers le site |
 | Fiche Google | Existe (identifiant `ChIJn-yuT0iZyRIRGalZ9F80kp4`), contenu non vérifiable d'ici | Vérifier les points ci-dessous |
-| Facebook, Instagram, PagesJaunes, TripAdvisor | Rien trouvé | Créer au moins Facebook ou Instagram, et PagesJaunes |
+| Instagram, PagesJaunes, TripAdvisor | Rien trouvé | Créer au moins Instagram et PagesJaunes |
 | Téléphone 06 40 92 51 76 | Cité sur aucune page indexée | Il le sera via la fiche Google, le site et les annuaires |
 
 À noter : une autre entreprise, **« Pizzeria La Destrousse »** (route des Vignerons), porte un nom très proche de la recherche « pizzeria La Destrousse ». Il ne faut **pas** utiliser ce nom pour la Piazzetta : toujours écrire « Piazzetta La Destrousse ».
@@ -44,7 +45,8 @@ Le nombre d'avis, leur note et leur fraîcheur pèsent beaucoup dans le classeme
 Nom, adresse et téléphone écrits **exactement** comme sur le site, à chaque endroit :
 
 - [ ] Uber Eats (renommer « Piazzetta Destrousse » → « Piazzetta La Destrousse »).
-- [ ] Facebook et/ou Instagram : créer la page avec le lien du site, puis ajouter leurs adresses dans `infos.js` (rubrique `reseaux`) : les liens apparaissent en bas du site et sont signalés à Google.
+- [ ] Facebook : renommer la page « Piazzetta La Destrousse » et ajouter le lien du site dans « À propos ». Le lien Facebook est déjà dans `infos.js`.
+- [ ] Instagram : si un compte est créé, ajouter son adresse dans `infos.js` (rubrique `reseaux`) : le lien apparaît en bas du site et est signalé à Google.
 - [ ] PagesJaunes (inscription gratuite sur pagesjaunes.fr/pros).
 - [ ] Éventuellement TripAdvisor, Apple Plans (Apple Business Connect), Bing Places.
 
@@ -55,5 +57,5 @@ Nom, adresse et téléphone écrits **exactement** comme sur le site, à chaque 
 
 ## 5. Dans `infos.js`
 
-- [ ] **`communesLivrees`** : lister les communes livrées (ex. `["La Destrousse", "Peypin", "La Bouilladisse"]`). Elles s'affichent sur le site et sont transmises à Google, ce qui aide à ressortir sur « pizzeria Peypin », etc.
-- [ ] **`reseaux`** : ajouter les adresses Facebook, Instagram et Uber Eats dès qu'elles existent.
+- [x] **`communesLivrees`** : laissé vide, le site affiche « La Destrousse et alentours ». Si un jour vous voulez ressortir sur « pizzeria Peypin », etc., lister les communes livrées (ex. `["La Destrousse", "Peypin"]`).
+- [x] **`reseaux`** : Facebook et Uber Eats renseignés. Ajouter Instagram s'il est créé.
