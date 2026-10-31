@@ -95,6 +95,8 @@ a:hover{color:var(--brand-dark)}
 .btn--light:hover{--b-bg:#fff;--b-bd:#fff;--b-fg:var(--brand-dark);box-shadow:0 14px 28px -16px rgba(0,0,0,.5)}
 .btn--ghost{--b-fg:var(--cream);--b-bd:rgba(246,238,227,.45)}
 .btn--ghost:hover{--b-bg:rgba(246,238,227,.1);--b-bd:var(--cream)}
+.btn--solid{--b-bg:var(--card)}
+.btn--solid:hover{--b-bg:#fff}
 .btn .arrow{transition:transform .25s var(--ease)}
 .btn:hover .arrow{transform:translateX(4px)}
 .actions{display:flex;flex-wrap:wrap;gap:12px}
@@ -116,6 +118,13 @@ a:hover{color:var(--brand-dark)}
 .brand span{font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:-.02em}
 .hdr__right{display:flex;align-items:center;gap:28px}
 .hdr__links{display:flex;gap:28px;margin:0;padding:0;list-style:none}
+.hdr__btns{display:flex;align-items:center;gap:8px}
+
+/* ---------- Bandeau d'annonce ---------- */
+.annonce{background:var(--brand);color:var(--cream);font-size:15px;line-height:1.4}
+.annonce[hidden]{display:none}
+.annonce__in{display:flex;align-items:center;justify-content:center;gap:10px;padding-top:10px;padding-bottom:10px;text-align:center}
+.annonce p{margin:0;text-wrap:balance}
 .navlink{position:relative;color:var(--ink-2);text-decoration:none;font-weight:500;font-size:15px;padding:10px 0}
 .navlink::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:1.5px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .35s var(--ease)}
 .navlink:hover,.navlink[aria-current="true"]{color:var(--brand)}
@@ -159,6 +168,21 @@ a:hover{color:var(--brand-dark)}
 /* ---------- Sections ---------- */
 .section{padding-top:clamp(64px,8vw,104px)}
 .section + .section{padding-top:clamp(40px,5vw,56px)}
+
+/* ---------- La maison ---------- */
+.story{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:28px clamp(40px,7vw,96px);align-items:start}
+.story__head{display:flex;flex-direction:column;gap:14px;position:sticky;top:calc(var(--hdr-h) + 32px)}
+.story__body{display:flex;flex-direction:column;gap:22px;padding-top:6px}
+.story__text{display:flex;flex-direction:column;gap:18px}
+.story__text p{margin:0;font-size:clamp(17px,1.6vw,19px);line-height:1.7;color:var(--ink-2);text-wrap:pretty}
+.story__text p:first-child::first-letter{
+  float:left;font-family:var(--f-display);font-weight:700;color:var(--brand);
+  font-size:3.4em;line-height:.82;margin:.06em .1em 0 0;
+}
+.story__sign{margin:0;display:flex;align-items:center;gap:12px;font-family:var(--f-display);font-weight:600;font-size:17px;color:var(--brand)}
+.story__sign .ic{transform-origin:bottom left;transition:transform .8s var(--ease-spring)}
+.story__body.is-in .story__sign .ic{animation:sway 4s ease-in-out 1s infinite}
+.story__sign::before{content:"";width:32px;height:1.5px;background:currentColor;opacity:.4;order:-1}
 
 /* ---------- La carte ---------- */
 .menu__head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:28px 40px;margin-bottom:clamp(28px,4vw,44px)}
@@ -259,6 +283,7 @@ a:hover{color:var(--brand-dark)}
 .hours li.is-today{background:rgba(107,26,20,.07);color:var(--brand);font-weight:600}
 .hours .day{display:inline-flex;align-items:center;gap:10px}
 .hours .time{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+.hours__note{display:block!important;min-height:0!important;margin-top:8px;padding:10px 12px!important;border-radius:12px;background:#FCEBD3;color:#5C3A00!important;font-size:15px;line-height:1.45}
 .today-tag{font-size:12px;font-weight:600;letter-spacing:.04em;padding:2px 8px;border-radius:999px;background:var(--brand);color:var(--cream)}
 
 /* ---------- Pied de page ---------- */
@@ -279,6 +304,7 @@ a:hover{color:var(--brand-dark)}
 @keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-10px) rotate(1deg)}}
 @keyframes shadow{0%,100%{opacity:1;transform:translateY(14%) scale(1)}50%{opacity:.7;transform:translateY(18%) scale(.92)}}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(47,158,79,.45)}70%{box-shadow:0 0 0 8px rgba(47,158,79,0)}100%{box-shadow:0 0 0 0 rgba(47,158,79,0)}}
+@keyframes sway{0%,100%{transform:rotate(0)}50%{transform:rotate(-8deg)}}
 @keyframes price{0%{opacity:0;transform:translateY(10px);filter:blur(3px)}100%{opacity:1;transform:none;filter:none}}
 
 .rise{animation:rise .8s var(--ease) both}
@@ -307,7 +333,10 @@ a:hover{color:var(--brand-dark)}
   body{font-size:16px}
   .hdr__links{display:none}
   .hdr__tel{display:none}
-  .hdr .btn--sm{width:44px;padding:0}
+  .hdr .btn--icon-m{width:44px;padding:0}
+  .hdr .btn--sm{padding:0 14px}
+  .story{grid-template-columns:1fr;gap:20px}
+  .story__head{position:static}
   .brand img{width:36px;height:36px}
   .hero{gap:28px;padding-top:24px}
   .hero__logo{max-width:220px}
@@ -336,7 +365,8 @@ a:hover{color:var(--brand-dark)}
     transform:translateY(110%);transition:transform .5s var(--ease);
   }
   .callbar.is-visible{transform:none}
-  .callbar .btn{max-width:440px;margin-inline:auto;display:flex}
+  .callbar__in{display:flex;gap:10px;max-width:480px;margin-inline:auto}
+  .callbar .btn{flex:1 1 0;padding:0 12px}
 }
 @media (max-width:360px){
   .card__actions{grid-template-columns:1fr}

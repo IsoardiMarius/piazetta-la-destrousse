@@ -2,22 +2,20 @@
 
 Site vitrine de la pizzeria, publié avec GitHub Pages.
 
-## Changer la carte : un seul fichier
+## Modifier le site : deux fichiers, c'est tout
 
-Tout se règle dans **[`carte.js`](carte.js)** : pizzas, ingrédients, prix, tailles, téléphone, adresse et horaires.
+| Je veux changer… | Fichier | Lien direct |
+| --- | --- | --- |
+| Les pizzas, les ingrédients, les prix, les tailles | **[`carte.js`](carte.js)** | [✏️ Modifier la carte](https://github.com/IsoardiMarius/piazetta-la-destrousse/edit/claude/affectionate-euler-l61emv/carte.js) |
+| Les horaires, une fermeture pour congés, une annonce, le téléphone, l'adresse, les textes de l'accueil | **[`infos.js`](infos.js)** | [✏️ Modifier les infos](https://github.com/IsoardiMarius/piazetta-la-destrousse/edit/claude/affectionate-euler-l61emv/infos.js) |
 
-1. Sur GitHub, ouvrez `carte.js` puis cliquez sur le crayon ✏️ (« Edit this file »).
+1. Cliquez sur le lien direct (ou ouvrez le fichier puis cliquez sur le crayon ✏️).
 2. Modifiez le texte entre les guillemets `"..."`.
-3. Cliquez sur **Commit changes** (sur la branche `main`).
+3. Cliquez sur **Commit changes**.
 
-Une à deux minutes plus tard, tout est à jour :
+Une à deux minutes plus tard, tout est à jour : la page d'accueil, la page « La carte », le **PDF téléchargeable** (regénéré automatiquement), les horaires et le badge « Ouvert / Fermé ».
 
-- la carte affichée sur le site (avec le choix de la taille) ;
-- la carte au format A4 (`carte.html`) ;
-- le **PDF téléchargeable** (`carte.pdf`), regénéré automatiquement ;
-- les horaires, le badge « Ouvert / Fermé » en temps réel et les infos pratiques.
-
-Exemples :
+### Exemples dans `carte.js`
 
 ```js
 // Changer un prix (ordre : Petite, Big, Mega)
@@ -30,13 +28,34 @@ Exemples :
 { nom: "Yéyé", ingredients: "…", prix: [14, 20, 29], masquee: true },
 ```
 
-Si `carte.js` contient une erreur (guillemet ou virgule oubliés, prix manquant…), la publication s'arrête et **l'ancien site reste en ligne**. Le message d'erreur, en français, s'affiche dans l'onglet **Actions** du dépôt et indique la ligne à corriger.
+### Exemples dans `infos.js`
 
-La carte A4 s'ajuste toute seule pour tenir sur une page, même si vous ajoutez des pizzas.
+```js
+// Ouvrir aussi le dimanche soir
+dimanche: "18h-22h",
+
+// Ajouter un service le midi le samedi
+samedi: "11h30-14h, 18h-22h",
+
+// Partir en vacances : le site affiche « Fermé » et un bandeau automatique
+fermetureDu: "01/08/2027",
+fermetureAu: "15/08/2027",
+
+// Afficher un message en haut du site (laisser "" pour l'enlever)
+annonce: "Nouveau : la pizza Burrata est arrivée !",
+```
+
+Les dates de congés passées n'ont aucun effet : pas besoin de les effacer tout de suite.
+
+### En cas d'erreur
+
+Si un fichier contient une faute (guillemet ou virgule oubliés, prix ou horaire illisible…), la publication s'arrête et **l'ancien site reste en ligne**. Le message d'erreur, en français, s'affiche dans l'onglet **Actions** du dépôt et indique quoi corriger.
+
+La carte A4 (PDF) s'ajuste toute seule pour tenir sur une page, même si vous ajoutez des pizzas.
 
 ## Publication sur GitHub Pages
 
-Le fichier [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) vérifie la carte, génère le PDF puis publie le site **à chaque push sur la branche par défaut** du dépôt (celle que GitHub propose quand on modifie un fichier en ligne). Rien d'autre à faire : modifier `carte.js` suffit.
+Le fichier [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) vérifie la carte, génère le PDF puis publie le site **à chaque push sur la branche par défaut** du dépôt (celle que GitHub propose quand on modifie un fichier en ligne). Rien d'autre à faire : modifier `carte.js` ou `infos.js` suffit.
 
 - Suivre une publication : onglet **Actions › Publier le site**.
 - Relancer à la main : **Actions › Publier le site › Run workflow**.
@@ -58,9 +77,10 @@ Puis ouvrir http://localhost:8000. Pour générer le PDF en local : `npm install
 
 | Fichier | Rôle |
 | --- | --- |
-| `carte.js` | **Le contenu à modifier** (carte, prix, horaires, contact) |
+| `carte.js` | **À modifier** : la carte (pizzas, prix, tailles) |
+| `infos.js` | **À modifier** : horaires, congés, annonce, contact, textes |
 | `index.html` | Page d'accueil |
-| `carte.html` | Carte au format A4 (source du PDF, imprimable) |
+| `carte.html` | Page « La carte » (et sa version A4, source du PDF) |
 | `assets/` | Styles, scripts, logo, polices auto-hébergées |
 | `scripts/` | Vérification de la carte et génération du PDF |
 
