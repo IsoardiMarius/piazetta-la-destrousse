@@ -13,6 +13,7 @@ Ouvrir **https://app.pagescms.org**, se connecter (avec GitHub, ou avec le lien 
 | Rubrique | Ce qu'on y change |
 | --- | --- |
 | **La carte** | Pizzas (ajouter, supprimer, réordonner, masquer, badge « Nouveau »), ingrédients, prix, tailles, phrase sous la carte |
+| **Boissons et desserts** | Page 2 de la carte : rubriques (Boissons, Desserts…), articles, prix ; la page et le renvoi « en page 2 » n'apparaissent que s'il y a au moins un article |
 | **Horaires et congés** | Horaires de chaque jour, fermeture exceptionnelle (calendrier), bandeau d'annonce |
 | **Photos** | Ajouter, retirer et réordonner les photos de l'accueil |
 | **Contact et réseaux** | Nom, téléphone, adresse, zone de livraison, Uber Eats, Facebook, Instagram |
@@ -24,7 +25,7 @@ Le mode d'emploi pour le gérant est dans **[`docs/guide-modifier-le-site.md`](d
 
 ### Directement sur GitHub (pour le développeur)
 
-Le contenu est dans le dossier **[`contenu/`](contenu/)** (fichiers JSON : `carte.json`, `horaires.json`, `photos.json`, `contact.json`, `textes.json`) et les photos dans **[`photos/`](photos/)**. L'interface ne fait que modifier ces fichiers ; on peut aussi les modifier à la main.
+Le contenu est dans le dossier **[`contenu/`](contenu/)** (fichiers JSON : `carte.json`, `boissons-desserts.json`, `horaires.json`, `photos.json`, `contact.json`, `textes.json`) et les photos dans **[`photos/`](photos/)**. L'interface ne fait que modifier ces fichiers ; on peut aussi les modifier à la main.
 
 ### Sécurités
 
@@ -33,7 +34,7 @@ Le contenu est dans le dossier **[`contenu/`](contenu/)** (fichiers JSON : `cart
 - **Erreur grave** (fichier abîmé, carte vide) : la publication s'arrête et **l'ancien site reste en ligne**.
 - **Contrôle final** : avant la mise en ligne, un script relit les pages générées et vérifie qu'elles correspondent exactement au contenu (chaque prix de chaque taille, pizzas masquées absentes, horaires, téléphone, liens, photos, fiche Google, aperçus de liens, plan du site). Au moindre écart, la publication s'arrête et l'ancien site reste en ligne.
 - **Alerte** : si une publication échoue, une alerte « La publication du site a échoué » est ouverte sur GitHub et le propriétaire du dépôt reçoit un e-mail. Elle se ferme toute seule à la publication réussie suivante.
-- La carte A4 (PDF) s'ajuste toute seule pour tenir sur une page : jusqu'à 24 pizzas environ (selon la longueur des ingrédients). Au-delà, elle est signalée dans « Points à vérifier ».
+- La carte A4 (PDF) s'ajuste toute seule : page 1 pour les pizzas (jusqu'à 22 pizzas environ, selon la longueur des ingrédients), page 2 pour les boissons et desserts. Une page qui déborde est signalée dans « Points à vérifier ».
 - Ce qui s'adapte tout seul au contenu : nombre de tailles (1 à 6) et de photos, horaires avec coupure le midi, réseaux renseignés ou non (les liens vides disparaissent), barre de navigation qui passe en menu si les liens ne tiennent plus, textes vides remplacés par un texte par défaut.
 
 ## Publication
@@ -62,7 +63,7 @@ Puis ouvrir http://localhost:8000 (`npm run serve` génère d'abord `donnees.js`
 | `.pages.yml` | Configuration des formulaires de Pages CMS |
 | `index.html` | Page d'accueil |
 | `photos/` | **À remplir** : les photos de la page d'accueil |
-| `carte.html` | Aperçu de la carte A4 avec boutons Imprimer et PDF (source du PDF) |
+| `carte.html` | Aperçu de la carte A4 (page 1 : pizzas, page 2 : boissons et desserts) avec boutons Imprimer et PDF (source du PDF) |
 | `assets/` | Styles, scripts, logo, polices auto-hébergées |
 | `scripts/` | Vérification, PDF, photos et pré-remplissage des pages à la publication |
 

@@ -48,7 +48,7 @@
 
 <div class="stage" data-stage>
   <div class="stage__box">
-  <article class="sheet" data-sheet aria-label="Carte des pizzas">
+  <article class="sheet" data-sheet="1" aria-label="Carte des pizzas, page 1">
     <header class="sh-head">
       <img src="assets/logo-360.webp" alt="Piazzetta La Destrousse — Pizzeria artisanale" width="88" height="88">
       <div class="sh-title">
@@ -68,6 +68,49 @@
         </div>
         <div data-rows></div>
         <p class="sh-mention" data-bind="mention"></p>
+      </div>
+    </main>
+
+    <footer class="sh-foot">
+      <!-- Renvoi vers la page 2 (affiché seulement s'il y a des boissons ou des desserts) -->
+      <a class="sh-next" href="#page-2" data-suite hidden>
+        <span data-bind="suitePage2">Boissons &amp; desserts en page 2</span>
+        <svg class="ic" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </a>
+      <div class="sh-foot__item">
+        <svg class="ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        <div><strong data-bind="telephone">06 40 92 51 76</strong><span>Livraison et à emporter</span></div>
+      </div>
+      <div class="sh-foot__item">
+        <svg class="ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <div><strong data-bind="resumeJoursCourt">Mardi – samedi</strong><span data-bind="resumeHeures">De 18h à 22h</span></div>
+      </div>
+      <div class="sh-foot__item">
+        <svg class="ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+        <div><strong data-bind="villeCourte">La Destrousse</strong><span data-bind="adresseCourte">842 av. de la Doulia · et alentours</span></div>
+      </div>
+    </footer>
+  </article>
+  </div>
+
+  <div class="stage__box" id="page-2" data-page2 hidden>
+  <article class="sheet sheet--2" data-sheet="2" aria-label="Boissons et desserts, page 2 de la carte">
+    <header class="sh-head">
+      <img src="assets/logo-360.webp" alt="" width="88" height="88">
+      <div class="sh-title">
+        <h1 data-bind="titrePage2">Boissons &amp; desserts</h1>
+        <p data-bind="sousTitrePage2">Boissons · Desserts · À emporter et en livraison</p>
+      </div>
+      <div class="sh-order">
+        <span>Commandes</span>
+        <strong data-bind="telephone">06 40 92 51 76</strong>
+      </div>
+    </header>
+
+    <main class="sh-main" data-main>
+      <div class="sh-list" data-list>
+        <div data-rubriques></div>
+        <p class="sh-mention" data-bind="mentionPage2"></p>
       </div>
     </main>
 

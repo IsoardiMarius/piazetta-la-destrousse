@@ -10,7 +10,7 @@ Adresse du site : **https://piazzetta-ladestrousse.com**
 | --- | --- | --- |
 | Code du site | GitHub, dépôt public `IsoardiMarius/piazetta-la-destrousse` | Compte GitHub du développeur (IsoardiMarius) |
 | Hébergement | GitHub Pages (gratuit, dépôt public) | Même compte GitHub |
-| Contenu (carte, horaires, photos, contact, textes) | Dossier `contenu/` du dépôt, modifié depuis **Pages CMS** (app.pagescms.org) | Le gérant (invité par e-mail) et le développeur |
+| Contenu (carte, boissons et desserts, horaires, photos, contact, textes) | Dossier `contenu/` du dépôt, modifié depuis **Pages CMS** (app.pagescms.org) | Le gérant (invité par e-mail) et le développeur |
 | Publication | GitHub Actions, workflow « Publier le site » (`.github/workflows/deploy.yml`) | Automatique à chaque modification |
 | Nom de domaine | `piazzetta-ladestrousse.com`, acheté sur Cloudflare Registrar | Compte Cloudflare du développeur, payé avec sa carte (renouvellement automatique) ; le gérant le rembourse (environ 10 € par an, par Wero) |
 | DNS (aiguillage du domaine vers le site) | Cloudflare, rubrique DNS du domaine | Même compte Cloudflare |
@@ -34,7 +34,7 @@ Aucun mot de passe, aucune carte bancaire et aucun identifiant ne sont stockés 
 **Ce que fait la publication**, à chaque modification (2 minutes environ, suivi dans l'onglet **Actions**) :
 
 1. vérifie le contenu du dossier `contenu/` : une erreur grave (fichier abîmé, carte vide) arrête la publication et l'ancien site reste en ligne ; une erreur mineure (prix manquant, photo introuvable…) est ignorée et signalée (voir l'étape 10) ;
-2. génère `donnees.js` (le contenu lu par les pages), puis le PDF de la carte et sa vignette (et signale une carte trop longue pour tenir sur une page A4) ;
+2. génère `donnees.js` (le contenu lu par les pages), puis le PDF de la carte (page 1 : pizzas ; page 2 : boissons et desserts, s'il y en a) et sa vignette, et signale une page trop longue pour tenir sur une feuille A4 ;
 3. prépare les photos de la liste `contenu/photos.json`, dans l'ordre choisi (redressées, allégées en 4 tailles, légèrement mises en valeur, données GPS retirées) ;
 4. dessine les images d'aperçu des liens (SMS, WhatsApp, Facebook) ;
 5. récupère l'adresse officielle du site auprès de GitHub (`https://piazzetta-ladestrousse.com`) ;
@@ -98,6 +98,7 @@ L'adresse du domaine n'est écrite nulle part en dur dans les scripts : si le do
 11. Branche par défaut renommée en `main`.
 12. Contenu déplacé dans le dossier `contenu/` (fichiers JSON) et interface Pages CMS mise en place pour que le gérant modifie le site lui-même ; alerte par e-mail en cas d'échec de publication.
 13. Contrôle final des pages générées avant chaque mise en ligne et signalement « Points à vérifier » ; site testé avec des contenus extrêmes (22 pizzas, 4 tailles, 12 photos, horaires avec coupure, congés, 3 réseaux, et à l'inverse 2 pizzas, 1 taille, 1 photo, aucun réseau ni texte) sur 14 tailles d'écran.
+14. Page 2 de la carte « Boissons & desserts » (rubrique Pages CMS du même nom) et animations de chargement (photos, vignette de la carte, visionneuse, page de la carte).
 
 ## 5. Entretien
 

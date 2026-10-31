@@ -208,11 +208,15 @@ a:hover{color:var(--brand-dark)}
 }
 .hero__logo .logo-in{position:relative;z-index:1;display:block}
 .hero__logo img{width:100%;height:auto;aspect-ratio:1;border-radius:50%}
-/* Place réservée au logo pendant son chargement */
+/* Place réservée au logo pendant son chargement : disque de pâte farinée, reflet de braise, pizza esquissée */
 .js .hero__logo::after{
   content:"";position:absolute;inset:2%;border-radius:50%;
-  background:radial-gradient(circle at 50% 38%,#EFE4D4,var(--chip) 70%);
-  animation:placeholder 1.6s ease-in-out infinite;transition:opacity .7s var(--ease) .3s;
+  background:
+    linear-gradient(105deg,transparent 30%,rgba(255,176,104,.34) 47%,rgba(255,232,204,.5) 52%,transparent 70%) 0 0/260% 100% no-repeat,
+    var(--sk-pizza) center/22% no-repeat,
+    var(--sk-farine),
+    radial-gradient(circle at 50% 38%,var(--sk-pate),var(--sk-pate-2) 72%);
+  animation:braise-fond 2.2s cubic-bezier(.45,0,.55,1) infinite;transition:opacity .7s var(--ease) .3s;
 }
 .js.logo-ready .hero__logo::after{opacity:0;animation:none}
 .js:not(.logo-ready) .hero__logo::before{visibility:hidden}
@@ -277,6 +281,13 @@ a:hover{color:var(--brand-dark)}
   filter:blur(14px) saturate(1.1);transform:scale(1.15);
 }
 .ph__btn img{position:relative;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease),opacity .7s var(--ease)}
+/* Révélation de la photo : elle s'ouvre en cercle depuis le centre, en se précisant */
+.js .ph__btn img[data-fade]{
+  opacity:1;clip-path:circle(0% at 50% 50%);filter:blur(8px) saturate(1.15);transform:scale(1.08);
+  transition:clip-path 1s cubic-bezier(.65,0,.35,1),filter 1s var(--ease),transform 1.2s var(--ease);
+}
+.js .ph__btn img[data-fade].is-loaded{clip-path:circle(75% at 50% 50%);filter:none;transform:none}
+.js .ph__btn:hover img[data-fade].is-loaded{transform:scale(1.05)}
 .ph__btn::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(36,20,17,.06);pointer-events:none}
 .ph__btn:hover img{transform:scale(1.05)}
 .ph__btn:focus-visible{outline:2.5px solid var(--brand);outline-offset:3px}
@@ -332,6 +343,15 @@ html.lb-open{overflow:hidden}
 }
 .preview:hover .preview__sheet,.preview:focus-visible .preview__sheet{transform:rotate(0) translateY(-8px) scale(1.03);box-shadow:0 44px 80px -28px rgba(0,0,0,.65)}
 .preview__sheet img{width:100%;height:100%;object-fit:cover}
+/* Vignette de la carte : elle « s'imprime » de haut en bas, une tête d'impression lumineuse en tête */
+.js .preview__sheet img[data-fade]{opacity:1;clip-path:inset(0 0 100% 0);transition:clip-path 1.2s cubic-bezier(.65,0,.35,1)}
+.js .preview__sheet img[data-fade].is-loaded{clip-path:inset(0)}
+.js .preview__sheet::after{
+  content:"";position:absolute;left:0;right:0;top:0;z-index:2;height:3px;opacity:0;pointer-events:none;
+  background:linear-gradient(90deg,transparent,#FFB86B 20%,#FFE3BF 50%,#FFB86B 80%,transparent);
+  box-shadow:0 0 14px 3px rgba(255,170,90,.55);
+}
+.js .preview__sheet.is-loaded::after{animation:tete-impression 1.2s cubic-bezier(.65,0,.35,1) forwards}
 
 /* ---------- Infos ---------- */
 .infos{padding-bottom:clamp(64px,8vw,104px);display:flex;flex-direction:column;gap:32px}
@@ -390,6 +410,62 @@ html.lb-open{overflow:hidden}
 .d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}.d4{animation-delay:.32s}
 .logo-in{animation:logo-in .9s var(--ease) both}
 .float{animation:float 7s ease-in-out 1.2s infinite}
+
+/* ---------- Squelettes de chargement : pâte farinée, reflet de braise, pizza qui se dessine ---------- */
+:root{
+  --sk-pate:#F1E6D6;--sk-pate-2:#E5D2BA;--sk-trait:rgba(107,26,20,.3);--sk-ligne:rgba(107,26,20,.11);
+  --sk-farine:radial-gradient(rgba(255,255,255,.55) 1px,transparent 1.6px) 0 0/13px 13px,radial-gradient(rgba(255,255,255,.3) 1px,transparent 1.6px) 6px 7px/13px 13px;
+  --sk-pizza:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none' stroke='%236B1A14' stroke-opacity='.28' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='24' cy='24' r='18'/%3E%3Cpath d='M24 6v36M8.4 15l31.2 18M8.4 33l31.2-18'/%3E%3C/svg%3E");
+}
+.sk{display:none}
+.js .sk{
+  position:absolute;inset:0;z-index:1;display:grid;place-items:center;overflow:hidden;pointer-events:none;border-radius:inherit;
+  background:var(--sk-farine),linear-gradient(160deg,var(--sk-pate),var(--sk-pate-2));
+  transition:opacity .7s var(--ease) .15s,transform .9s var(--ease),visibility 0s 1s;
+}
+/* Reflet chaud qui passe, comme la chaleur du four */
+.js .sk::before{
+  content:"";position:absolute;inset:-10% -60%;
+  background:linear-gradient(105deg,transparent 35%,rgba(255,176,104,.32) 47%,rgba(255,234,208,.55) 51%,transparent 64%);
+  animation:braise 2.2s cubic-bezier(.45,0,.55,1) infinite;animation-delay:calc(var(--i,0) * .14s);
+}
+.sk__pizza{position:relative;width:clamp(34px,24%,74px);height:auto;fill:none;stroke:var(--sk-trait);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sk__croute,.sk__parts{stroke-dasharray:100;stroke-dashoffset:100;animation:sk-croute 2.6s var(--ease) infinite;animation-delay:inherit}
+.sk__parts{animation-name:sk-parts}
+.sk__garni{fill:var(--sk-trait);stroke:none;transform-box:fill-box;transform-origin:center;transform:scale(0);animation:sk-garni 2.6s var(--ease) infinite;animation-delay:inherit}
+.ph .sk__pizza{animation-delay:calc(var(--i,0) * .14s)}
+.ph .sk__pizza *{animation-delay:calc(var(--i,0) * .14s)}
+/* Une fois chargé : le squelette s'efface et s'arrête */
+[data-sk].is-loaded .sk{opacity:0;transform:scale(1.06);visibility:hidden}
+
+/* Vignette de la carte : une carte esquissée (logo, titre, lignes de pizzas, pied de page) */
+.js .sk--carte{
+  place-items:normal;
+  background:
+    radial-gradient(circle closest-side,var(--sk-ligne) 95%,transparent 100%) 7.9% 4.2%/11.1% 7.8%,
+    linear-gradient(var(--sk-ligne),var(--sk-ligne)) 29.9% 4.7%/30% 3.4%,
+    linear-gradient(var(--sk-ligne),var(--sk-ligne)) 31.7% 8.8%/34% 1.5%,
+    linear-gradient(var(--sk-ligne),var(--sk-ligne)) 91.25% 6.6%/20% 2.4%,
+    repeating-linear-gradient(to bottom,var(--sk-ligne) 0 5px,transparent 5px 9px,rgba(107,26,20,.06) 9px 12px,transparent 12px 21px) 16.7% 48.4%/58% 68%,
+    repeating-linear-gradient(to bottom,var(--sk-ligne) 0 5px,transparent 5px 21px) 91.25% 48.4%/20% 68%,
+    linear-gradient(#7A2A22,#7A2A22) 0 100%/100% 11.5%,
+    var(--sk-farine),
+    linear-gradient(160deg,var(--sk-pate),var(--sk-pate-2));
+  background-repeat:no-repeat,no-repeat,no-repeat,no-repeat,no-repeat,no-repeat,no-repeat,repeat,repeat,no-repeat;
+}
+
+/* Visionneuse : la pizza se dessine en grand pendant le chargement de la photo */
+.lb-sk{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .3s var(--ease)}
+.lb-sk .sk__pizza{width:84px;--sk-trait:rgba(246,238,227,.55)}
+.lightbox.is-loading .lb-sk{opacity:1;visibility:visible;transition-delay:.15s}
+.lightbox.is-loading .lightbox__fig img{opacity:0}
+
+@keyframes braise{from{transform:translateX(-55%)}to{transform:translateX(55%)}}
+@keyframes braise-fond{from{background-position:130% 0,center,0 0,6px 7px,0 0}to{background-position:-30% 0,center,0 0,6px 7px,0 0}}
+@keyframes sk-croute{0%{stroke-dashoffset:100;opacity:1}38%{stroke-dashoffset:0}86%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+@keyframes sk-parts{0%,28%{stroke-dashoffset:100;opacity:1}58%{stroke-dashoffset:0}86%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+@keyframes sk-garni{0%,52%{transform:scale(0);opacity:1}64%{transform:scale(1.3)}72%,86%{transform:scale(1);opacity:1}100%{transform:scale(1);opacity:0}}
+@keyframes tete-impression{0%{top:0;opacity:1}88%{opacity:1}100%{top:calc(100% - 3px);opacity:0}}
 
 /* Chargement : images en fondu, animations d'entrée lancées une fois les polices et le logo prêts */
 .js img[data-fade]{opacity:0;transition:opacity .7s var(--ease)}
@@ -515,5 +591,9 @@ html.lb-open{overflow:hidden}
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important}
   .js .reveal{opacity:1;transform:none}
+  /* Squelettes immobiles : la pizza reste dessinée */
+  .sk__croute,.sk__parts{stroke-dashoffset:0!important;animation:none!important}
+  .sk__garni{transform:none!important;animation:none!important}
+  .js .sk::before,.js .preview__sheet::after{display:none}
   @view-transition{navigation:none}
 }

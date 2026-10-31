@@ -130,10 +130,26 @@ const nomsVisibles = new Set(pizzas.map((p) => p.nom));
   .forEach((p) => verifier(!lignes.some((l) => l.includes(`<b>${PZ.esc(p.nom)}<`)), `Carte : « ${p.nom} » est masquée mais affichée`));
 const entete = contenuDe(carte, 'data-head') || '';
 tailles.forEach((t) => verifier(present(entete, t.taille || t.nom), `Carte : la taille « ${t.taille || t.nom} » n'est pas dans l'en-tête`));
-for (const k of ['telephone', 'resumeJoursCourt', 'resumeHeures', 'villeCourte', 'mention']) {
+for (const k of ['telephone', 'resumeJoursCourt', 'resumeHeures', 'villeCourte', 'mention', 'titrePage2', 'sousTitrePage2', 'mentionPage2', 'suitePage2']) {
   if (T[k] === undefined || !carte.includes(`data-bind="${k}"`)) continue;
   verifier(contenuDe(carte, `data-bind="${k}"`) === html(T[k]), `Carte : « ${k} » ne correspond pas au contenu`);
 }
+
+/* ---------- Carte, page 2 : boissons, desserts… ---------- */
+const rubriques = PZ.rubriquesVisibles(D);
+const page2 = contenuDe(carte, 'data-rubriques') || '';
+verifier(cache(carte, 'data-page2') === !rubriques.length, rubriques.length ? 'Carte : la page 2 (boissons et desserts) est masquée alors qu’elle a du contenu' : 'Carte : la page 2 est affichée alors qu’elle est vide');
+verifier(cache(carte, 'data-suite') === !rubriques.length, 'Carte : le renvoi « en page 2 » ne correspond pas au contenu');
+verifier(page2 === PZ.htmlRubriques(D), 'Carte : la page 2 ne correspond pas au contenu (boissons et desserts)');
+const articlesAffiches = page2.match(/<div class="art">/g) || [];
+const nbArticles = rubriques.reduce((n, r) => n + r.articles.length, 0);
+verifier(articlesAffiches.length === nbArticles, `Carte : ${articlesAffiches.length} boissons et desserts affichés pour ${nbArticles} dans le contenu`);
+rubriques.forEach((r) => r.articles.forEach((a) => {
+  verifier(page2.includes(`<b>${PZ.esc(a.nom)}`) && page2.includes(`<span class="art__prix">${PZ.prix(a.prix)}</span>`), `Carte : « ${a.nom} » ou son prix est absent de la page 2`);
+}));
+const visibles2 = new Set(rubriques.flatMap((r) => r.articles.map((a) => a.nom)));
+((D.boissonsDesserts || {}).rubriques || []).forEach((r) => ((r && r.articles) || []).filter((a) => a && a.nom && a.masque && !visibles2.has(a.nom))
+  .forEach((a) => verifier(!page2.includes(`<b>${PZ.esc(a.nom)}`), `Carte : « ${a.nom} » est masqué mais affiché en page 2`)));
 
 /* ---------- Google : données structurées, descriptions, plan du site ---------- */
 if (base) {
@@ -146,6 +162,8 @@ if (base) {
     verifier(ld.address.streetAddress === D.adresse, 'Google : adresse différente du contenu');
     const items = ld.hasMenu.hasMenuSection[0].hasMenuItem;
     verifier(items.length === pizzas.length && items.every((it, i) => it.name === pizzas[i].nom && it.offers.length === tailles.length), 'Google : la carte transmise ne correspond pas au contenu');
+    const sections = ld.hasMenu.hasMenuSection.slice(1);
+    verifier(sections.length === rubriques.length && sections.every((sec, i) => sec.hasMenuItem.length === rubriques[i].articles.length), 'Google : les boissons et desserts transmis ne correspondent pas au contenu');
     const creneaux = PZ.JOURS.reduce((n, j) => n + PZ.parseCreneaux((D.horaires || {})[j]).filter(Boolean).length, 0);
     verifier(ld.openingHoursSpecification.length === creneaux, 'Google : les horaires transmis ne correspondent pas au contenu');
   }
@@ -167,7 +185,7 @@ terminer();
 
 function terminer() {
   if (!problemes.length) {
-    console.log(`✅ Site cohérent avec le contenu : ${pizzas.length} pizza(s), ${tailles.length} taille(s), photos, horaires, liens et données Google vérifiés.`);
+    console.log(`✅ Site cohérent avec le contenu : ${pizzas.length} pizza(s), ${tailles.length} taille(s), ${rubriques.reduce((n, r) => n + r.articles.length, 0)} boisson(s) et dessert(s), photos, horaires, liens et données Google vérifiés.`);
     process.exit(0);
   }
   const texte = ['### ❌ Le site généré ne correspond pas au contenu (publication arrêtée)', ...problemes.map((p) => '- ' + p), ''].join('\n');

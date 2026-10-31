@@ -8,11 +8,12 @@ Tu peux changer toi-même la carte, les prix, les horaires, les congés, les pho
 2. Connecte-toi avec ton adresse e-mail : tu reçois un lien de connexion par e-mail, clique dessus.
 3. Choisis le site **piazetta-la-destrousse**.
 
-À gauche (ou dans le menu ☰ sur téléphone), tu as 5 rubriques :
+À gauche (ou dans le menu ☰ sur téléphone), tu as 6 rubriques :
 
 | Rubrique | Pour… |
 | --- | --- |
 | **La carte** | ajouter, supprimer ou réordonner une pizza, changer un prix ou des ingrédients |
+| **Boissons et desserts** | la page 2 de la carte : boissons, desserts, et d'autres rubriques si tu veux (glaces…) |
 | **Horaires et congés** | changer les horaires, prévenir d'une fermeture (vacances, jour férié), afficher un message en haut du site |
 | **Photos** | ajouter, retirer ou réordonner les photos |
 | **Contact et réseaux** | téléphone, adresse, zone de livraison, liens Uber Eats / Facebook / Instagram |
@@ -37,6 +38,10 @@ Coche **Masquer cette pizza** : elle disparaît du site et du PDF, mais reste en
 La carte › Tailles, en bas de la page. Si tu ajoutes ou retires une taille, ajoute ou retire aussi le prix correspondant sur chaque pizza, au même rang.
 
 La carte tient sur une feuille A4 jusqu'à 24 pizzas environ. Au-delà, masque celles que tu fais moins souvent.
+
+**Boissons et desserts**
+Boissons et desserts › ouvre la rubrique (Boissons, Desserts…) › **Ajouter** un article : nom, précision (par exemple « Canette 33 cl » ou « Fait maison »), prix › Enregistrer.
+Ils s'affichent en page 2 de la carte et du PDF, et la page 1 indique « Boissons & desserts en page 2 ». Tu peux aussi créer une nouvelle rubrique (par exemple « Glaces »), ou cocher **Masquer cet article**. S'il n'y a plus aucun article, la page 2 disparaît toute seule.
 
 **Partir en vacances**
 Horaires et congés › choisis les dates **du** et **au** dans le calendrier › Enregistrer.

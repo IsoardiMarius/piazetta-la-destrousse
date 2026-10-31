@@ -2,8 +2,8 @@
 (function () {
   'use strict';
   var PZ = window.PZ, d = document, root = d.documentElement;
-  function $(s) { return d.querySelector(s); }
-  function $$(s) { return Array.prototype.slice.call(d.querySelectorAll(s)); }
+  function $(s, r) { return (r || d).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || d).querySelectorAll(s)); }
   function bind(k, v) { $$('[data-bind="' + k + '"]').forEach(function (el) { el.textContent = v; }); }
 
   if (!PZ || !window.CARTE || !window.INFOS) { root.setAttribute('data-ready', 'error'); return; }
@@ -11,7 +11,7 @@
   var erreurs = PZ.validerCarte(window.CARTE).concat(PZ.validerInfos(window.INFOS));
   if (erreurs.length) console.warn('[contenu] ' + erreurs.join('\n'));
 
-  var sheet = $('[data-sheet]');
+  var sheet = $('[data-sheet="1"]'), sheet2 = $('[data-sheet="2"]');
   sheet.style.setProperty('--cols', (C.tailles || []).length);
 
   /* Contenu (déjà en place sur le site publié ; utile en local) */
@@ -22,22 +22,34 @@
   var T = PZ.textes(C);
   Object.keys(T).forEach(function (k) { bind(k, T[k]); });
 
-  /* Ajuste la taille du texte pour que tout tienne sur une seule page A4 */
-  function fit() {
-    var main = $('[data-main]'), list = $('[data-list]');
+  /* Page 2 (boissons, desserts…) : seulement s'il y a au moins un article à afficher */
+  var rub = $('[data-rubriques]'), hRub = PZ.htmlRubriques(C), avecPage2 = !!hRub && !!sheet2;
+  if (rub && rub.innerHTML !== hRub) rub.innerHTML = hRub;
+  $$('[data-page2], [data-suite]').forEach(function (el) { el.hidden = !avecPage2; });
+  root.classList.toggle('has-page2', avecPage2);
+
+  /* Ajuste la taille du texte pour que tout tienne sur la page A4 ; renvoie false si ça déborde quand même */
+  function fit(feuille, kMax) {
+    var main = $('[data-main]', feuille), list = $('[data-list]', feuille);
     /* Hauteur disponible pour la liste : la zone centrale, sans ses marges intérieures */
     var place = function () {
       var cs = getComputedStyle(main);
       return main.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
     };
-    var k = 1.15;
-    sheet.style.setProperty('--k', k);
+    var k = kMax;
+    feuille.style.setProperty('--k', k);
     while (k > 0.6 && list.scrollHeight > place()) {
       k = Math.round((k - 0.02) * 100) / 100;
-      sheet.style.setProperty('--k', k);
+      feuille.style.setProperty('--k', k);
     }
-    /* Même au plus petit, la carte déborde de la page : signalé à la publication */
-    if (list.scrollHeight > place() + 1) root.setAttribute('data-trop-long', '');
+    return list.scrollHeight <= place() + 1;
+  }
+  function fitTout() {
+    var trop = [];
+    if (!fit(sheet, 1.15)) trop.push(1);
+    if (avecPage2 && !fit(sheet2, 1.3)) trop.push(2);
+    /* Même au plus petit, une page déborde : signalé à la publication (numéros des pages) */
+    if (trop.length) root.setAttribute('data-trop-long', trop.join(','));
     else root.removeAttribute('data-trop-long');
   }
 
@@ -63,7 +75,7 @@
 
   var ready = (d.fonts && d.fonts.ready) ? d.fonts.ready : Promise.resolve();
   ready.then(function () {
-    fit();
+    fitTout();
     root.setAttribute('data-ready', 'ok');
     if (root.classList.contains('is-print-auto')) setTimeout(function () { window.print(); }, 300);
   });

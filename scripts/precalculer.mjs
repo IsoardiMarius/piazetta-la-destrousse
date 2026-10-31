@@ -143,6 +143,11 @@ let carte = nommer(lire('carte.html'));
 carte = remplirBinds(carte);
 carte = remplirTout(carte, 'data-head', PZ.htmlEnteteTailles(D));
 carte = remplirTout(carte, 'data-rows', PZ.htmlLignesCarte(D));
+/* Page 2 (boissons, desserts…) et renvoi depuis la page 1, seulement s'il y a des articles */
+carte = remplirTout(carte, 'data-rubriques', PZ.htmlRubriques(D));
+if (PZ.rubriquesVisibles(D).length) {
+  carte = afficher(afficher(carte, 'data-page2'), 'data-suite').replace(/<html lang="fr"(?![^>]*has-page2)/, '<html lang="fr" class="has-page2"');
+}
 carte = liens(carte);
 carte = meta(carte, {
   titre: `Carte et prix des pizzas — ${PZ.nomCourt(D)}, pizzeria à ${PZ.villeSeule(D)}`,

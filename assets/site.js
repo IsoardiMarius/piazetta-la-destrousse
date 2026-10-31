@@ -19,7 +19,11 @@
   /* Images : apparition en fondu une fois chargées (l'aperçu flou ou le fond disparaît) */
   function fadeImages(root) {
     $$('img[data-fade]', root).forEach(function (img) {
-      var done = function () { img.classList.add('is-loaded'); };
+      var done = function () {
+        img.classList.add('is-loaded');
+        var box = img.closest('[data-sk]');
+        if (box) box.classList.add('is-loaded');
+      };
       if (img.complete && img.naturalWidth) done();
       else { img.addEventListener('load', done, { once: true }); img.addEventListener('error', done, { once: true }); }
     });
@@ -127,11 +131,21 @@
     function show(i, dir) {
       idx = (i + btns.length) % btns.length;
       var b = btns[idx];
+      var anim = dir > 0 ? 'lb-in-r' : dir < 0 ? 'lb-in-l' : 'lb-in';
       img.classList.remove('lb-in', 'lb-in-l', 'lb-in-r');
-      void img.offsetWidth;
+      img.onload = img.onerror = null;
+      /* Pendant le chargement de la grande photo : la pizza se dessine ; puis la photo arrive */
+      var go = function () {
+        img.onload = img.onerror = null;
+        dlg.classList.remove('is-loading');
+        void img.offsetWidth;
+        img.classList.add(anim);
+      };
+      dlg.classList.add('is-loading');
       img.src = b.getAttribute('data-grande');
       img.alt = $('img', b).alt;
-      img.classList.add(dir > 0 ? 'lb-in-r' : dir < 0 ? 'lb-in-l' : 'lb-in');
+      if (img.complete && img.naturalWidth) go();
+      else { img.onload = go; img.onerror = go; }
       count.textContent = btns.length > 1 ? (idx + 1) + ' / ' + btns.length : '';
       dlg.classList.toggle('is-single', btns.length < 2);
     }

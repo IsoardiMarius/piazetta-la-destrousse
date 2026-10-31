@@ -95,6 +95,64 @@ content:
             label: Diamètre (ex. 30 cm)
             type: string
 
+  - name: boissons-desserts
+    label: Boissons et desserts
+    type: file
+    path: contenu/boissons-desserts.json
+    format: json
+    fields:
+      - name: titre
+        label: Titre de la page 2 de la carte
+        description: "Par exemple « Boissons & desserts ». La page 2 (et le renvoi « en page 2 » sur la première page) n'apparaît que s'il y a au moins un article affiché."
+        type: string
+      - name: rubriques
+        label: Rubriques
+        description: "Par exemple « Boissons », « Desserts », « Glaces ». Glisser une rubrique pour changer son ordre."
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{titre}"
+        fields:
+          - name: titre
+            label: Nom de la rubrique
+            type: string
+            required: true
+          - name: articles
+            label: Articles
+            description: "Glisser un article pour changer son ordre."
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{nom}"
+            fields:
+              - name: nom
+                label: Nom
+                type: string
+                required: true
+              - name: detail
+                label: Précision (facultatif)
+                description: "Par exemple « Canette 33 cl » ou « Fait maison »."
+                type: string
+              - name: prix
+                label: Prix en euros
+                description: "Pour les centimes, utiliser un point : 4.5 s'affiche « 4,50 € »."
+                type: number
+                options:
+                  min: 0
+              - name: badge
+                label: Badge (facultatif)
+                description: "Petit mot affiché à côté du nom, par exemple « Nouveau »."
+                type: string
+              - name: masque
+                label: Masquer cet article
+                description: "Coché, l'article n'apparaît plus sur la carte ni sur le PDF, sans être supprimé."
+                type: boolean
+      - name: mention
+        label: Phrase en bas de la page 2 (facultatif)
+        type: text
+
   - name: horaires
     label: Horaires et congés
     type: file
