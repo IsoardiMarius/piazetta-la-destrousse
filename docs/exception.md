@@ -14,6 +14,16 @@
   - aucune donnée de l'organisation et aucune donnée personnelle d'étudiants, de salariés ou de partenaires dans le site ou le dépôt : uniquement les informations publiques de la pizzeria ;
   - aucun secret, aucun cookie, aucun outil de statistiques, aucun formulaire ;
   - polices auto-hébergées, sans appel à Google Fonts ;
-  - mentions légales et mention RGPD ajoutées (`mentions-legales.html`) ;
+  - pas de page de mentions légales, à la demande du builder (voir l'exception n°2) ;
   - Claude n'a pas déclenché le déploiement : il a préparé le workflow. L'activation (Settings › Pages) et la fusion dans `main` restent à la main du builder.
+- **Décision** : écart accepté par le builder (demande explicite).
+
+## 2. Pas de page de mentions légales
+
+- **Date** : 31 octobre 2026
+- **Demandé par** : le builder du projet
+- **Demande** : retirer la page `mentions-legales.html` et le lien qui y menait.
+- **Risque signalé au builder** : en France, un site professionnel doit afficher des mentions légales (loi pour la confiance dans l'économie numérique, article 6 : éditeur, SIRET, directeur ou directrice de la publication, hébergeur). Leur absence est passible d'une amende et peut être relevée par un client ou un concurrent.
+- **Contexte RGPD** : le site ne collecte aucune donnée personnelle (pas de cookie, de formulaire ni de statistiques), mais l'hébergeur GitHub enregistre l'adresse IP des visiteurs ; aucune information n'est donc donnée à ce sujet aux visiteurs.
+- **Alternative proposée** : remettre une page courte, avec ces informations, dans le pied de page.
 - **Décision** : écart accepté par le builder (demande explicite).

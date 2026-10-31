@@ -62,7 +62,6 @@ Puis ouvrir http://localhost:8000. Pour générer le PDF en local : `npm install
 | `carte.js` | **Le contenu à modifier** (carte, prix, horaires, contact) |
 | `index.html` | Page d'accueil |
 | `carte.html` | Carte au format A4 (source du PDF, imprimable) |
-| `mentions-legales.html` | Mentions légales (à compléter : raison sociale, SIRET, directeur de publication) |
 | `assets/` | Styles, scripts, logo, polices auto-hébergées |
 | `scripts/` | Vérification de la carte et génération du PDF |
 
