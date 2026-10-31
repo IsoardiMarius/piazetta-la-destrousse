@@ -241,6 +241,10 @@
       if (I[k] && !parseDate(I[k])) err.push('« ' + k + ' » : « ' + I[k] + ' » n’est pas une date (format attendu : "01/08/2027").');
     });
     if (I.histoire != null && !Array.isArray(I.histoire) && typeof I.histoire !== 'string') err.push('« histoire » doit être un texte ou une liste de paragraphes.');
+    if (I.communesLivrees != null && !Array.isArray(I.communesLivrees)) err.push('« communesLivrees » doit être une liste, ex. ["La Destrousse", "Peypin"].');
+    if (I.reseaux && typeof I.reseaux === 'object') Object.keys(I.reseaux).forEach(function (k) {
+      if (I.reseaux[k] && !/^https?:\/\//.test(I.reseaux[k])) err.push('Réseau « ' + k + ' » : l’adresse doit commencer par https://');
+    });
     return err.map(function (e) { return 'infos.js — ' + e; });
   }
 
@@ -254,6 +258,34 @@
       .replace(/(«)\s+/g, '$1 ');
   }
   function lower1(s) { return s ? s.charAt(0).toLowerCase() + s.slice(1) : s; }
+
+  function listeFr(a) { return a.length > 1 ? a.slice(0, -1).join(', ') + ' et ' + a[a.length - 1] : (a[0] || ''); }
+  function nomOfficiel(D) { return D.nom || 'Piazzetta La Destrousse'; }
+  function villeSeule(D) { return (D.ville || '').replace(/^\d{5}\s+/, '') || 'La Destrousse'; }
+  function communes(D) { return Array.isArray(D.communesLivrees) ? D.communesLivrees.filter(Boolean) : []; }
+
+  /* Liens vers la fiche Google : fiche, itinéraire et page « laisser un avis » */
+  function liensGoogle(D) {
+    var id = D.googlePlaceId, q = encodeURIComponent(nomOfficiel(D));
+    if (!id) {
+      var f = D.lienGoogle || 'https://www.google.com/maps/search/?api=1&query=' + q;
+      return { fiche: f, itineraire: f, avis: f };
+    }
+    return {
+      fiche: 'https://www.google.com/maps/search/?api=1&query=' + q + '&query_place_id=' + id,
+      itineraire: 'https://www.google.com/maps/dir/?api=1&destination=' + q + '&destination_place_id=' + id,
+      avis: 'https://search.google.com/local/writereview?placeid=' + id
+    };
+  }
+
+  var RESEAUX = { facebook: 'Facebook', instagram: 'Instagram', uberEats: 'Uber Eats' };
+  function reseaux(D) {
+    var r = D.reseaux || {};
+    return Object.keys(RESEAUX).filter(function (k) { return /^https?:\/\//.test(r[k] || ''); }).map(function (k) { return { cle: k, nom: RESEAUX[k], url: r[k] }; });
+  }
+  function htmlReseaux(D) {
+    return reseaux(D).map(function (x) { return '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.nom) + '</a>'; }).join('');
+  }
 
   /* Valeur de chaque élément data-bind="..." des pages */
   function textes(D) {
@@ -275,6 +307,9 @@
     T.sousTitreCarte = tl + (fp ? (fp.min === fp.max ? ', ' + prix(fp.min) : ', de ' + prix(fp.min) + ' à ' + prix(fp.max)) : '') + '.';
     var ville = (D.ville || '').replace(/^\d{5}\s+/, '');
     if (ville) T.villeCourte = ville;
+    T.lieu = 'Pizzeria à ' + villeSeule(D);
+    var cs = communes(D);
+    T.livraisonTexte = 'Livraison à ' + (cs.length ? listeFr(cs) : (D.zoneLivraison || villeSeule(D))) + '.';
     if (D.adresse) T.adresseCourte = D.adresse.replace(/\bavenue\b/i, 'av.') + ' · et alentours';
     return T;
   }
@@ -298,7 +333,7 @@
     }).join('') + (note ? '<li class="hours__note">' + esc(note) + '</li>' : '');
   }
 
-  function altPhoto(p) { return p.legende ? p.legende + ', pizza de la Piazzetta' : 'Pizza de la Piazzetta'; }
+  function altPhoto(p) { return (p.legende ? 'Pizza ' + p.legende : 'Pizza artisanale') + ' de la Piazzetta, pizzeria à La Destrousse'; }
 
   function htmlGalerie(photos) {
     return photos.map(function (p, i) {
@@ -331,15 +366,16 @@
 
   /* Descriptions pour Google et les aperçus de liens */
   function description(D) {
-    var T = textes(D), fp = fourchettePrix(D), nt = (D.tailles || []).length;
-    return 'Pizzas artisanales à emporter ou livrées à ' + (D.zoneLivraison || 'La Destrousse') + '. ' +
-      pizzasVisibles(D).length + ' pizzas en ' + nt + ' taille' + (nt > 1 ? 's' : '') + (fp ? ', de ' + prix(fp.min) + ' à ' + prix(fp.max) : '') + '. ' +
-      (T.resumeJours ? T.resumeJours + (premiereOuverture(D) ? ' dès ' + premiereOuverture(D) : '') + '. ' : '') +
+    var T = textes(D), fp = fourchettePrix(D);
+    var cs = communes(D);
+    return 'Piazzetta, pizzeria artisanale à ' + villeSeule(D) + ' : pizzas à emporter ou livrées' + (cs.length ? ' à ' + listeFr(cs) : '') + ', ' +
+      (T.resumeJours ? lower1(T.resumeJours) + (premiereOuverture(D) ? ' dès ' + premiereOuverture(D) : '') : '') + '. ' +
+      pizzasVisibles(D).length + ' pizzas' + (fp ? ' de ' + prix(fp.min) + ' à ' + prix(fp.max) : '') + '. ' +
       'Tél. ' + (D.telephone || '') + '.';
   }
   function descriptionCarte(D) {
     var noms = pizzasVisibles(D).map(function (p) { return p.nom; });
-    return 'La carte de la Piazzetta La Destrousse : ' + noms.join(', ') + '. ' + textes(D).sousTitreCarte + ' À emporter ou en livraison.';
+    return 'Carte et prix des pizzas de la Piazzetta, pizzeria à ' + villeSeule(D) + ' : ' + noms.join(', ') + '. ' + textes(D).sousTitreCarte + ' À emporter ou en livraison.';
   }
 
   /* Fiche « Restaurant » pour Google (données structurées schema.org) */
@@ -356,11 +392,12 @@
     var tailles = D.tailles || [];
     var fp = fourchettePrix(D);
     var images = [base + 'assets/og-image.jpg'].concat((photos || []).map(function (p) { return base + p.grande; }));
-    return {
-      '@context': 'https://schema.org',
+    var G = liensGoogle(D), cs = communes(D);
+    var restaurant = {
       '@type': 'Restaurant',
       '@id': base + '#restaurant',
-      name: 'Piazzetta La Destrousse',
+      name: nomOfficiel(D),
+      alternateName: ['Piazzetta', 'Pizzeria Piazzetta', 'Piazzetta Destrousse'],
       description: description(D),
       url: base,
       telephone: telLink(D.telephone).replace('tel:', ''),
@@ -370,8 +407,10 @@
       priceRange: fp ? (Math.round(fp.min) + '–' + Math.round(fp.max) + ' €') : undefined,
       acceptsReservations: false,
       address: { '@type': 'PostalAddress', streetAddress: D.adresse, postalCode: cp ? cp[1] : undefined, addressLocality: cp ? cp[2] : D.ville, addressCountry: 'FR' },
-      areaServed: D.zoneLivraison,
-      hasMap: D.lienGoogle,
+      areaServed: cs.length ? cs.map(function (c) { return { '@type': 'City', name: c }; }) : { '@type': 'City', name: villeSeule(D) },
+      hasMap: G.fiche,
+      sameAs: [G.fiche].concat(reseaux(D).map(function (x) { return x.url; })),
+      menu: base + 'carte.html',
       openingHoursSpecification: spec,
       hasMenu: {
         '@type': 'Menu',
@@ -393,6 +432,13 @@
         }]
       }
     };
+    return {
+      '@context': 'https://schema.org',
+      '@graph': [
+        restaurant,
+        { '@type': 'WebSite', '@id': base + '#site', url: base, name: nomOfficiel(D), alternateName: 'Piazzetta', inLanguage: 'fr-FR', publisher: { '@id': base + '#restaurant' } }
+      ]
+    };
   }
 
   var api = {
@@ -405,7 +451,8 @@
     validerCarte: validerCarte, validerInfos: validerInfos,
     fr: fr, textes: textes, htmlHistoire: htmlHistoire, htmlHoraires: htmlHoraires, htmlGalerie: htmlGalerie, altPhoto: altPhoto,
     htmlEnteteTailles: htmlEnteteTailles, htmlLignesCarte: htmlLignesCarte,
-    description: description, descriptionCarte: descriptionCarte, jsonLd: jsonLd
+    description: description, descriptionCarte: descriptionCarte, jsonLd: jsonLd,
+    liensGoogle: liensGoogle, htmlReseaux: htmlReseaux, nomOfficiel: nomOfficiel
   };
   root.PZ = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

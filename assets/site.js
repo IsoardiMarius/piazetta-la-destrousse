@@ -48,7 +48,10 @@
     a.href = PZ.telLink(D.telephone);
     if (a.hasAttribute('aria-label')) a.setAttribute('aria-label', 'Appeler le ' + D.telephone);
   });
-  if (D.lienGoogle) $$('[data-google]').forEach(function (a) { a.href = D.lienGoogle; });
+  var G = PZ.liensGoogle(D);
+  $$('[data-google]').forEach(function (a) { a.href = G[a.getAttribute('data-google')] || G.fiche; });
+  var res = $('[data-reseaux]');
+  if (res) { var hr = PZ.htmlReseaux(D); if (res.innerHTML !== hr) res.innerHTML = hr; res.hidden = !hr; }
 
   /* ---------- Bandeau d'annonce (calculé chaque jour : congés à venir…) ---------- */
   var annonce = $('[data-annonce]');

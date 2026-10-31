@@ -31,10 +31,27 @@ const html = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').repla
 const attr = (s) => html(s).replace(/"/g, '&quot;');
 const reEsc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-/* Remplace le contenu de chaque élément portant l'attribut donné */
+/* Remplace le contenu de chaque élément portant l'attribut donné.
+   Les balises imbriquées du même type sont comptées : on peut relancer le script
+   sur une page déjà remplie sans rien casser. */
 function remplirTout(page, attribut, contenu) {
-  const re = new RegExp(`(<(\\w+)\\b[^>]*\\s${attribut}(?=[\\s>])[^>]*>)([\\s\\S]*?)(</\\2>)`, 'g');
-  return page.replace(re, (_, ouv, _t, _c, ferm) => ouv + contenu + ferm);
+  const ouverture = new RegExp(`<(\\w+)\\b[^>]*\\s${attribut}(?=[\\s>])[^>]*>`, 'g');
+  let resultat = '', curseur = 0, m;
+  while ((m = ouverture.exec(page))) {
+    const tag = m[1], debut = m.index + m[0].length;
+    const balise = new RegExp(`<(/?)${tag}\\b[^>]*>`, 'gi');
+    balise.lastIndex = debut;
+    let niveau = 1, b, fin = -1;
+    while ((b = balise.exec(page))) {
+      niveau += b[1] ? -1 : 1;
+      if (niveau === 0) { fin = b.index; break; }
+    }
+    if (fin < 0) break;
+    resultat += page.slice(curseur, debut) + contenu;
+    curseur = fin;
+    ouverture.lastIndex = fin;
+  }
+  return resultat + page.slice(curseur);
 }
 function remplirBinds(page) {
   for (const [k, v] of Object.entries(T)) page = remplirTout(page, `data-bind="${reEsc(k)}"`, html(v));
@@ -47,7 +64,10 @@ function liens(page) {
   const tel = PZ.telLink(D.telephone);
   page = page.replace(/href="tel:[^"]*"/g, `href="${attr(tel)}"`)
     .replace(/aria-label="Appeler le [^"]*"/g, `aria-label="${attr('Appeler le ' + D.telephone)}"`);
-  if (D.lienGoogle) page = page.replace(/href="[^"]*"(?=[^>]*data-google)/g, `href="${attr(D.lienGoogle)}"`);
+  const G = PZ.liensGoogle(D);
+  page = page.replace(/<a\b([^>]*?)\shref="[^"]*"([^>]*\sdata-google="(\w+)"[^>]*)>/g, (_, avant, apres, type) => `<a${avant} href="${attr(G[type] || G.fiche)}"${apres}>`);
+  const reseaux = PZ.htmlReseaux(D);
+  if (reseaux) page = afficher(remplirTout(page, 'data-reseaux', reseaux), 'data-reseaux');
   return page;
 }
 function meta(page, { titre, description, url, image }) {
@@ -56,7 +76,7 @@ function meta(page, { titre, description, url, image }) {
     url && `<link rel="canonical" href="${attr(url)}">`,
     `<meta property="og:type" content="website">`,
     `<meta property="og:locale" content="fr_FR">`,
-    `<meta property="og:site_name" content="Piazzetta La Destrousse">`,
+    `<meta property="og:site_name" content="${attr(PZ.nomOfficiel(D))}">`,
     `<meta property="og:title" content="${attr(titre)}">`,
     `<meta property="og:description" content="${attr(description)}">`,
     url && `<meta property="og:url" content="${attr(url)}">`,
@@ -79,20 +99,21 @@ accueil = remplirTout(accueil, 'data-histoire', PZ.htmlHistoire(D));
 accueil = remplirTout(accueil, 'data-hours', PZ.htmlHoraires(D, null, ''));
 if (photos.length) {
   accueil = remplirTout(accueil, 'data-gallery', PZ.htmlGalerie(photos))
-    .replace(/(<ul class="gallery" data-gallery)/, `$1 data-count="${Math.min(photos.length, 6)}"`);
+    .replace(/(<ul class="gallery" data-gallery)(?: data-count="\d+")*/, `$1 data-count="${Math.min(photos.length, 6)}"`);
   accueil = afficher(afficher(accueil, 'data-photos'), 'data-photos-link');
 }
 accueil = liens(accueil);
 const imageAccueil = base + (existe('assets/og-accueil.jpg') ? 'assets/og-accueil.jpg' : 'assets/og-image.jpg');
 accueil = meta(accueil, {
-  titre: 'Piazzetta La Destrousse — Pizzeria artisanale',
+  titre: 'Piazzetta — Pizzeria à La Destrousse, pizzas à emporter et en livraison',
   description: PZ.description(D),
   url: base,
   image: base && imageAccueil,
 });
 if (base) {
   const ld = JSON.stringify(PZ.jsonLd(D, base, photos)).replace(/</g, '\\u003c');
-  accueil = accueil.replace('</head>', `<script type="application/ld+json">${ld}</script>\n</head>`);
+  accueil = accueil.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>\n?/g, '')
+    .replace('</head>', `<script type="application/ld+json">${ld}</script>\n</head>`);
 }
 ecrire('index.html', accueil);
 
@@ -103,7 +124,7 @@ carte = remplirTout(carte, 'data-head', PZ.htmlEnteteTailles(D));
 carte = remplirTout(carte, 'data-rows', PZ.htmlLignesCarte(D));
 carte = liens(carte);
 carte = meta(carte, {
-  titre: 'La carte — Piazzetta La Destrousse',
+  titre: 'Carte et prix des pizzas — Piazzetta, pizzeria à La Destrousse',
   description: PZ.descriptionCarte(D),
   url: base && base + 'carte.html',
   image: base && existe('assets/og-carte.jpg') ? base + 'assets/og-carte.jpg' : base && imageAccueil,
@@ -112,7 +133,7 @@ ecrire('carte.html', carte);
 
 /* ---------- Page 404 : chemins absolus, elle peut s'afficher à n'importe quelle adresse ---------- */
 if (existe('404.html') && base) {
-  ecrire('404.html', liens(lire('404.html')).replace('<head>', `<head>\n<base href="${attr(base)}">`));
+  ecrire('404.html', liens(lire('404.html')).replace(/\n?<base [^>]*>/g, '').replace('<head>', `<head>\n<base href="${attr(base)}">`));
 }
 
 /* ---------- Plan du site et robots.txt pour les moteurs de recherche ---------- */

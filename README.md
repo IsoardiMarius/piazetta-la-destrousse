@@ -88,12 +88,16 @@ Puis ouvrir http://localhost:8000. Pour générer le PDF en local : `npm install
 | `assets/` | Styles, scripts, logo, polices auto-hébergées |
 | `scripts/` | Vérification, PDF, photos et pré-remplissage des pages à la publication |
 
+## Être trouvé sur Google
+
+Le site fait sa part (voir ci-dessous). Le reste se joue sur la fiche Google, les avis et la cohérence des informations sur Internet : la liste des choses à faire, avec un QR code « Laisser un avis » à imprimer, est dans **[`docs/referencement.md`](docs/referencement.md)**.
+
 ## Rapidité, Google et aperçus de liens
 
 À chaque publication, le site est préparé automatiquement, comme le ferait un framework type Next.js, sans en avoir la lourdeur :
 
 - **Pages pré-remplies** : textes, horaires, carte et photos sont déjà dans les pages publiées. Google et les aperçus de liens les lisent sans attendre JavaScript.
-- **Google** : description de chaque page, adresse officielle (canonique), plan du site (`sitemap.xml`), `robots.txt` et fiche « Restaurant » (adresse, horaires, carte et prix de chaque pizza) pour les résultats de recherche.
+- **Google** : titres et descriptions de pages pensés pour « pizzeria La Destrousse », adresse officielle (canonique), plan du site (`sitemap.xml`), `robots.txt`, fiche « Restaurant » (adresse, horaires, communes livrées, carte et prix de chaque pizza, lien vers la fiche Google et les réseaux) et nom du site pour les résultats de recherche.
 - **Aperçus de liens** (WhatsApp, Facebook, Messenger, SMS…) : une image est générée pour chaque page, la première photo avec le logo pour l'accueil, et le haut de la carte pour la page carte.
 - **Images** : chaque photo existe en 4 tailles, le navigateur télécharge la plus adaptée à l'écran. Un aperçu flou s'affiche pendant le chargement.
 - **Cache** : chaque publication change l'adresse des fichiers, pour que personne ne voie une ancienne version.

@@ -50,14 +50,39 @@ window.INFOS = {
   /* ------------------------------------------------------------------------
      4. CONTACT
      ------------------------------------------------------------------------ */
+  /* Nom, adresse et téléphone : à écrire EXACTEMENT pareil sur la fiche Google,
+     Uber Eats, Facebook, Instagram… Google compare ces informations entre les
+     sites : plus elles sont identiques, mieux la pizzeria est classée. */
+  nom:           "Piazzetta La Destrousse",
   telephone:     "06 40 92 51 76",
   adresse:       "842 avenue de la Doulia",
   ville:         "13112 La Destrousse",
   zoneLivraison: "La Destrousse et alentours",
-  lienGoogle:    "https://www.google.com/maps/search/?api=1&query=Piazzetta%20La%20Destrousse&query_place_id=ChIJn-yuT0iZyRIRGalZ9F80kp4",
+
+  /* Communes où vous livrez, une par une, entre guillemets.
+     Elles sont affichées sur le site et indiquées à Google : la pizzeria peut
+     alors ressortir dans les recherches « pizzeria Peypin », etc.
+     Exemple : ["La Destrousse", "Peypin", "La Bouilladisse"]
+     Laissez [] pour garder simplement « La Destrousse et alentours ». */
+  communesLivrees: [],
 
   /* ------------------------------------------------------------------------
-     5. TEXTES DE LA PAGE D'ACCUEIL
+     5. GOOGLE ET RÉSEAUX SOCIAUX
+     ------------------------------------------------------------------------ */
+  /* Identifiant de la fiche Google (ne pas modifier). Il sert aux boutons
+     « Itinéraire » et « Laisser un avis », et à relier le site à la fiche. */
+  googlePlaceId: "ChIJn-yuT0iZyRIRGalZ9F80kp4",
+
+  /* Adresses complètes des pages (copiées depuis le navigateur).
+     Laissez "" si la pizzeria n'y est pas : rien ne s'affiche. */
+  reseaux: {
+    facebook:  "",
+    instagram: "",
+    uberEats:  "",
+  },
+
+  /* ------------------------------------------------------------------------
+     6. TEXTES DE LA PAGE D'ACCUEIL
      ------------------------------------------------------------------------ */
   titre: "Pizzas artisanales, à emporter ou livrées.",
   introduction: "Une pâte légère travaillée avec soin, des produits frais et de l’huile d’olive.",
