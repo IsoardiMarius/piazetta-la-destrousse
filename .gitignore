@@ -4,3 +4,4 @@ carte.pdf
 .DS_Store
 photos-web/
 assets/photos.json
+__pycache__/

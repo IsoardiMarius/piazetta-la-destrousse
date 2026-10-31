@@ -39,17 +39,19 @@ def slug(texte):
 def legende(nom):
     """« 1-la-reine.jpg » → « La reine » ; « IMG_2034.jpg » → pas de légende."""
     base = re.sub(r"^\d+[\s._-]*", "", Path(nom).stem)
-    if re.match(r"^(img|dsc|dcim|pxl|photo|image|wp|screenshot|capture)[\s._-]*\d", base, re.I) or not base:
+    if not base or re.match(r"^(img|dsc|dcim|pxl|photo|image|pizza|wp|screenshot|capture)([\s._-]*\d+)?$", base, re.I) \
+            or re.match(r"^(img|dsc|dcim|pxl|wp|screenshot|capture)[\s._-]*\d", base, re.I):
         return ""
     base = re.sub(r"[_-]+", " ", base).strip()
     return base[:1].upper() + base[1:]
 
 
 def mettre_en_valeur(im):
-    im = ImageOps.autocontrast(im, cutoff=0.4, preserve_tone=True)
-    im = ImageEnhance.Contrast(im).enhance(1.04)
-    im = ImageEnhance.Color(im).enhance(1.07)
-    im = ImageEnhance.Brightness(im).enhance(1.02)
+    """Retouche discrète : un peu de relief et d'éclat, sans changer les couleurs."""
+    im = im.filter(ImageFilter.UnsharpMask(radius=24, percent=14, threshold=0))  # relief (contraste local)
+    im = ImageEnhance.Contrast(im).enhance(1.03)
+    im = ImageEnhance.Color(im).enhance(1.04)
+    im = ImageEnhance.Brightness(im).enhance(1.015)
     return im
 
 

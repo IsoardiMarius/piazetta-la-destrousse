@@ -12,7 +12,7 @@ Déposez ici les photos de vos pizzas : elles apparaissent automatiquement sur l
 
 - **4 ou 5 photos suffisent** (12 au maximum).
 - **Formats acceptés** : JPG, PNG, WebP et les photos d'iPhone (HEIC). Envoyez les photos d'origine, en pleine taille : le site les allège lui-même.
-- **Légende** : elle vient du nom du fichier. `reine.jpg` affiche « Reine » ; `IMG_2034.jpg` n'affiche pas de légende.
+- **Légende** : elle vient du nom du fichier. `reine.jpg` affiche « Reine ». Pour ne pas mettre de légende, appelez la photo `pizza.jpg` (ou laissez le nom donné par le téléphone, comme `IMG_2034.jpg`).
 - **Ordre** : alphabétique. Pour choisir l'ordre, ajoutez un numéro devant le nom : `1-reine.jpg`, `2-atlantique.jpg`… (le numéro n'est pas affiché). La première photo est la plus grande.
 - **Retouche** : à la publication, chaque photo est redressée, légèrement éclaircie et rendue un peu plus nette, en restant naturelle. La position GPS et les autres informations cachées du téléphone sont supprimées.
 - **Retirer une photo** : ouvrez-la dans ce dossier, puis menu « … » › **Delete file**.
