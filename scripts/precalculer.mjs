@@ -132,7 +132,7 @@ const version = (process.env.GITHUB_SHA || '').slice(0, 8);
 const v = version ? '?v=' + version : '';
 const imageAccueil = base + (existe('assets/og-accueil.jpg') ? 'assets/og-accueil.jpg' : 'assets/og-image.jpg') + v;
 accueil = meta(accueil, {
-  titre: `${PZ.nomCourt(D)} — Pizzeria à ${PZ.villeSeule(D)}, pizzas ${PZ.service(D).phrase}`,
+  titre: `${PZ.nomCourt(D)} — Pizzeria à ${PZ.villeSeule(D)}, ${PZ.service(D).titre.toLowerCase()}`,
   description: PZ.description(D),
   url: base,
   image: base && imageAccueil,

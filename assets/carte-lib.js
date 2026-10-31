@@ -466,7 +466,16 @@
   }
 
   /* Horaires de la semaine ; avec `now`, le jour courant est mis en avant */
+  /* Jour du service en cours : après minuit, tant que le service de la veille n'est pas fini
+     (ex. samedi 18h-1h, dimanche à 0h30), c'est encore la veille */
+  function jourDeService(D, now) {
+    var hier = new Date(now.getTime() - 864e5), mins = now.getHours() * 60 + now.getMinutes();
+    var enCours = !estFerme(D, hier) && creneauxDuJour(D, hier.getDay()).some(function (c) { return c[1] > 1440 && mins < c[1] - 1440; });
+    return enCours ? hier : now;
+  }
+
   function htmlHoraires(D, now, note) {
+    if (now) now = jourDeService(D, now);
     var conges = now && estFerme(D, now);
     return JOURS.map(function (j) {
       var today = !!now && JS_DAY[j] === now.getDay();
@@ -566,11 +575,14 @@
       pizzasVisibles(D).length + ' pizza' + (pizzasVisibles(D).length > 1 ? 's' : '') + (fp ? ' de ' + prix(fp.min) + ' à ' + prix(fp.max) : '') + '. ' +
       'Tél. ' + (D.telephone || '') + '.';
   }
+  /* Description de la page de la carte (environ 160 caractères, la longueur affichée par Google) */
   function descriptionCarte(D) {
-    var noms = pizzasVisibles(D).map(function (p) { return p.nom; });
-    var rv = rubriquesVisibles(D);
-    return 'Carte et prix des pizzas — ' + nomCourt(D) + ', pizzeria à ' + villeSeule(D) + ' : ' + noms.join(', ') + '. ' + textes(D).sousTitreCarte +
-      (rv.length ? ' ' + cap(listeFr(rv.map(function (r) { return r.titre.toLowerCase(); }).filter(Boolean))) + '.' : '') + ' ' + cap(service(D).phrase) + '.';
+    var n = pizzasVisibles(D).length, tailles = (D.tailles || []).length, fp = fourchettePrix(D), rv = rubriquesVisibles(D);
+    var d = 'Carte ' + (/^piazzetta/i.test(nomCourt(D)) ? 'de la ' : 'de ') + nomCourt(D) + ', pizzeria à ' + villeSeule(D) + ' : ' + n + ' pizza' + (n > 1 ? 's' : '') + ' artisanale' + (n > 1 ? 's' : '') +
+      (fp ? (fp.min === fp.max ? ' à ' + prix(fp.min) : ' de ' + prix(fp.min) + ' à ' + prix(fp.max)) : '') +
+      (tailles > 1 ? ' en ' + tailles + ' tailles' : '') +
+      (rv.length ? ', ' + listeFr(rv.map(function (r) { return r.titre.toLowerCase(); }).filter(Boolean)) : '') + '. ' + cap(service(D).phrase) + '.';
+    return d.replace(/\u00a0/g, ' ');
   }
 
   /* Fiche « Restaurant » pour Google (données structurées schema.org) */

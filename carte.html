@@ -30,7 +30,7 @@
 <body>
 
 <nav class="bar" aria-label="Actions">
-  <a class="bar__btn bar__back" href="./">
+  <a class="bar__btn bar__back" href="./" aria-label="Retour au site">
     <svg class="ic" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
     <span>Retour au site</span>
   </a>
@@ -46,7 +46,7 @@
   </div>
 </nav>
 
-<div class="stage" data-stage>
+<main class="stage" data-stage>
   <div class="stage__box">
   <article class="sheet" data-sheet="1" aria-label="Carte des pizzas, page 1">
     <header class="sh-head">
@@ -57,7 +57,7 @@
       </div>
     </header>
 
-    <main class="sh-main" data-main>
+    <div class="sh-main" data-main>
       <div class="sh-list" data-list>
         <div class="row row--head" data-head>
           <span class="row__label">Nos pizzas</span>
@@ -65,7 +65,7 @@
         <div data-rows></div>
         <p class="sh-mention" data-bind="mention"></p>
       </div>
-    </main>
+    </div>
 
     <footer class="sh-foot">
       <!-- Renvoi vers la page 2 (affiché seulement s'il y a des boissons ou des desserts) -->
@@ -99,12 +99,12 @@
       </div>
     </header>
 
-    <main class="sh-main" data-main>
+    <div class="sh-main" data-main>
       <div class="sh-list" data-list>
         <div data-rubriques></div>
         <p class="sh-mention" data-bind="mentionPage2"></p>
       </div>
-    </main>
+    </div>
 
     <footer class="sh-foot">
       <div class="sh-foot__item">
@@ -122,7 +122,7 @@
     </footer>
   </article>
   </div>
-</div>
+</main>
 
 </body>
 </html>

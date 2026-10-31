@@ -74,7 +74,7 @@ jobs:
         run: |
           # Nouvelle adresse des fichiers à chaque publication : les visiteurs ne gardent jamais une ancienne version.
           V="${GITHUB_SHA::8}"
-          sed -i -E "s#(href|src)=\"((assets/[^\"?]+|donnees)\.(css|js))\"#\1=\"\2?v=$V\"#g; s#\"carte\.pdf\"#\"carte.pdf?v=$V\"#g; s#\"assets/apercu-carte\.jpg\"#\"assets/apercu-carte.jpg?v=$V\"#g" _site/*.html
+          sed -i -E "s#(href|src)=\"((assets/[^\"?]+|donnees)\.(css|js))\"#\1=\"\2?v=$V\"#g; s#\"carte\.pdf\"#\"carte.pdf?v=$V\"#g; s#\"assets/apercu-carte\.jpg\"#\"assets/apercu-carte.jpg?v=$V\"#g; s#assets/(logo-[0-9]+\.webp|favicon-48\.png|apple-touch-icon\.png)#assets/\1?v=$V#g" _site/*.html
 
       - uses: actions/upload-pages-artifact@v4
         with:
