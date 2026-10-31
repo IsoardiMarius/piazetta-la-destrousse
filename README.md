@@ -29,16 +29,18 @@ Le contenu est dans le dossier **[`contenu/`](contenu/)** (fichiers JSON : `cart
 ### Sécurités
 
 - **Formulaires guidés** : prix en chiffres, dates au calendrier, format des horaires et des liens vérifié avant l'enregistrement.
-- **Erreur mineure** (prix manquant, photo introuvable…) : le site est publié quand même, l'élément fautif est ignoré ou affiché « – », et le point est signalé dans le résumé de la publication.
+- **Erreur mineure** (prix manquant, photo introuvable, carte trop longue pour une page…) : le site est publié quand même, l'élément fautif est ignoré ou affiché « – », et un signalement **« Points à vérifier sur le site »** (« issue » GitHub, donc un e-mail au propriétaire du dépôt) explique quoi corriger. Il se ferme tout seul à la première publication sans point à vérifier.
 - **Erreur grave** (fichier abîmé, carte vide) : la publication s'arrête et **l'ancien site reste en ligne**.
-- **Alerte** : si une publication échoue, une alerte (« issue ») est ouverte sur GitHub et le propriétaire du dépôt reçoit un e-mail. Elle se ferme toute seule à la publication réussie suivante.
-- La carte A4 (PDF) s'ajuste toute seule pour tenir sur une page, même si on ajoute des pizzas.
+- **Contrôle final** : avant la mise en ligne, un script relit les pages générées et vérifie qu'elles correspondent exactement au contenu (chaque prix de chaque taille, pizzas masquées absentes, horaires, téléphone, liens, photos, fiche Google, aperçus de liens, plan du site). Au moindre écart, la publication s'arrête et l'ancien site reste en ligne.
+- **Alerte** : si une publication échoue, une alerte « La publication du site a échoué » est ouverte sur GitHub et le propriétaire du dépôt reçoit un e-mail. Elle se ferme toute seule à la publication réussie suivante.
+- La carte A4 (PDF) s'ajuste toute seule pour tenir sur une page : jusqu'à 24 pizzas environ (selon la longueur des ingrédients). Au-delà, elle est signalée dans « Points à vérifier ».
+- Ce qui s'adapte tout seul au contenu : nombre de tailles (1 à 6) et de photos, horaires avec coupure le midi, réseaux renseignés ou non (les liens vides disparaissent), barre de navigation qui passe en menu si les liens ne tiennent plus, textes vides remplacés par un texte par défaut.
 
 ## Publication
 
 Le site est hébergé sur GitHub Pages et relié au domaine **piazzetta-ladestrousse.com** (acheté sur Cloudflare). Le fichier [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) vérifie le contenu, génère le PDF, prépare les photos et publie le site **à chaque modification de la branche par défaut** (`main`), qu'elle vienne de Pages CMS ou de GitHub.
 
-- Suivre une publication : onglet **Actions › Publier le site**.
+- Suivre une publication : onglet **Actions › Publier le site** (le résumé de chaque publication liste aussi les points à vérifier).
 - Relancer à la main : **Actions › Publier le site › Run workflow**.
 - Réglages GitHub et Cloudflare en place, enregistrements DNS, entretien et dépannage : **[`docs/mise-en-ligne.md`](docs/mise-en-ligne.md)**.
 
@@ -50,7 +52,7 @@ Le site est hébergé sur GitHub Pages et relié au domaine **piazzetta-ladestro
 npm run serve
 ```
 
-Puis ouvrir http://localhost:8000 (`npm run serve` génère d'abord `donnees.js` à partir du dossier `contenu/`). Pour vérifier le contenu : `npm run verifier`. Pour générer le PDF : `npm install`, `npx playwright install chromium`, puis `npm run pdf`.
+Puis ouvrir http://localhost:8000 (`npm run serve` génère d'abord `donnees.js` à partir du dossier `contenu/`). Pour vérifier le contenu : `npm run verifier`. Pour générer le PDF : `npm install`, `npx playwright install chromium`, puis `npm run pdf`. La chaîne complète de publication (photos, pré-remplissage, contrôle final) est décrite étape par étape dans [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
 
 ## Organisation des fichiers
 

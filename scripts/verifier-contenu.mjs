@@ -25,7 +25,7 @@ const { erreurs, avertissements } = PZ.valider(contenu.CARTE, contenu.INFOS);
 rapporter(erreurs, avertissements);
 if (erreurs.length) process.exit(1);
 const D = PZ.donnees(contenu);
-console.log(`✅ Contenu valide : ${PZ.pizzasVisibles(D).length} pizzas, ${(D.tailles || []).length} tailles, ${contenu.photos.length} photo(s).`);
+console.log(`✅ Contenu valide : ${PZ.pizzasVisibles(D).length} pizza(s), ${(D.tailles || []).length} taille(s), ${contenu.photos.length} photo(s).`);
 
 /* Affiche les messages et les garde pour le résumé de publication et l'alerte en cas d'échec */
 function rapporter(err, avert) {

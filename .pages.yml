@@ -58,8 +58,8 @@ content:
             label: Ingrédients
             type: text
           - name: prix
-            label: Prix en euros, un par taille, dans l'ordre des tailles (Petite, Big, Mega)
-            description: "Pour les centimes, utiliser un point : 12.5 s'affiche « 12,50 € »."
+            label: Prix en euros, un par taille, dans l'ordre des tailles
+            description: "Même ordre que la liste « Tailles » en bas de la page (aujourd'hui : Petite, Big, Mega). Pour les centimes, utiliser un point : 12.5 s'affiche « 12,50 € »."
             type: number
             list:
               min: 1

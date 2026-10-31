@@ -25,12 +25,20 @@
   /* Ajuste la taille du texte pour que tout tienne sur une seule page A4 */
   function fit() {
     var main = $('[data-main]'), list = $('[data-list]');
+    /* Hauteur disponible pour la liste : la zone centrale, sans ses marges intérieures */
+    var place = function () {
+      var cs = getComputedStyle(main);
+      return main.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    };
     var k = 1.15;
     sheet.style.setProperty('--k', k);
-    while (k > 0.6 && list.scrollHeight > main.clientHeight - 16) {
+    while (k > 0.6 && list.scrollHeight > place()) {
       k = Math.round((k - 0.02) * 100) / 100;
       sheet.style.setProperty('--k', k);
     }
+    /* Même au plus petit, la carte déborde de la page : signalé à la publication */
+    if (list.scrollHeight > place() + 1) root.setAttribute('data-trop-long', '');
+    else root.removeAttribute('data-trop-long');
   }
 
   /* Zoom d'affichage : la feuille s'adapte à la largeur de l'écran */

@@ -60,7 +60,7 @@
   <nav class="hdr__in wrap" aria-label="Navigation principale">
     <a class="brand" href="#accueil" aria-label="Piazzetta La Destrousse, retour en haut">
       <img src="assets/logo-120.webp" alt="" width="40" height="40">
-      <span>Piazzetta</span>
+      <span data-bind="nomCourt">Piazzetta</span>
     </a>
     <div class="hdr__right">
       <ul class="hdr__links">
@@ -68,6 +68,7 @@
         <li><a class="navlink" href="#infos">Infos pratiques</a></li>
         <li data-reseau-item="uberEats" hidden><a class="navlink navlink--ext" href="#" data-reseau="uberEats" target="_blank" rel="noopener" aria-label="Commander sur Uber Eats (nouvel onglet)">Uber Eats<svg class="ic ext" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><use href="#i-ext"></use></svg></a></li>
         <li data-reseau-item="facebook" hidden><a class="navlink navlink--ext" href="#" data-reseau="facebook" target="_blank" rel="noopener" aria-label="Facebook (nouvel onglet)">Facebook<svg class="ic ext" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><use href="#i-ext"></use></svg></a></li>
+        <li data-reseau-item="instagram" hidden><a class="navlink navlink--ext" href="#" data-reseau="instagram" target="_blank" rel="noopener" aria-label="Instagram (nouvel onglet)">Instagram<svg class="ic ext" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><use href="#i-ext"></use></svg></a></li>
       </ul>
       <div class="hdr__btns">
         <a class="btn btn--secondary btn--sm hdr__carte" href="carte.html">
@@ -92,6 +93,7 @@
       <li><a href="#infos"><span>Infos pratiques</span><svg class="ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><use href="#i-arrow"></use></svg></a></li>
       <li data-reseau-item="uberEats" hidden><a href="#" data-reseau="uberEats" target="_blank" rel="noopener"><span>Commander sur Uber Eats</span><svg class="ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><use href="#i-ext"></use></svg></a></li>
       <li data-reseau-item="facebook" hidden><a href="#" data-reseau="facebook" target="_blank" rel="noopener"><span>Facebook</span><svg class="ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><use href="#i-ext"></use></svg></a></li>
+      <li data-reseau-item="instagram" hidden><a href="#" data-reseau="instagram" target="_blank" rel="noopener"><span>Instagram</span><svg class="ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><use href="#i-ext"></use></svg></a></li>
     </ul>
     <div class="mnav__cta wrap">
       <a class="btn btn--primary btn--full" href="tel:+33640925176" data-tel>
@@ -108,7 +110,7 @@
   <div class="hero__text">
     <p class="pill rise" data-status>
       <span class="dot" aria-hidden="true"></span>
-      <span data-status-text>Du mardi au samedi dès 18h</span>
+      <span data-status-text data-bind="statutDefaut">Du mardi au samedi dès 18h</span>
     </p>
     <h1 class="h-display rise d1"><span class="h-kicker" data-bind="lieu">Pizzeria à La Destrousse</span> <span data-bind="titre">Pizzas artisanales, à emporter ou livrées.</span></h1>
     <p class="lead rise d2"><span data-bind="introduction">Une pâte légère travaillée avec soin, des produits frais et de l’huile d’olive.</span> <span data-bind="accroche">À La Destrousse et alentours, du mardi au samedi dès 18h.</span></p>
@@ -233,7 +235,7 @@
   <div class="ftr__in wrap">
     <div class="ftr__brand">
       <img src="assets/logo-120.webp" alt="" width="36" height="36" loading="lazy">
-      <span>Piazzetta La Destrousse · Pizzeria artisanale</span>
+      <span data-bind="nomPied">Piazzetta La Destrousse · Pizzeria artisanale</span>
     </div>
     <div class="ftr__links">
       <nav class="ftr__social" aria-label="Réseaux et commande en ligne" data-reseaux hidden></nav>

@@ -64,6 +64,9 @@ jobs:
       - name: Pré-remplir les pages (référencement, aperçus de liens)
         run: node scripts/precalculer.mjs _site "${{ steps.pages.outputs.base_url }}"
 
+      - name: Contrôler que le site généré correspond au contenu
+        run: node scripts/controler-site.mjs _site "${{ steps.pages.outputs.base_url }}"
+
       - name: Éviter les anciennes versions en cache
         run: |
           # Nouvelle adresse des fichiers à chaque publication : les visiteurs ne gardent jamais une ancienne version.
@@ -73,6 +76,34 @@ jobs:
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site
+
+      # Publication réussie mais éléments ignorés (photo introuvable, carte trop longue…) :
+      # un signalement « Points à vérifier » est ouvert (donc un e-mail), puis fermé tout seul
+      # à la prochaine publication sans point à vérifier.
+      - name: Signaler les points à vérifier
+        continue-on-error: true   # un souci de signalement ne doit jamais bloquer la mise en ligne
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          LIEN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          TITRE="Points à vérifier sur le site"
+          NUMS=$(gh issue list --state open --search "\"$TITRE\" in:title" --json number --jq '.[].number')
+          if [ -s rapport-contenu.md ]; then
+            {
+              echo "La publication du **$(date -u '+%d/%m/%Y à %H:%M') (UTC)** a réussi : le site est à jour, mais certains éléments ont été ignorés ou sont à vérifier."
+              echo
+              cat rapport-contenu.md
+              echo
+              echo "Détails de la publication : $LIEN"
+              echo
+              echo "Ce signalement se ferme tout seul à la prochaine publication sans point à vérifier."
+            } > points.md
+            N=$(echo "$NUMS" | head -n 1)
+            if [ -n "$N" ]; then gh issue comment "$N" --body-file points.md; else gh issue create --title "$TITRE" --body-file points.md; fi
+          else
+            for n in $NUMS; do gh issue close "$n" --comment "Plus aucun point à vérifier lors de la dernière publication."; done
+          fi
 
   deploy:
     needs: build

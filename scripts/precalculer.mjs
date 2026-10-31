@@ -51,6 +51,13 @@ function remplirTout(page, attribut, contenu) {
   }
   return resultat + page.slice(curseur);
 }
+/* Nom de la pizzeria écrit dans le modèle des pages (textes alternatifs, nom du PDF…) :
+   remplacé par celui du contenu s'il a été changé dans Pages CMS. */
+const NOM_MODELE = 'Piazzetta La Destrousse';
+function nommer(page) {
+  page = page.replace(/download="Carte-[^"]*\.pdf"/g, `download="${attr(PZ.nomPdf(D))}"`);
+  return PZ.nomOfficiel(D) === NOM_MODELE ? page : page.split(NOM_MODELE).join(attr(PZ.nomOfficiel(D)));
+}
 function remplirBinds(page) {
   for (const [k, v] of Object.entries(T)) page = remplirTout(page, `data-bind="${reEsc(k)}"`, html(v));
   return page;
@@ -94,27 +101,32 @@ function meta(page, { titre, description, url, image }) {
     image && `<meta name="twitter:image" content="${attr(image)}">`,
   ].filter(Boolean);
   page = page.replace(/\s*<meta (name|property)="(description|og:[^"]+|twitter:[^"]+)"[^>]*>/g, '')
-    .replace(/\s*<link rel="canonical"[^>]*>/g, '');
+    .replace(/\s*<link rel="canonical"[^>]*>/g, '')
+    .replace(/<title>[^<]*<\/title>/, `<title>${html(titre)}</title>`);
   return page.replace(/(<title>[^<]*<\/title>)/, `$1\n${balises.join('\n')}`);
 }
 
 /* ---------- Page d'accueil ---------- */
-let accueil = lire('index.html');
+let accueil = nommer(lire('index.html'));
 accueil = remplirBinds(accueil);
 accueil = remplirTout(accueil, 'data-histoire', PZ.htmlHistoire(D));
 accueil = remplirTout(accueil, 'data-hours', PZ.htmlHoraires(D, null, ''));
 if (photos.length) {
-  accueil = remplirTout(accueil, 'data-gallery', PZ.htmlGalerie(photos))
+  accueil = remplirTout(accueil, 'data-gallery', PZ.htmlGalerie(photos, D))
     .replace(/(<ul class="gallery" data-gallery)(?: data-count="\d+")*/, `$1 data-count="${Math.min(photos.length, 6)}"`);
   accueil = afficher(afficher(accueil, 'data-photos'), 'data-photos-link');
 }
 accueil = liens(accueil);
+/* Bandeau d'annonce saisi dans Pages CMS (le bandeau de congés, lui, dépend de la date et est ajouté par le navigateur) */
+if (D.annonce && String(D.annonce).trim()) {
+  accueil = afficher(remplirTout(accueil, 'data-annonce-text', html(String(D.annonce).trim())), 'data-annonce');
+}
 /* Version dans l'adresse des images d'aperçu : WhatsApp, Facebook… rechargent l'image après chaque publication */
 const version = (process.env.GITHUB_SHA || '').slice(0, 8);
 const v = version ? '?v=' + version : '';
 const imageAccueil = base + (existe('assets/og-accueil.jpg') ? 'assets/og-accueil.jpg' : 'assets/og-image.jpg') + v;
 accueil = meta(accueil, {
-  titre: 'Piazzetta — Pizzeria à La Destrousse, pizzas à emporter et en livraison',
+  titre: `${PZ.nomCourt(D)} — Pizzeria à ${PZ.villeSeule(D)}, pizzas à emporter et en livraison`,
   description: PZ.description(D),
   url: base,
   image: base && imageAccueil,
@@ -127,13 +139,13 @@ if (base) {
 ecrire('index.html', accueil);
 
 /* ---------- Carte ---------- */
-let carte = lire('carte.html');
+let carte = nommer(lire('carte.html'));
 carte = remplirBinds(carte);
 carte = remplirTout(carte, 'data-head', PZ.htmlEnteteTailles(D));
 carte = remplirTout(carte, 'data-rows', PZ.htmlLignesCarte(D));
 carte = liens(carte);
 carte = meta(carte, {
-  titre: 'Carte et prix des pizzas — Piazzetta, pizzeria à La Destrousse',
+  titre: `Carte et prix des pizzas — ${PZ.nomCourt(D)}, pizzeria à ${PZ.villeSeule(D)}`,
   description: PZ.descriptionCarte(D),
   url: base && base + 'carte.html',
   image: base && existe('assets/og-carte.jpg') ? base + 'assets/og-carte.jpg' + v : base && imageAccueil,
@@ -142,7 +154,7 @@ ecrire('carte.html', carte);
 
 /* ---------- Page 404 : chemins absolus, elle peut s'afficher à n'importe quelle adresse ---------- */
 if (existe('404.html') && base) {
-  ecrire('404.html', liens(lire('404.html')).replace(/\n?<base [^>]*>/g, '').replace('<head>', `<head>\n<base href="${attr(base)}">`));
+  ecrire('404.html', liens(remplirBinds(nommer(lire('404.html')))).replace(/\n?<base [^>]*>/g, '').replace('<head>', `<head>\n<base href="${attr(base)}">`));
 }
 
 /* ---------- Plan du site et robots.txt pour les moteurs de recherche ---------- */

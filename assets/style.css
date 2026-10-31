@@ -112,13 +112,15 @@ a:hover{color:var(--brand-dark)}
 }
 .hdr.is-scrolled{border-bottom-color:var(--line);background:rgba(246,240,230,.9);box-shadow:0 10px 30px -24px rgba(36,20,17,.35)}
 .hdr__in{height:var(--hdr-h);display:flex;align-items:center;justify-content:space-between;gap:16px}
-.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);min-height:44px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0;text-decoration:none;color:var(--ink);min-height:44px;white-space:nowrap}
+.brand img{flex-shrink:0}
+.hdr__right{flex-shrink:0}
 .brand:hover{color:var(--ink)}
 .brand img{width:40px;height:40px;border-radius:50%;transition:transform .6s var(--ease-spring)}
 .brand:hover img{transform:rotate(-12deg) scale(1.06)}
-.brand span{font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:-.02em}
+.brand span{min-width:0;overflow:hidden;text-overflow:ellipsis;font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:-.02em}
 .hdr__right{display:flex;align-items:center;gap:28px}
-.hdr__links{display:flex;align-items:center;gap:24px;margin:0;padding:0;list-style:none}
+.hdr__links{display:flex;align-items:center;gap:24px;margin:0;padding:0;list-style:none;white-space:nowrap}
 .hdr__links li[hidden]{display:none}
 .navlink--ext{gap:3px}
 .navlink--ext::after{right:17px}
@@ -162,6 +164,7 @@ a:hover{color:var(--brand-dark)}
 .mnav.is-open .mnav__list li:nth-child(4) a{transition-delay:.12s}
 .mnav.is-open .mnav__list li:nth-child(5) a{transition-delay:.16s}
 .mnav.is-open .mnav__list li:nth-child(6) a{transition-delay:.2s}
+.mnav.is-open .mnav__list li:nth-child(7) a{transition-delay:.24s}
 .mnav__cta{padding-top:18px}
 
 /* ---------- Bandeau d'annonce ---------- */
@@ -346,11 +349,13 @@ html.lb-open{overflow:hidden}
 .card__actions .btn--full{grid-column:1 / -1}
 .address{margin:0;font-family:var(--f-display);font-weight:600;font-size:24px;line-height:1.25;letter-spacing:-.02em}
 .hours{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
-.hours li{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:42px;padding:0 12px;border-radius:12px;color:var(--ink)}
+.hours li{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:42px;padding:6px 12px;border-radius:12px;color:var(--ink)}
 .hours li.is-closed{color:var(--muted)}
 .hours li.is-today{background:rgba(107,26,20,.07);color:var(--brand);font-weight:600}
 .hours .day{display:inline-flex;align-items:center;gap:10px}
-.hours .time{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+.hours .day{flex-shrink:0}
+.hours .time{display:flex;flex-wrap:wrap;justify-content:flex-end;column-gap:.7em;font-variant-numeric:tabular-nums;text-align:right}
+.hours .time span{white-space:nowrap}
 .hours__note{display:block!important;min-height:0!important;margin-top:8px;padding:10px 12px!important;border-radius:12px;background:#FCEBD3;color:#5C3A00!important;font-size:15px;line-height:1.45}
 .today-tag{font-size:12px;font-weight:600;letter-spacing:.04em;padding:2px 8px;border-radius:999px;background:var(--brand);color:var(--cream)}
 
@@ -407,12 +412,16 @@ html.lb-open{overflow:hidden}
   .preview{margin:0}
 }
 
-/* ---------- En-tête : menu à bouton sous 1040 px (la barre complète n'y tient plus) ---------- */
+/* ---------- En-tête : menu à bouton sous 1040 px (la barre complète n'y tient plus) ----------
+   .hdr--serre : même mode, posé par site.js quand les liens ne tiennent pas sur une ligne
+   (trois réseaux renseignés, nom plus long…), quelle que soit la largeur de l'écran. */
 @media (max-width:1040px){
   .hdr__links{display:none}
   .hdr__carte{display:none}
   .hdr__menu{display:inline-flex}
 }
+.hdr--serre .hdr__links,.hdr--serre .hdr__carte{display:none}
+.hdr--serre .hdr__menu{display:inline-flex}
 
 /* ---------- Mobile ---------- */
 @media (max-width:760px){
@@ -469,7 +478,7 @@ html.lb-open{overflow:hidden}
 @media (max-width:360px){
   .btn{padding:0 16px;gap:8px}
   .card{padding:20px 18px}
-  .hours li{padding:0 8px;gap:8px}
+  .hours li{padding:6px 8px;gap:8px}
   .hours .day{gap:6px}
   .today-tag{font-size:12px;padding:2px 7px}
   .preview__sheet{--pw:200}

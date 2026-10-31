@@ -104,7 +104,7 @@
       .then(function (photos) {
         if (!Array.isArray(photos) || !photos.length) return;
         ul.setAttribute('data-count', Math.min(photos.length, 6));
-        ul.innerHTML = window.PZ.htmlGalerie(photos);
+        ul.innerHTML = window.PZ.htmlGalerie(photos, D);
         photosReady(sec, ul);
         observeReveals($$('.reveal', ul));
       })
@@ -206,7 +206,26 @@
       document.addEventListener('click', function (e) {
         if (toggle.getAttribute('aria-expanded') === 'true' && !e.target.closest('.hdr')) setMenu(false);
       });
-      window.matchMedia('(min-width: 1041px)').addEventListener('change', function (m) { if (m.matches) setMenu(false); });
+      window.matchMedia('(min-width: 1041px)').addEventListener('change', function (m) { if (m.matches && !hdr.classList.contains('hdr--serre')) setMenu(false); });
+    }
+
+    /* Barre complète ou menu à bouton : on mesure plutôt que de deviner, car la place
+       nécessaire dépend du contenu (nombre de réseaux renseignés, longueur des libellés). */
+    var hdrIn = $('.hdr__in'), nomBarre = $('.brand span');
+    if (hdr && hdrIn) {
+      var ajusterEntete = function () {
+        var etait = hdr.classList.contains('hdr--serre');
+        hdr.classList.remove('hdr--serre');
+        /* Liens qui débordent, ou nom de la pizzeria raccourci par manque de place */
+        var serre = hdrIn.scrollWidth > hdrIn.clientWidth + 1 || (!!nomBarre && nomBarre.scrollWidth > nomBarre.clientWidth + 1);
+        hdr.classList.toggle('hdr--serre', serre);
+        if (etait && !serre && toggle && toggle.getAttribute('aria-expanded') === 'true' &&
+            window.matchMedia('(min-width: 1041px)').matches) setMenu(false);
+      };
+      ajusterEntete();
+      var resizeTimer;
+      window.addEventListener('resize', function () { cancelAnimationFrame(resizeTimer); resizeTimer = requestAnimationFrame(ajusterEntete); });
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajusterEntete);
     }
 
     /* Lien actif dans la navigation */

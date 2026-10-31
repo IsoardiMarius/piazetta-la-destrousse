@@ -33,15 +33,17 @@ Aucun mot de passe, aucune carte bancaire et aucun identifiant ne sont stockés 
 
 **Ce que fait la publication**, à chaque modification (2 minutes environ, suivi dans l'onglet **Actions**) :
 
-1. vérifie le contenu du dossier `contenu/` : une erreur grave (fichier abîmé, carte vide) arrête la publication et l'ancien site reste en ligne ; une erreur mineure (prix manquant, photo introuvable…) est ignorée et signalée dans le résumé de la publication ;
-2. génère `donnees.js` (le contenu lu par les pages), puis le PDF de la carte et sa vignette ;
+1. vérifie le contenu du dossier `contenu/` : une erreur grave (fichier abîmé, carte vide) arrête la publication et l'ancien site reste en ligne ; une erreur mineure (prix manquant, photo introuvable…) est ignorée et signalée (voir l'étape 10) ;
+2. génère `donnees.js` (le contenu lu par les pages), puis le PDF de la carte et sa vignette (et signale une carte trop longue pour tenir sur une page A4) ;
 3. prépare les photos de la liste `contenu/photos.json`, dans l'ordre choisi (redressées, allégées en 4 tailles, légèrement mises en valeur, données GPS retirées) ;
 4. dessine les images d'aperçu des liens (SMS, WhatsApp, Facebook) ;
 5. récupère l'adresse officielle du site auprès de GitHub (`https://piazzetta-ladestrousse.com`) ;
 6. pré-remplit les pages et ajoute ce qu'il faut pour Google (titres, descriptions, adresse canonique, fiche « Restaurant », `sitemap.xml`, `robots.txt`) ;
-7. change l'adresse des fichiers pour que personne ne garde une ancienne version en cache ;
-8. met le site en ligne ;
-9. en cas d'échec, ouvre une alerte (« issue ») sur GitHub, ce qui envoie un e-mail au propriétaire du dépôt ; elle se ferme toute seule à la publication réussie suivante.
+7. **contrôle** que les pages générées correspondent exactement au contenu (`scripts/controler-site.mjs`) : chaque prix de chaque taille, pizzas masquées absentes, horaires, téléphone, liens des réseaux, photos, fiche Google, aperçus de liens, plan du site ; au moindre écart, la publication s'arrête et l'ancien site reste en ligne ;
+8. change l'adresse des fichiers pour que personne ne garde une ancienne version en cache ;
+9. met le site en ligne ;
+10. si des éléments ont été ignorés ou sont à vérifier (photo introuvable, carte trop longue…), ouvre un signalement « **Points à vérifier sur le site** » (« issue » GitHub, donc un e-mail au propriétaire du dépôt), ou le complète s'il est déjà ouvert ; il se ferme tout seul à la première publication sans point à vérifier ;
+11. en cas d'échec, ouvre une alerte « **La publication du site a échoué** », qui se ferme toute seule à la publication réussie suivante.
 
 L'adresse du domaine n'est écrite nulle part en dur dans les scripts : si le domaine change un jour, il suffit de modifier le domaine personnalisé dans GitHub puis de relancer la publication.
 
@@ -95,6 +97,7 @@ L'adresse du domaine n'est écrite nulle part en dur dans les scripts : si le do
 10. Site déclaré dans Google Search Console (propriété « Domaine », TXT dans Cloudflare), plan du site envoyé, indexation demandée pour l'accueil et la carte.
 11. Branche par défaut renommée en `main`.
 12. Contenu déplacé dans le dossier `contenu/` (fichiers JSON) et interface Pages CMS mise en place pour que le gérant modifie le site lui-même ; alerte par e-mail en cas d'échec de publication.
+13. Contrôle final des pages générées avant chaque mise en ligne et signalement « Points à vérifier » ; site testé avec des contenus extrêmes (22 pizzas, 4 tailles, 12 photos, horaires avec coupure, congés, 3 réseaux, et à l'inverse 2 pizzas, 1 taille, 1 photo, aucun réseau ni texte) sur 14 tailles d'écran.
 
 ## 5. Entretien
 
@@ -109,6 +112,8 @@ L'adresse du domaine n'est écrite nulle part en dur dans les scripts : si le do
 | Symptôme | Cause probable | Que faire |
 | --- | --- | --- |
 | Une modification n'apparaît pas | Publication en cours, en échec, ou cache du navigateur | Attendre 2 minutes et recharger. Sinon, onglet **Actions** : le résumé de la publication indique ce qui bloque. En cas d'échec, une alerte « La publication du site a échoué » est aussi ouverte (onglet **Issues**) et envoyée par e-mail. |
+| Une photo ou une pizza manque, la carte déborde | Élément ignoré à la publication | Onglet **Issues** › « Points à vérifier sur le site » : il dit quoi corriger (photo introuvable, prix manquant, carte trop longue → masquer quelques pizzas). |
+| « Le site généré ne correspond pas au contenu » | Contrôle final en échec (cas imprévu dans le contenu ou modification du code) | Le détail est dans le résumé de la publication ; l'ancien site reste en ligne. Corriger, puis relancer. |
 | Le site affiche une erreur de certificat | Certificat en cours de renouvellement ou DNS modifié | Vérifier que les enregistrements DNS sont toujours en « DNS only » et que le domaine personnalisé est toujours saisi dans Settings › Pages. |
 | Le site ne répond plus du tout | Domaine expiré ou DNS supprimé | Vérifier le domaine sur Cloudflare (Domain Registration) et les enregistrements DNS. |
 | Revenir à une version précédente | Erreur de contenu | Sur GitHub, ouvrir l'historique du fichier modifié, reprendre l'ancien contenu et enregistrer : la publication repart automatiquement. |

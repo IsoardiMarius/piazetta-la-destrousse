@@ -51,7 +51,7 @@ const accueil = page(`
   <div class="txt">
     <img class="logo" src="assets/logo-360.webp" alt="">
     <div class="kicker">${esc(T.lieu)}</div>
-    <h1>Piazzetta</h1>
+    <h1>${esc(PZ.nomCourt(D))}</h1>
     <div class="sub">Pizzas artisanales à emporter ou en livraison</div>
     <div class="tel">${tel}${esc(D.telephone || '')}</div>
   </div>
@@ -62,8 +62,8 @@ const n = PZ.pizzasVisibles(D).length, nt = (D.tailles || []).length;
 const carte = page(`
   <div class="txt">
     <img class="logo" src="assets/logo-360.webp" alt="">
-    <div class="kicker">La carte · Piazzetta</div>
-    <h1>${n} pizzas</h1>
+    <div class="kicker">La carte · ${esc(PZ.nomCourt(D))}</div>
+    <h1>${n} pizza${n > 1 ? 's' : ''}</h1>
     <div class="sub">${nt} taille${nt > 1 ? 's' : ''}${fp ? `, de ${esc(PZ.prix(fp.min))} à ${esc(PZ.prix(fp.max))}` : ''}.<br>À emporter ou en livraison.</div>
     <div class="tel">${tel}${esc(D.telephone || '')}</div>
   </div>

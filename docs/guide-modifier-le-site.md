@@ -24,14 +24,19 @@ Après chaque changement : clique sur **Enregistrer** (« Save »). **1 à 2 min
 
 **Changer un prix**
 La carte › clique sur la pizza › change le chiffre › Enregistrer.
-Les 3 prix sont dans l'ordre : Petite, Big, Mega. Pour les centimes, mets un point : `12.5` s'affichera « 12,50 € ».
+Les prix sont dans l'ordre des tailles (aujourd'hui : Petite, Big, Mega). Pour les centimes, mets un point : `12.5` s'affichera « 12,50 € ».
 
 **Ajouter une pizza**
-La carte › bouton **Ajouter** (« Add ») en bas de la liste des pizzas › nom, ingrédients, les 3 prix › Enregistrer.
+La carte › bouton **Ajouter** (« Add ») en bas de la liste des pizzas › nom, ingrédients, un prix par taille › Enregistrer.
 Pour la mettre en avant, écris `Nouveau` dans « Badge ». Tu peux la glisser vers le haut ou le bas pour choisir sa place.
 
 **Retirer une pizza pour un temps**
 Coche **Masquer cette pizza** : elle disparaît du site et du PDF, mais reste enregistrée pour plus tard.
+
+**Changer les tailles**
+La carte › Tailles, en bas de la page. Si tu ajoutes ou retires une taille, ajoute ou retire aussi le prix correspondant sur chaque pizza, au même rang.
+
+La carte tient sur une feuille A4 jusqu'à 24 pizzas environ. Au-delà, masque celles que tu fais moins souvent.
 
 **Partir en vacances**
 Horaires et congés › choisis les dates **du** et **au** dans le calendrier › Enregistrer.
@@ -39,6 +44,7 @@ Pendant ces dates, le site affiche « Fermé » et un bandeau prévient les clie
 
 **Changer un horaire**
 Écris par exemple `18h-22h`. Avec une coupure le midi : `11h30-14h, 18h-22h`. Laisse vide si c'est fermé ce jour-là.
+Le badge « Ouvert / Fermé », le résumé des jours et des heures, la carte PDF et Google se mettent à jour tout seuls.
 
 **Afficher un message en haut du site**
 Horaires et congés › Bandeau d'annonce, par exemple « Nouveau : la pizza Burrata est arrivée ! ». Vide le champ pour l'enlever.
@@ -52,6 +58,7 @@ Si l'envoi d'une photo échoue (photo trop lourde), réessaie avec une version p
 
 ## À savoir
 
-- Tu ne peux rien casser : si quelque chose ne va pas, le site garde sa version précédente, et ton cousin est prévenu par e-mail.
+- Tu ne peux rien casser : si quelque chose ne va pas, le site garde sa version précédente, et ton cousin est prévenu par e-mail. Si un détail est ignoré (une photo qui ne passe pas, une carte trop longue), il est prévenu aussi.
+- Un champ de texte laissé vide n'abîme rien : le site met un texte par défaut, et un lien Uber Eats, Facebook ou Instagram vide disparaît simplement du site.
 - Quand tu changes le nom, le téléphone, l'adresse ou les horaires, change-les aussi sur ta **fiche Google**, **Uber Eats** et **Facebook**, exactement pareil : Google aime quand tout est identique.
 - Un doute, un souci ? Envoie un message à ton cousin.
