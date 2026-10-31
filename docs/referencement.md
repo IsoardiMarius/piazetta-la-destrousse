@@ -56,11 +56,20 @@ Nom, adresse et téléphone écrits **exactement** comme sur le site, à chaque 
 ## 4. Les outils de Google et Bing
 
 - [x] **Google Search Console** : propriété « Domaine » `piazzetta-ladestrousse.com` créée et validée (enregistrement TXT dans Cloudflare).
-- [ ] **Plan du site** : dans Search Console, menu de gauche **Indexation › Sitemaps**, champ « Ajouter un sitemap », saisir l'adresse complète `https://piazzetta-ladestrousse.com/sitemap.xml` puis **Envoyer**. L'état passe à « Opération effectuée » en quelques heures ou jours (un « Impossible de récupérer » au début est courant : attendre).
-- [ ] **Accélérer la première indexation** : en haut de Search Console, coller `https://piazzetta-ladestrousse.com/` dans la barre « Inspecter n'importe quelle URL », puis **Demander l'indexation**. Refaire la même chose avec `https://piazzetta-ladestrousse.com/carte.html`.
-- [ ] **Bing Webmaster Tools** : importer le site depuis Search Console en un clic.
+- [x] **Plan du site** : dans Search Console, menu de gauche **Indexation › Sitemaps**, champ « Ajouter un sitemap », saisir l'adresse complète `https://piazzetta-ladestrousse.com/sitemap.xml` puis **Envoyer**. L'état passe à « Opération effectuée » en quelques heures ou jours (un « Impossible de récupérer » au début est courant : attendre).
+- [x] **Accélérer la première indexation** : en haut de Search Console, coller `https://piazzetta-ladestrousse.com/` dans la barre « Inspecter n'importe quelle URL », puis **Demander l'indexation**. Refaire la même chose avec `https://piazzetta-ladestrousse.com/carte.html`.
+- [ ] **Bing Webmaster Tools** (bing.com/webmasters) : « Importer depuis Google Search Console », en un clic. Bing alimente aussi ChatGPT, Copilot et DuckDuckGo.
+- [ ] **Dans 2 semaines** : vérifier dans Search Console que l'état du sitemap est « Opération effectuée » et que les 2 pages apparaissent dans **Indexation › Pages**. Ensuite, une fois par mois, regarder **Performances** : sur quelles recherches le site apparaît.
 
-## 5. Dans `infos.js`
+## 5. Des liens vers le site depuis des sites locaux
+
+Google fait davantage confiance à un site cité par d'autres sites de la région.
+
+- [ ] Demander à la **mairie de La Destrousse** d'ajouter la pizzeria (avec le lien du site) à la liste des commerces de son site, si elle en a une.
+- [ ] Publier le lien dans les **groupes Facebook locaux** (« Tu es de La Destrousse si… », groupes d'entraide des communes voisines).
+- [ ] Office de tourisme du Pays d'Aubagne et de l'Étoile, associations ou clubs sportifs que la pizzeria soutient : leur demander un lien.
+
+## 6. Dans `infos.js`
 
 - [x] **`communesLivrees`** : laissé vide, le site affiche « La Destrousse et alentours ». Si un jour vous voulez ressortir sur « pizzeria Peypin », etc., lister les communes livrées (ex. `["La Destrousse", "Peypin"]`).
 - [x] **`reseaux`** : Facebook et Uber Eats renseignés. Ajouter Instagram s'il est créé.
