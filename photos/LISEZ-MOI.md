@@ -17,6 +17,11 @@ Ce dossier contient les photos d'origine. **Les photos affichées sur la page d'
 
 Formats acceptés : JPG, PNG, WebP et photos d'iPhone (HEIC). 4 ou 5 photos suffisent (12 au maximum).
 
+- **Taille** : la photo d'origine, au moins 1000 pixels de large (en dessous, elle risque d'être floue et la publication le signale). Si Pages CMS refuse une photo trop lourde, en envoyer une version plus légère.
+- **Cadrage** : le site recadre selon l'emplacement (rectangle sur ordinateur, plutôt vertical sur téléphone) : garder le sujet centré avec un peu de marge.
+- **Première photo** : la plus grande de la galerie et l'image d'aperçu des liens partagés, découpée en rond : idéalement une pizza ronde vue du dessus, centrée.
+- **Personnes** : pas de clients ou d'employés reconnaissables sans leur accord (droit à l'image).
+
 ## Conseils pour de belles photos
 
 - Lumière du jour, près d'une fenêtre, sans flash.
