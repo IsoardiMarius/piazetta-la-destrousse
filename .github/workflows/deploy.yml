@@ -39,23 +39,30 @@ jobs:
           npm ci --no-audit --no-fund
           npx playwright install --with-deps chromium
 
-      - name: Générer le PDF de la carte
+      - name: Générer le PDF de la carte et son image d'aperçu
         run: node scripts/generer-pdf.mjs
 
-      - name: Préparer les fichiers du site
+      - name: Rassembler les fichiers du site
         run: |
           mkdir _site
-          cp -r index.html carte.html carte.js infos.js carte.pdf assets _site/
-          # Nouvelle adresse des fichiers à chaque publication : les visiteurs ne gardent jamais une ancienne version en cache.
-          V="${GITHUB_SHA::8}"
-          sed -i -E "s#(href|src)=\"((assets/[^\"?]+|carte|infos)\.(css|js))\"#\1=\"\2?v=$V\"#g; s#\"carte\.pdf\"#\"carte.pdf?v=$V\"#g" _site/*.html
+          cp -r index.html carte.html 404.html carte.js infos.js carte.pdf assets _site/
 
       - name: Préparer les photos (dossier photos/)
         run: |
           pip install --quiet pillow pillow-heif
           python scripts/preparer-photos.py _site
 
-      - uses: actions/configure-pages@v5
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Pré-remplir les pages (référencement, aperçus de liens)
+        run: node scripts/precalculer.mjs _site "${{ steps.pages.outputs.base_url }}"
+
+      - name: Éviter les anciennes versions en cache
+        run: |
+          # Nouvelle adresse des fichiers à chaque publication : les visiteurs ne gardent jamais une ancienne version.
+          V="${GITHUB_SHA::8}"
+          sed -i -E "s#(href|src)=\"((assets/[^\"?]+|carte|infos)\.(css|js))\"#\1=\"\2?v=$V\"#g; s#\"carte\.pdf\"#\"carte.pdf?v=$V\"#g" _site/*.html
 
       - uses: actions/upload-pages-artifact@v4
         with:

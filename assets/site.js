@@ -1,4 +1,7 @@
-/* Piazzetta — comportement des pages. Le contenu vient de infos.js et carte.js. */
+/* Piazzetta — comportement des pages.
+   Le contenu vient de infos.js et carte.js. À la publication, les pages sont déjà
+   pré-remplies (scripts/precalculer.mjs) ; ce script ne fait que les mettre à jour
+   (statut d'ouverture, jour en cours) et gérer les interactions. */
 (function () {
   'use strict';
   var doc = document.documentElement;
@@ -9,169 +12,56 @@
 
   function $(s, r) { return (r || document).querySelector(s); }
   function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
-  function bind(key, val) { $$('[data-bind="' + key + '"]').forEach(function (el) { el.textContent = val; }); }
-  function lower1(s) { return s ? s.charAt(0).toLowerCase() + s.slice(1) : s; }
-  /* Typographie française : pas de mot court ni de ponctuation isolés en fin de ligne */
-  function fr(s) {
-    return String(s)
-      .replace(/(^|\s)(à|a|ou|et|de|du|le|la|les|un|une|en|au|aux|sur|ce|ne)\s+/gi, '$1$2\u00A0')
-      .replace(/\s+([?!:;»])/g, '\u202F$1')
-      .replace(/(«)\s+/g, '$1\u202F');
-  }
+  function bind(key, val) { $$('[data-bind="' + key + '"]').forEach(function (el) { if (el.textContent !== val) el.textContent = val; }); }
 
   $$('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
+  setupPhotos();
 
   if (!PZ || !window.CARTE || !window.INFOS) { setupUi(); return; }
   var erreurs = PZ.validerCarte(window.CARTE).concat(PZ.validerInfos(window.INFOS));
   if (erreurs.length && window.console) console.warn(erreurs.join('\n'));
 
   var D = PZ.donnees(window);
-  var pizzas = PZ.pizzasVisibles(D);
-  var tailles = D.tailles || [];
 
-  /* ---------- Textes simples ---------- */
-  ['titre', 'introduction', 'histoireTitre'].forEach(function (k) {
-    if (typeof D[k] === 'string') bind(k, fr(D[k]));
-  });
-  if (typeof D.photosTitre === 'string') bind('photosTitre', fr(D.photosTitre));
-  ['histoireSignature', 'adresse', 'ville', 'zoneLivraison', 'mention'].forEach(function (k) {
-    if (typeof D[k] === 'string') bind(k, D[k]);
-  });
-
-  var tel = D.telephone || '';
-  bind('telephone', tel);
-  $$('[data-tel]').forEach(function (a) {
-    a.href = PZ.telLink(tel);
-    if (a.hasAttribute('aria-label')) a.setAttribute('aria-label', 'Appeler le ' + tel);
-  });
-  if (D.lienGoogle) $$('[data-google]').forEach(function (a) { a.href = D.lienGoogle; });
-
-  /* Le petit mot de la maison : un paragraphe par ligne de la liste */
+  /* ---------- Textes (déjà en place sur le site publié ; utile en local) ---------- */
+  var T = PZ.textes(D);
+  Object.keys(T).forEach(function (k) { bind(k, T[k]); });
   var histoire = $('[data-histoire]');
   if (histoire && D.histoire) {
-    var paras = Array.isArray(D.histoire) ? D.histoire : [D.histoire];
-    histoire.innerHTML = paras.filter(Boolean).map(function (p) { return '<p>' + PZ.esc(fr(p)) + '</p>'; }).join('');
+    var h = PZ.htmlHistoire(D);
+    if (histoire.innerHTML !== h) histoire.innerHTML = h;
   }
   var story = $('#maison');
   if (story && !D.histoire && !D.histoireTitre) story.hidden = true;
 
-  /* Horaires résumés */
-  var jours = PZ.resumeJours(D), heures = PZ.resumeHeures(D), ouv = PZ.premiereOuverture(D);
-  if (jours) bind('resumeJours', jours);
-  if (heures) { bind('resumeHeures', heures); bind('resumeHeuresMin', lower1(heures)); }
-  if (D.zoneLivraison && jours) {
-    bind('accroche', 'À ' + D.zoneLivraison + ', ' + lower1(jours) + (ouv ? ' dès ' + ouv : '') + '.');
-  }
+  $$('[data-tel]').forEach(function (a) {
+    a.href = PZ.telLink(D.telephone);
+    if (a.hasAttribute('aria-label')) a.setAttribute('aria-label', 'Appeler le ' + D.telephone);
+  });
+  if (D.lienGoogle) $$('[data-google]').forEach(function (a) { a.href = D.lienGoogle; });
 
-  /* Titre et sous-titre de la carte */
-  var n = pizzas.length;
-  bind('titreCarte', n + ' pizza' + (n > 1 ? 's' : '') + ' artisanale' + (n > 1 ? 's' : '') + ', ' + tailles.length + ' taille' + (tailles.length > 1 ? 's' : '') + '.');
-  var fp = PZ.fourchettePrix(D);
-  var lt = tailles.map(function (t) { return t.nom + (t.taille ? ' ' + t.taille : ''); });
-  var tl = lt.length > 1 ? lt.slice(0, -1).join(', ') + ' ou ' + lt[lt.length - 1] : (lt[0] || '');
-  bind('sousTitreCarte', tl + (fp ? (fp.min === fp.max ? ', ' + PZ.prix(fp.min) : ', de ' + PZ.prix(fp.min) + ' à ' + PZ.prix(fp.max)) : '') + '.');
-
-  /* ---------- Bandeau d'annonce ---------- */
+  /* ---------- Bandeau d'annonce (calculé chaque jour : congés à venir…) ---------- */
   var annonce = $('[data-annonce]');
   var msg = (D.annonce && String(D.annonce).trim()) || PZ.messageFermeture(D);
-  if (annonce && msg) {
-    $('[data-annonce-text]', annonce).textContent = msg;
-    annonce.hidden = false;
+  if (annonce) {
+    if (msg) $('[data-annonce-text]', annonce).textContent = msg;
+    annonce.hidden = !msg;
   }
 
-  /* ---------- Horaires et statut en direct ---------- */
+  /* ---------- Horaires (jour en cours) et statut en direct ---------- */
   var hoursEl = $('[data-hours]');
-  function renderHours() {
-    if (!hoursEl) return;
-    var now = PZ.maintenantParis();
-    var f = PZ.fermeture(D);
-    var conges = f && PZ.estFerme(D, now);
-    hoursEl.innerHTML = PZ.JOURS.map(function (j) {
-      var today = PZ.JS_DAY[j] === now.getDay();
-      var txt = PZ.creneauxTexte(D.horaires[j]);
-      if (today && conges) txt = 'Fermé';
-      var closed = txt === 'Fermé';
-      return '<li class="' + (closed ? 'is-closed' : '') + (today ? ' is-today' : '') + '">' +
-        '<span class="day">' + PZ.cap(j) + (today ? '<span class="today-tag">Aujourd’hui</span>' : '') + '</span>' +
-        '<span class="time">' + PZ.esc(txt) + '</span></li>';
-    }).join('') + (f && msg && !D.annonce ? '<li class="hours__note">' + PZ.esc(msg) + '</li>' : '');
-  }
+  var note = PZ.fermeture(D) && msg && !D.annonce ? msg : '';
+  function renderHours() { if (hoursEl) hoursEl.innerHTML = PZ.htmlHoraires(D, PZ.maintenantParis(), note); }
   var pill = $('[data-status]');
   function renderStatus() {
     if (!pill) return;
-    var s = PZ.statut(D);
-    pill.classList.toggle('is-open', s.ouvert);
-    $('[data-status-text]', pill).textContent = s.texte;
+    var st = PZ.statut(D);
+    pill.classList.toggle('is-open', st.ouvert);
+    $('[data-status-text]', pill).textContent = st.texte;
   }
   renderHours();
   renderStatus();
   setInterval(function () { renderStatus(); renderHours(); }, 60000);
-
-  /* ---------- Photos (dossier photos/, préparées à la publication) ---------- */
-  var photosSec = $('[data-photos]');
-  if (photosSec && 'fetch' in window && location.protocol !== 'file:') {
-    fetch('assets/photos.json', { cache: 'no-cache' })
-      .then(function (r) { return r.ok ? r.json() : []; })
-      .then(function (photos) { if (Array.isArray(photos) && photos.length) renderPhotos(photosSec, photos); })
-      .catch(function () {});
-  }
-
-  function renderPhotos(sec, photos) {
-    var ul = $('[data-gallery]', sec);
-    ul.setAttribute('data-count', Math.min(photos.length, 6));
-    ul.innerHTML = photos.map(function (p, i) {
-      var alt = p.legende ? p.legende + ', pizza de la Piazzetta' : 'Pizza de la Piazzetta';
-      return '<li class="ph reveal" style="--i:' + (i % 5) + '">' +
-        '<button type="button" class="ph__btn" data-ph="' + i + '" aria-label="Agrandir la photo' + (p.legende ? ' : ' + PZ.esc(p.legende) : '') + '">' +
-        '<img src="' + PZ.esc(p.src) + '" srcset="' + PZ.esc(p.srcset) + '" sizes="(max-width: 760px) 80vw, (max-width: 1200px) 50vw, 600px" width="' + p.largeur + '" height="' + p.hauteur + '" alt="' + PZ.esc(alt) + '" loading="lazy" decoding="async">' +
-        '</button></li>';
-    }).join('');
-    sec.hidden = false;
-    $$('[data-photos-link]').forEach(function (el) { el.hidden = false; });
-    observeReveals($$('.reveal', ul));
-    setupLightbox(photos, ul);
-  }
-
-  function setupLightbox(photos, ul) {
-    var dlg = $('[data-lightbox]');
-    if (!dlg || typeof dlg.showModal !== 'function') return;
-    var img = $('[data-lb-img]', dlg), count = $('[data-lb-count]', dlg);
-    var idx = 0, startX = null, opener = null;
-    function show(i, dir) {
-      idx = (i + photos.length) % photos.length;
-      var p = photos[idx];
-      img.classList.remove('lb-in', 'lb-in-l', 'lb-in-r');
-      void img.offsetWidth;
-      img.src = p.grande; img.removeAttribute('srcset');
-      img.alt = p.legende ? p.legende + ', pizza de la Piazzetta' : 'Pizza de la Piazzetta';
-      img.classList.add(dir > 0 ? 'lb-in-r' : dir < 0 ? 'lb-in-l' : 'lb-in');
-      count.textContent = photos.length > 1 ? (idx + 1) + ' / ' + photos.length : '';
-      dlg.classList.toggle('is-single', photos.length < 2);
-    }
-    ul.addEventListener('click', function (e) {
-      var b = e.target.closest('[data-ph]');
-      if (!b) return;
-      opener = b;
-      show(+b.getAttribute('data-ph'), 0);
-      dlg.showModal();
-      document.documentElement.classList.add('lb-open');
-    });
-    $('[data-lb-prev]', dlg).addEventListener('click', function () { show(idx - 1, -1); });
-    $('[data-lb-next]', dlg).addEventListener('click', function () { show(idx + 1, 1); });
-    $('[data-lb-close]', dlg).addEventListener('click', function () { dlg.close(); });
-    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
-    dlg.addEventListener('close', function () { document.documentElement.classList.remove('lb-open'); if (opener) opener.focus(); });
-    dlg.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowLeft') { e.preventDefault(); show(idx - 1, -1); }
-      if (e.key === 'ArrowRight') { e.preventDefault(); show(idx + 1, 1); }
-    });
-    dlg.addEventListener('pointerdown', function (e) { startX = e.clientX; });
-    dlg.addEventListener('pointerup', function (e) {
-      if (startX == null || photos.length < 2) return;
-      var dx = e.clientX - startX; startX = null;
-      if (Math.abs(dx) > 50) show(idx + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
-    });
-  }
 
   /* ---------- Lien PDF : repli vers l'impression si le PDF n'existe pas ---------- */
   $$('[data-pdf]').forEach(function (pdf) {
@@ -180,32 +70,77 @@
     else fetch(pdf.getAttribute('href'), { method: 'HEAD', cache: 'no-store' }).then(function (r) { if (!r.ok) fallback(); }).catch(fallback);
   });
 
-  /* ---------- Données structurées (référencement Google) ---------- */
-  try {
-    var dayMap = { lundi: 'Monday', mardi: 'Tuesday', mercredi: 'Wednesday', jeudi: 'Thursday', vendredi: 'Friday', samedi: 'Saturday', dimanche: 'Sunday' };
-    var pad = function (m) { m = m % 1440; return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); };
-    var spec = [];
-    PZ.JOURS.forEach(function (j) {
-      PZ.parseCreneaux(D.horaires[j]).filter(Boolean).forEach(function (r) {
-        spec.push({ '@type': 'OpeningHoursSpecification', dayOfWeek: dayMap[j], opens: pad(r[0]), closes: pad(r[1]) });
-      });
+  /* ---------- Photos : déjà dans la page publiée ; sinon chargées depuis photos.json ---------- */
+  function setupPhotos() {
+    var sec = $('[data-photos]');
+    if (!sec) return;
+    var ul = $('[data-gallery]', sec);
+    if (ul.children.length) { photosReady(sec, ul); return; }
+    if (!('fetch' in window) || location.protocol === 'file:' || !window.PZ) return;
+    fetch('assets/photos.json', { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (photos) {
+        if (!Array.isArray(photos) || !photos.length) return;
+        ul.setAttribute('data-count', Math.min(photos.length, 6));
+        ul.innerHTML = window.PZ.htmlGalerie(photos);
+        photosReady(sec, ul);
+        observeReveals($$('.reveal', ul));
+      })
+      .catch(function () {});
+  }
+
+  function photosReady(sec, ul) {
+    sec.hidden = false;
+    $$('[data-photos-link]').forEach(function (el) { el.hidden = false; });
+    /* Apparition en fondu une fois l'image chargée (le flou de l'aperçu disparaît) */
+    $$('.ph__btn img', ul).forEach(function (img) {
+      var done = function () { img.parentNode.classList.add('is-loaded'); };
+      if (img.complete && img.naturalWidth) done(); else img.addEventListener('load', done, { once: true });
     });
-    var cp = (D.ville || '').match(/^(\d{5})\s+(.*)$/);
-    var ld = {
-      '@context': 'https://schema.org', '@type': 'Restaurant',
-      name: 'Piazzetta La Destrousse', servesCuisine: 'Pizza',
-      telephone: PZ.telLink(tel).replace('tel:', ''),
-      url: new URL('./', location.href).href,
-      image: new URL('assets/og-image.jpg', location.href).href,
-      address: { '@type': 'PostalAddress', streetAddress: D.adresse, postalCode: cp ? cp[1] : undefined, addressLocality: cp ? cp[2] : D.ville, addressCountry: 'FR' },
-      openingHoursSpecification: spec,
-      hasMenu: new URL('carte.html', location.href).href
-    };
-    var s = document.createElement('script');
-    s.type = 'application/ld+json';
-    s.textContent = JSON.stringify(ld);
-    document.head.appendChild(s);
-  } catch (e) {}
+    setupLightbox(ul);
+  }
+
+  function setupLightbox(ul) {
+    var dlg = $('[data-lightbox]');
+    if (!dlg || typeof dlg.showModal !== 'function') return;
+    var btns = $$('[data-ph]', ul);
+    var img = $('[data-lb-img]', dlg), count = $('[data-lb-count]', dlg);
+    var idx = 0, startX = null, opener = null;
+    function show(i, dir) {
+      idx = (i + btns.length) % btns.length;
+      var b = btns[idx];
+      img.classList.remove('lb-in', 'lb-in-l', 'lb-in-r');
+      void img.offsetWidth;
+      img.src = b.getAttribute('data-grande');
+      img.alt = $('img', b).alt;
+      img.classList.add(dir > 0 ? 'lb-in-r' : dir < 0 ? 'lb-in-l' : 'lb-in');
+      count.textContent = btns.length > 1 ? (idx + 1) + ' / ' + btns.length : '';
+      dlg.classList.toggle('is-single', btns.length < 2);
+    }
+    ul.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-ph]');
+      if (!b) return;
+      opener = b;
+      show(btns.indexOf(b), 0);
+      dlg.showModal();
+      doc.classList.add('lb-open');
+    });
+    $('[data-lb-prev]', dlg).addEventListener('click', function () { show(idx - 1, -1); });
+    $('[data-lb-next]', dlg).addEventListener('click', function () { show(idx + 1, 1); });
+    $('[data-lb-close]', dlg).addEventListener('click', function () { dlg.close(); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener('close', function () { doc.classList.remove('lb-open'); if (opener) opener.focus(); });
+    dlg.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); show(idx - 1, -1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); show(idx + 1, 1); }
+    });
+    dlg.addEventListener('pointerdown', function (e) { startX = e.clientX; });
+    dlg.addEventListener('pointerup', function (e) {
+      if (startX == null || btns.length < 2) return;
+      var dx = e.clientX - startX; startX = null;
+      if (Math.abs(dx) > 50) show(idx + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+    });
+  }
 
   setupUi();
 

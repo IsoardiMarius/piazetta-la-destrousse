@@ -244,6 +244,157 @@
     return err.map(function (e) { return 'infos.js — ' + e; });
   }
 
+  /* ---------- Textes et blocs HTML (partagés par le navigateur et la publication) ---------- */
+
+  /* Typographie française : pas de mot court ni de ponctuation isolés en fin de ligne */
+  function fr(s) {
+    return String(s)
+      .replace(/(^|\s)(à|a|ou|et|de|du|le|la|les|un|une|en|au|aux|sur|ce|ne)\s+/gi, '$1$2 ')
+      .replace(/\s+([?!:;»])/g, ' $1')
+      .replace(/(«)\s+/g, '$1 ');
+  }
+  function lower1(s) { return s ? s.charAt(0).toLowerCase() + s.slice(1) : s; }
+
+  /* Valeur de chaque élément data-bind="..." des pages */
+  function textes(D) {
+    var T = {};
+    ['titre', 'introduction', 'histoireTitre', 'photosTitre'].forEach(function (k) { if (typeof D[k] === 'string') T[k] = fr(D[k]); });
+    ['histoireSignature', 'adresse', 'ville', 'zoneLivraison', 'mention', 'telephone'].forEach(function (k) { if (typeof D[k] === 'string') T[k] = D[k]; });
+    var jours = resumeJours(D), heures = resumeHeures(D), ouv = premiereOuverture(D);
+    if (jours) {
+      T.resumeJours = jours;
+      T.resumeJoursCourt = jours.replace(/^Du (\S+) au (\S+)$/, function (_, a, b) { return cap(a) + ' – ' + b; });
+    }
+    if (heures) { T.resumeHeures = heures; T.resumeHeuresMin = lower1(heures); }
+    if (D.zoneLivraison && jours) T.accroche = 'À ' + D.zoneLivraison + ', ' + lower1(jours) + (ouv ? ' dès ' + ouv : '') + '.';
+    var tailles = D.tailles || [], n = pizzasVisibles(D).length;
+    T.titreCarte = n + ' pizza' + (n > 1 ? 's' : '') + ' artisanale' + (n > 1 ? 's' : '') + ', ' + tailles.length + ' taille' + (tailles.length > 1 ? 's' : '') + '.';
+    var fp = fourchettePrix(D);
+    var lt = tailles.map(function (t) { return t.nom + (t.taille ? ' ' + t.taille : ''); });
+    var tl = lt.length > 1 ? lt.slice(0, -1).join(', ') + ' ou ' + lt[lt.length - 1] : (lt[0] || '');
+    T.sousTitreCarte = tl + (fp ? (fp.min === fp.max ? ', ' + prix(fp.min) : ', de ' + prix(fp.min) + ' à ' + prix(fp.max)) : '') + '.';
+    var ville = (D.ville || '').replace(/^\d{5}\s+/, '');
+    if (ville) T.villeCourte = ville;
+    if (D.adresse) T.adresseCourte = D.adresse.replace(/\bavenue\b/i, 'av.') + ' · et alentours';
+    return T;
+  }
+
+  function htmlHistoire(D) {
+    var paras = Array.isArray(D.histoire) ? D.histoire : (D.histoire ? [D.histoire] : []);
+    return paras.filter(Boolean).map(function (p) { return '<p>' + esc(fr(p)) + '</p>'; }).join('');
+  }
+
+  /* Horaires de la semaine ; avec `now`, le jour courant est mis en avant */
+  function htmlHoraires(D, now, note) {
+    var conges = now && estFerme(D, now);
+    return JOURS.map(function (j) {
+      var today = !!now && JS_DAY[j] === now.getDay();
+      var txt = creneauxTexte((D.horaires || {})[j]);
+      if (today && conges) txt = 'Fermé';
+      var closed = txt === 'Fermé';
+      return '<li class="' + (closed ? 'is-closed' : '') + (today ? ' is-today' : '') + '">' +
+        '<span class="day">' + cap(j) + (today ? '<span class="today-tag">Aujourd’hui</span>' : '') + '</span>' +
+        '<span class="time">' + esc(txt) + '</span></li>';
+    }).join('') + (note ? '<li class="hours__note">' + esc(note) + '</li>' : '');
+  }
+
+  function altPhoto(p) { return p.legende ? p.legende + ', pizza de la Piazzetta' : 'Pizza de la Piazzetta'; }
+
+  function htmlGalerie(photos) {
+    return photos.map(function (p, i) {
+      var grand = i === 0 || photos.length < 3;
+      var sizes = '(max-width: 760px) 80vw, ' + (grand ? '(max-width: 1200px) 50vw, 600px' : '300px');
+      return '<li class="ph reveal" style="--i:' + (i % 5) + '">' +
+        '<button type="button" class="ph__btn" data-ph="' + i + '" data-grande="' + esc(p.grande) + '" aria-label="Agrandir la photo"' +
+        (p.lqip ? ' style="background-image:url(\'' + p.lqip + '\')"' : '') + '>' +
+        '<img src="' + esc(p.src) + '" srcset="' + esc(p.srcset) + '" sizes="' + sizes + '" width="' + p.largeur + '" height="' + p.hauteur + '" alt="' + esc(altPhoto(p)) + '" loading="lazy" decoding="async">' +
+        '</button></li>';
+    }).join('');
+  }
+
+  function htmlEnteteTailles(D) {
+    return '<span class="row__label">Nos pizzas</span>' + (D.tailles || []).map(function (t) {
+      return '<div class="size"><b>' + esc(t.taille || t.nom) + '</b>' + (t.taille ? '<small>' + esc(t.nom) + '</small>' : '') + '</div>';
+    }).join('');
+  }
+
+  function htmlLignesCarte(D) {
+    var tailles = D.tailles || [];
+    return pizzasVisibles(D).map(function (p) {
+      return '<div class="row">' +
+        '<div class="row__name"><b>' + esc(p.nom) + (p.badge ? '<em>' + esc(p.badge) + '</em>' : '') + '</b>' +
+        (p.ingredients ? '<span>' + esc(p.ingredients) + '</span>' : '') + '</div>' +
+        tailles.map(function (t, i) { return '<span class="row__price">' + prix((p.prix || [])[i]) + '</span>'; }).join('') +
+        '</div>';
+    }).join('');
+  }
+
+  /* Descriptions pour Google et les aperçus de liens */
+  function description(D) {
+    var T = textes(D), fp = fourchettePrix(D), nt = (D.tailles || []).length;
+    return 'Pizzas artisanales à emporter ou livrées à ' + (D.zoneLivraison || 'La Destrousse') + '. ' +
+      pizzasVisibles(D).length + ' pizzas en ' + nt + ' taille' + (nt > 1 ? 's' : '') + (fp ? ', de ' + prix(fp.min) + ' à ' + prix(fp.max) : '') + '. ' +
+      (T.resumeJours ? T.resumeJours + (premiereOuverture(D) ? ' dès ' + premiereOuverture(D) : '') + '. ' : '') +
+      'Tél. ' + (D.telephone || '') + '.';
+  }
+  function descriptionCarte(D) {
+    var noms = pizzasVisibles(D).map(function (p) { return p.nom; });
+    return 'La carte de la Piazzetta La Destrousse : ' + noms.join(', ') + '. ' + textes(D).sousTitreCarte + ' À emporter ou en livraison.';
+  }
+
+  /* Fiche « Restaurant » pour Google (données structurées schema.org) */
+  function jsonLd(D, base, photos) {
+    var dayMap = { lundi: 'Monday', mardi: 'Tuesday', mercredi: 'Wednesday', jeudi: 'Thursday', vendredi: 'Friday', samedi: 'Saturday', dimanche: 'Sunday' };
+    var pad = function (m) { m = m % 1440; return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); };
+    var spec = [];
+    JOURS.forEach(function (j) {
+      parseCreneaux((D.horaires || {})[j]).filter(Boolean).forEach(function (r) {
+        spec.push({ '@type': 'OpeningHoursSpecification', dayOfWeek: 'https://schema.org/' + dayMap[j], opens: pad(r[0]), closes: pad(r[1]) });
+      });
+    });
+    var cp = (D.ville || '').match(/^(\d{5})\s+(.*)$/);
+    var tailles = D.tailles || [];
+    var fp = fourchettePrix(D);
+    var images = [base + 'assets/og-image.jpg'].concat((photos || []).map(function (p) { return base + p.grande; }));
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'Restaurant',
+      '@id': base + '#restaurant',
+      name: 'Piazzetta La Destrousse',
+      description: description(D),
+      url: base,
+      telephone: telLink(D.telephone).replace('tel:', ''),
+      image: images,
+      logo: base + 'assets/logo-360.webp',
+      servesCuisine: ['Pizza', 'Italienne'],
+      priceRange: fp ? (Math.round(fp.min) + '–' + Math.round(fp.max) + ' €') : undefined,
+      acceptsReservations: false,
+      address: { '@type': 'PostalAddress', streetAddress: D.adresse, postalCode: cp ? cp[1] : undefined, addressLocality: cp ? cp[2] : D.ville, addressCountry: 'FR' },
+      areaServed: D.zoneLivraison,
+      hasMap: D.lienGoogle,
+      openingHoursSpecification: spec,
+      hasMenu: {
+        '@type': 'Menu',
+        name: 'La carte',
+        url: base + 'carte.html',
+        hasMenuSection: [{
+          '@type': 'MenuSection',
+          name: 'Pizzas',
+          hasMenuItem: pizzasVisibles(D).map(function (p) {
+            return {
+              '@type': 'MenuItem',
+              name: p.nom,
+              description: p.ingredients,
+              offers: tailles.map(function (t, i) {
+                return { '@type': 'Offer', name: t.nom + (t.taille ? ' ' + t.taille : ''), price: (p.prix || [])[i], priceCurrency: 'EUR' };
+              })
+            };
+          })
+        }]
+      }
+    };
+  }
+
   var api = {
     JOURS: JOURS, JS_DAY: JS_DAY, cap: cap, esc: esc, prix: prix, telLink: telLink, heure: heure,
     donnees: donnees, parseCreneaux: parseCreneaux, creneauxTexte: creneauxTexte,
@@ -251,7 +402,10 @@
     statut: statut, maintenantParis: maintenantParis,
     groupesHoraires: groupesHoraires, resumeJours: resumeJours, resumeHeures: resumeHeures, premiereOuverture: premiereOuverture,
     pizzasVisibles: pizzasVisibles, fourchettePrix: fourchettePrix,
-    validerCarte: validerCarte, validerInfos: validerInfos
+    validerCarte: validerCarte, validerInfos: validerInfos,
+    fr: fr, textes: textes, htmlHistoire: htmlHistoire, htmlHoraires: htmlHoraires, htmlGalerie: htmlGalerie, altPhoto: altPhoto,
+    htmlEnteteTailles: htmlEnteteTailles, htmlLignesCarte: htmlLignesCarte,
+    description: description, descriptionCarte: descriptionCarte, jsonLd: jsonLd
   };
   root.PZ = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

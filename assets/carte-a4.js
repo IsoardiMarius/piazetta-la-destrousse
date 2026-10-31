@@ -11,34 +11,16 @@
   var erreurs = PZ.validerCarte(window.CARTE).concat(PZ.validerInfos(window.INFOS));
   if (erreurs.length) console.warn('[carte.js] ' + erreurs.join('\n'));
 
-  var tailles = C.tailles || [];
-  var pizzas = PZ.pizzasVisibles(C);
   var sheet = $('[data-sheet]');
-  sheet.style.setProperty('--cols', tailles.length);
+  sheet.style.setProperty('--cols', (C.tailles || []).length);
 
-  /* En-tête des colonnes */
-  $('[data-head]').insertAdjacentHTML('beforeend', tailles.map(function (t) {
-    return '<div class="size"><b>' + PZ.esc(t.taille || t.nom) + '</b>' + (t.taille ? '<small>' + PZ.esc(t.nom) + '</small>' : '') + '</div>';
-  }).join(''));
-
-  /* Lignes */
-  $('[data-rows]').innerHTML = pizzas.map(function (p) {
-    return '<div class="row">' +
-      '<div class="row__name"><b>' + PZ.esc(p.nom) + (p.badge ? '<em>' + PZ.esc(p.badge) + '</em>' : '') + '</b>' +
-      (p.ingredients ? '<span>' + PZ.esc(p.ingredients) + '</span>' : '') + '</div>' +
-      tailles.map(function (t, i) { return '<span class="row__price">' + PZ.prix((p.prix || [])[i]) + '</span>'; }).join('') +
-      '</div>';
-  }).join('');
-
-  /* Textes */
-  bind('telephone', C.telephone || '');
-  bind('mention', C.mention || '');
-  var jours = PZ.resumeJours(C);
-  if (jours) bind('resumeJours', jours.replace(/^Du (\S+) au (\S+)$/, function (_, a, b) { return PZ.cap(a) + ' – ' + b; }));
-  var h = PZ.resumeHeures(C); if (h) bind('resumeHeures', h);
-  var ville = (C.ville || '').replace(/^\d{5}\s+/, '');
-  if (ville) bind('villeCourte', ville);
-  if (C.adresse) bind('adresseCourte', C.adresse.replace(/\bavenue\b/i, 'av.') + ' · et alentours');
+  /* Contenu (déjà en place sur le site publié ; utile en local) */
+  var head = $('[data-head]'), rows = $('[data-rows]');
+  var hHead = PZ.htmlEnteteTailles(C), hRows = PZ.htmlLignesCarte(C);
+  if (head.innerHTML !== hHead) head.innerHTML = hHead;
+  if (rows.innerHTML !== hRows) rows.innerHTML = hRows;
+  var T = PZ.textes(C);
+  Object.keys(T).forEach(function (k) { bind(k, T[k]); });
 
   /* Ajuste la taille du texte pour que tout tienne sur une seule page A4 */
   function fit() {
@@ -53,10 +35,12 @@
 
   /* Zoom d'affichage : la feuille s'adapte à la largeur de l'écran */
   var stage = $('[data-stage]');
-  var box = d.createElement('div');
-  box.className = 'stage__box';
-  stage.insertBefore(box, sheet);
-  box.appendChild(sheet);
+  if (!sheet.parentNode.classList.contains('stage__box')) {
+    var box = d.createElement('div');
+    box.className = 'stage__box';
+    stage.insertBefore(box, sheet);
+    box.appendChild(sheet);
+  }
   function zoom() {
     if (root.classList.contains('is-bare')) { root.style.setProperty('--s', 1); return; }
     var avail = Math.min(stage.clientWidth - 32, 900);

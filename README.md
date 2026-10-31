@@ -86,7 +86,18 @@ Puis ouvrir http://localhost:8000. Pour générer le PDF en local : `npm install
 | `photos/` | **À remplir** : les photos de la page d'accueil |
 | `carte.html` | Aperçu de la carte A4 avec boutons Imprimer et PDF (source du PDF) |
 | `assets/` | Styles, scripts, logo, polices auto-hébergées |
-| `scripts/` | Vérification de la carte et génération du PDF |
+| `scripts/` | Vérification, PDF, photos et pré-remplissage des pages à la publication |
+
+## Rapidité, Google et aperçus de liens
+
+À chaque publication, le site est préparé automatiquement, comme le ferait un framework type Next.js, sans en avoir la lourdeur :
+
+- **Pages pré-remplies** : textes, horaires, carte et photos sont déjà dans les pages publiées. Google et les aperçus de liens les lisent sans attendre JavaScript.
+- **Google** : description de chaque page, adresse officielle (canonique), plan du site (`sitemap.xml`), `robots.txt` et fiche « Restaurant » (adresse, horaires, carte et prix de chaque pizza) pour les résultats de recherche.
+- **Aperçus de liens** (WhatsApp, Facebook, Messenger, SMS…) : une image est générée pour chaque page, la première photo avec le logo pour l'accueil, et le haut de la carte pour la page carte.
+- **Images** : chaque photo existe en 4 tailles, le navigateur télécharge la plus adaptée à l'écran. Un aperçu flou s'affiche pendant le chargement.
+- **Cache** : chaque publication change l'adresse des fichiers, pour que personne ne voie une ancienne version.
+- **Page 404** aux couleurs du site.
 
 ## Choix techniques
 

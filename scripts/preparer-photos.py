@@ -2,13 +2,17 @@
 
 - redresse les photos prises au téléphone (orientation EXIF) ;
 - les met légèrement en valeur, en restant naturel (contraste, couleurs, netteté) ;
-- les redimensionne en deux tailles WebP légères ;
+- les redimensionne en plusieurs tailles WebP légères (le navigateur choisit la bonne) ;
+- crée un minuscule aperçu flou, affiché le temps du chargement ;
 - retire les métadonnées (dont la position GPS du téléphone) ;
-- écrit la liste dans assets/photos.json, lue par la page d'accueil.
+- crée l'image d'aperçu des liens partagés (assets/og-accueil.jpg) ;
+- écrit la liste dans assets/photos.json, utilisée à la publication.
 
 Utilisation : python3 scripts/preparer-photos.py [dossier-de-sortie]
 (par défaut, la sortie est le dossier du projet ; en CI, c'est _site).
 """
+import base64
+import io
 import json
 import re
 import sys
@@ -27,7 +31,7 @@ RACINE = Path(__file__).resolve().parent.parent
 SOURCE = RACINE / "photos"
 SORTIE = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else RACINE
 EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".heic", ".heif"}
-LARGEURS = (800, 1600)
+LARGEURS = (480, 800, 1200, 1600)
 MAX_PHOTOS = 12
 
 
@@ -53,6 +57,29 @@ def mettre_en_valeur(im):
     im = ImageEnhance.Color(im).enhance(1.04)
     im = ImageEnhance.Brightness(im).enhance(1.015)
     return im
+
+
+def image_partage(photo, chemin):
+    """Image des aperçus de liens (WhatsApp, Facebook…) : la photo et le logo."""
+    W, H = 1200, 630
+    img = ImageOps.fit(photo, (W, H), Image.LANCZOS, centering=(0.5, 0.5))
+    logo_path = RACINE / "assets" / "logo-720.webp"
+    if logo_path.exists():
+        logo = Image.open(logo_path).convert("RGBA")
+        taille = 230
+        logo = logo.resize((taille, taille), Image.LANCZOS)
+        ombre = Image.new("RGBA", (taille + 80, taille + 80), (0, 0, 0, 0))
+        masque = Image.new("L", (taille + 80, taille + 80), 0)
+        masque.paste(logo.getchannel("A"), (40, 46))
+        masque = masque.filter(ImageFilter.GaussianBlur(18))
+        ombre.putalpha(masque.point(lambda a: int(a * 0.45)))
+        base = img.convert("RGBA")
+        x, y = 56, H - taille - 56
+        base.alpha_composite(ombre, (x - 40, y - 40))
+        base.alpha_composite(logo, (x, y))
+        img = base.convert("RGB")
+    chemin.parent.mkdir(parents=True, exist_ok=True)
+    img.save(chemin, "JPEG", quality=86, optimize=True, progressive=True)
 
 
 def main():
@@ -93,9 +120,20 @@ def main():
             if w < largeur:
                 break
 
-        petite, grande = variantes[0], variantes[-1]
+        apercu = im.copy()
+        apercu.thumbnail((24, 24))
+        tampon = io.BytesIO()
+        apercu.save(tampon, "WEBP", quality=40)
+        lqip = "data:image/webp;base64," + base64.b64encode(tampon.getvalue()).decode()
+
+        if not liste:
+            image_partage(im, SORTIE / "assets" / "og-accueil.jpg")
+
+        moyenne = next((v for v in variantes if v[1] >= 800), variantes[-1])
+        grande = variantes[-1]
         liste.append({
-            "src": petite[0],
+            "src": moyenne[0],
+            "lqip": lqip,
             "grande": grande[0],
             "srcset": ", ".join(f"{p} {w}w" for p, w, _ in variantes),
             "largeur": grande[1],

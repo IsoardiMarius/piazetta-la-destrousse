@@ -241,7 +241,10 @@ a:hover{color:var(--brand-dark)}
   border-radius:20px;overflow:hidden;background:var(--chip);isolation:isolate;
   -webkit-tap-highlight-color:transparent;
 }
-.ph__btn img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease),filter .6s var(--ease)}
+.ph__btn{background-size:cover;background-position:center}
+.ph__btn img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease),opacity .6s var(--ease)}
+.js .ph__btn[style] img{opacity:0}
+.js .ph__btn.is-loaded img{opacity:1}
 .ph__btn::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(36,20,17,.06);pointer-events:none}
 .ph__btn:hover img{transform:scale(1.05)}
 .ph__btn:focus-visible{outline:2.5px solid var(--brand);outline-offset:3px}
