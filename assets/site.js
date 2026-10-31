@@ -57,6 +57,8 @@
     var item = a.closest('[data-reseau-item]') || a;
     if (/^https?:\/\//.test(url || '')) { a.href = url; item.hidden = false; } else item.hidden = true;
   });
+  var heroRes = $('[data-hero-reseaux]');
+  if (heroRes) { var hh = PZ.htmlLiensHero(D); if (heroRes.innerHTML !== hh) heroRes.innerHTML = hh; heroRes.hidden = !hh; }
   var res = $('[data-reseaux]');
   if (res) { var hr = PZ.htmlReseaux(D); if (res.innerHTML !== hr) res.innerHTML = hr; res.hidden = !hr; }
 

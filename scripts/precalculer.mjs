@@ -72,6 +72,8 @@ function liens(page) {
     page = page.replace(new RegExp(`(<a\\b[^>]*?)\\shref="[^"]*"([^>]*\\sdata-reseau="${cle}")`, 'g'), `$1 href="${attr(url)}"$2`)
       .replace(new RegExp(`(<li\\b[^>]*\\sdata-reseau-item="${cle}")\\s+hidden`, 'g'), '$1');
   }
+  const hero = PZ.htmlLiensHero(D);
+  if (hero) page = afficher(remplirTout(page, 'data-hero-reseaux', hero), 'data-hero-reseaux');
   const reseaux = PZ.htmlReseaux(D);
   if (reseaux) page = afficher(remplirTout(page, 'data-reseaux', reseaux), 'data-reseaux');
   return page;
@@ -109,7 +111,10 @@ if (photos.length) {
   accueil = afficher(afficher(accueil, 'data-photos'), 'data-photos-link');
 }
 accueil = liens(accueil);
-const imageAccueil = base + (existe('assets/og-accueil.jpg') ? 'assets/og-accueil.jpg' : 'assets/og-image.jpg');
+/* Version dans l'adresse des images d'aperçu : WhatsApp, Facebook… rechargent l'image après chaque publication */
+const version = (process.env.GITHUB_SHA || '').slice(0, 8);
+const v = version ? '?v=' + version : '';
+const imageAccueil = base + (existe('assets/og-accueil.jpg') ? 'assets/og-accueil.jpg' : 'assets/og-image.jpg') + v;
 accueil = meta(accueil, {
   titre: 'Piazzetta — Pizzeria à La Destrousse, pizzas à emporter et en livraison',
   description: PZ.description(D),
@@ -133,7 +138,7 @@ carte = meta(carte, {
   titre: 'Carte et prix des pizzas — Piazzetta, pizzeria à La Destrousse',
   description: PZ.descriptionCarte(D),
   url: base && base + 'carte.html',
-  image: base && existe('assets/og-carte.jpg') ? base + 'assets/og-carte.jpg' : base && imageAccueil,
+  image: base && existe('assets/og-carte.jpg') ? base + 'assets/og-carte.jpg' + v : base && imageAccueil,
 });
 ecrire('carte.html', carte);
 

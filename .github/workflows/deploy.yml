@@ -52,6 +52,9 @@ jobs:
           pip install --quiet pillow pillow-heif
           python scripts/preparer-photos.py _site
 
+      - name: Générer les images d'aperçu des liens (SMS, WhatsApp, Facebook…)
+        run: node scripts/generer-apercus.mjs _site
+
       - id: pages
         uses: actions/configure-pages@v5
 

@@ -181,6 +181,14 @@ a:hover{color:var(--brand-dark)}
 }
 .hero__text{display:flex;flex-direction:column;align-items:flex-start;gap:24px;max-width:640px}
 .hero__text .actions{margin-top:4px}
+/* Liens discrets Uber Eats / Facebook sous les boutons de l'accueil */
+.hero__more{display:flex;flex-wrap:wrap;align-items:center;gap:0 14px;margin:-6px 0 0;font-size:15px;color:var(--muted)}
+.hero__more[hidden]{display:none}
+.hero__more a{display:inline-flex;align-items:center;gap:4px;min-height:44px;color:var(--ink-2);font-weight:500;text-decoration:none;transition:color .2s var(--ease)}
+.hero__more a .ic{opacity:.5;transition:transform .25s var(--ease),opacity .25s}
+.hero__more a:hover{color:var(--brand)}
+.hero__more a:hover .ic{opacity:1;transform:translate(1px,-1px)}
+.hero__sep{color:var(--line-2)}
 .pill{
   display:inline-flex;align-items:center;gap:10px;margin:0;
   padding:7px 14px 7px 12px;border-radius:999px;background:var(--chip);
@@ -374,7 +382,7 @@ html.lb-open{overflow:hidden}
 @keyframes sway{0%,100%{transform:rotate(0)}50%{transform:rotate(-8deg)}}
 
 .rise{animation:rise .8s var(--ease) both}
-.d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}
+.d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}.d4{animation-delay:.32s}
 .logo-in{animation:logo-in .9s var(--ease) both}
 .float{animation:float 7s ease-in-out 1.2s infinite}
 
@@ -431,6 +439,8 @@ html.lb-open{overflow:hidden}
   .hero__logo{max-width:220px}
   .hero__text{gap:20px}
   .actions .btn{flex:1 1 100%}
+  .hero__more{justify-content:center;width:100%;gap:0 20px}
+  .hero__sep{display:none}
   .strip{grid-template-columns:1fr}
   .strip__item{padding:18px 0}
   .strip__item + .strip__item{border-top:1px solid var(--line)}

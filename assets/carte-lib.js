@@ -278,13 +278,22 @@
     };
   }
 
-  var RESEAUX = { facebook: 'Facebook', instagram: 'Instagram', uberEats: 'Uber Eats' };
+  var RESEAUX = { uberEats: 'Uber Eats', facebook: 'Facebook', instagram: 'Instagram' };
   function reseaux(D) {
     var r = D.reseaux || {};
     return Object.keys(RESEAUX).filter(function (k) { return /^https?:\/\//.test(r[k] || ''); }).map(function (k) { return { cle: k, nom: RESEAUX[k], url: r[k] }; });
   }
   function htmlReseaux(D) {
     return reseaux(D).map(function (x) { return '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.nom) + '</a>'; }).join('');
+  }
+
+  /* Liens discrets sous les boutons de l'accueil */
+  var ICONE_EXT = '<svg class="ic" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg>';
+  var LIBELLES_HERO = { uberEats: 'Commander sur Uber Eats', facebook: 'Suivre sur Facebook', instagram: 'Suivre sur Instagram' };
+  function htmlLiensHero(D) {
+    return reseaux(D).map(function (x) {
+      return '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(LIBELLES_HERO[x.cle] || x.nom) + ICONE_EXT + '</a>';
+    }).join('<span class="hero__sep" aria-hidden="true">·</span>');
   }
 
   /* Valeur de chaque élément data-bind="..." des pages */
@@ -452,7 +461,7 @@
     fr: fr, textes: textes, htmlHistoire: htmlHistoire, htmlHoraires: htmlHoraires, htmlGalerie: htmlGalerie, altPhoto: altPhoto,
     htmlEnteteTailles: htmlEnteteTailles, htmlLignesCarte: htmlLignesCarte,
     description: description, descriptionCarte: descriptionCarte, jsonLd: jsonLd,
-    liensGoogle: liensGoogle, htmlReseaux: htmlReseaux, nomOfficiel: nomOfficiel
+    liensGoogle: liensGoogle, htmlReseaux: htmlReseaux, htmlLiensHero: htmlLiensHero, nomOfficiel: nomOfficiel, villeSeule: villeSeule
   };
   root.PZ = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

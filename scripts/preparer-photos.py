@@ -5,7 +5,6 @@
 - les redimensionne en plusieurs tailles WebP légères (le navigateur choisit la bonne) ;
 - crée un minuscule aperçu flou, affiché le temps du chargement ;
 - retire les métadonnées (dont la position GPS du téléphone) ;
-- crée l'image d'aperçu des liens partagés (assets/og-accueil.jpg) ;
 - écrit la liste dans assets/photos.json, utilisée à la publication.
 
 Utilisation : python3 scripts/preparer-photos.py [dossier-de-sortie]
@@ -59,29 +58,6 @@ def mettre_en_valeur(im):
     return im
 
 
-def image_partage(photo, chemin):
-    """Image des aperçus de liens (WhatsApp, Facebook…) : la photo et le logo."""
-    W, H = 1200, 630
-    img = ImageOps.fit(photo, (W, H), Image.LANCZOS, centering=(0.5, 0.5))
-    logo_path = RACINE / "assets" / "logo-720.webp"
-    if logo_path.exists():
-        logo = Image.open(logo_path).convert("RGBA")
-        taille = 230
-        logo = logo.resize((taille, taille), Image.LANCZOS)
-        ombre = Image.new("RGBA", (taille + 80, taille + 80), (0, 0, 0, 0))
-        masque = Image.new("L", (taille + 80, taille + 80), 0)
-        masque.paste(logo.getchannel("A"), (40, 46))
-        masque = masque.filter(ImageFilter.GaussianBlur(18))
-        ombre.putalpha(masque.point(lambda a: int(a * 0.45)))
-        base = img.convert("RGBA")
-        x, y = 56, H - taille - 56
-        base.alpha_composite(ombre, (x - 40, y - 40))
-        base.alpha_composite(logo, (x, y))
-        img = base.convert("RGB")
-    chemin.parent.mkdir(parents=True, exist_ok=True)
-    img.save(chemin, "JPEG", quality=86, optimize=True, progressive=True)
-
-
 def main():
     fichiers = sorted(
         (f for f in SOURCE.iterdir() if f.suffix.lower() in EXTENSIONS),
@@ -125,9 +101,6 @@ def main():
         tampon = io.BytesIO()
         apercu.save(tampon, "WEBP", quality=40)
         lqip = "data:image/webp;base64," + base64.b64encode(tampon.getvalue()).decode()
-
-        if not liste:
-            image_partage(im, SORTIE / "assets" / "og-accueil.jpg")
 
         moyenne = next((v for v in variantes if v[1] >= 800), variantes[-1])
         grande = variantes[-1]
