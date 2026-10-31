@@ -40,6 +40,9 @@
   /* ---------- Textes (déjà en place sur le site publié ; utile en local) ---------- */
   var T = PZ.textes(D);
   Object.keys(T).forEach(function (k) { bind(k, T[k]); });
+  /* Résumé des heures (petit tableau quand les horaires varient d'un jour à l'autre) */
+  var hResume = PZ.htmlResumeHeures(D);
+  $$('[data-resume-heures]').forEach(function (el) { if (el.innerHTML !== hResume) el.innerHTML = hResume; });
   var histoire = $('[data-histoire]');
   if (histoire && D.histoire) {
     var h = PZ.htmlHistoire(D);

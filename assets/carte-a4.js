@@ -21,6 +21,8 @@
   if (rows.innerHTML !== hRows) rows.innerHTML = hRows;
   var T = PZ.textes(C);
   Object.keys(T).forEach(function (k) { bind(k, T[k]); });
+  var hResume = PZ.htmlResumeHeures(C, true);
+  $$('[data-resume-heures-court]').forEach(function (el) { if (el.innerHTML !== hResume) el.innerHTML = hResume; });
 
   /* Page 2 (boissons, desserts…) : seulement s'il y a au moins un article à afficher */
   var rub = $('[data-rubriques]'), hRub = PZ.htmlRubriques(C), avecPage2 = !!hRub && !!sheet2;

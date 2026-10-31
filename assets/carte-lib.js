@@ -217,28 +217,37 @@
     return groupes;
   }
   var JOURS_COURTS = ['lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.', 'dim.'];
-  /* Une ligne par horaire : « Mar.–ven. et dim. : 18h – 22h », « Sam. : 11h30 – 14h, 18h – 22h30 » */
-  function lignesHoraires(D) {
-    return horairesParHeures(D).map(function (g) {
-      var plages = [];
-      g.jours.forEach(function (i) {
-        var l = plages[plages.length - 1];
-        if (l && l[1] === i - 1) l[1] = i; else plages.push([i, i]);
-      });
-      var jours = listeFr(plages.map(function (p) { return JOURS_COURTS[p[0]] + (p[1] > p[0] ? '–' + JOURS_COURTS[p[1]] : ''); }));
-      /* Insécable autour du tiret (le « gluon » \u2060 empêche la coupure juste après le tiret) */
-      var heures = g.creneaux.map(function (r) { return heure(r[0]) + NBSP + '–\u2060' + NBSP + heure(r[1]); }).join(', ');
-      return cap(jours) + NBSP + ': ' + heures;
+  /* Jours d'un groupe : « Mardi – jeudi », « Vendredi – samedi », « Lundi, mercredi – vendredi »
+     (version courte pour le PDF : « Mar. – jeu. ») */
+  function joursDuGroupe(jours, court) {
+    var plages = [];
+    jours.forEach(function (i) {
+      var l = plages[plages.length - 1];
+      if (l && l[1] === i - 1) l[1] = i; else plages.push([i, i]);
     });
+    var nom = function (i) { return court ? JOURS_COURTS[i] : JOURS[i]; };
+    return cap(plages.map(function (p) { return nom(p[0]) + (p[1] > p[0] ? NBSP + '– ' + nom(p[1]) : ''); }).join(', '));
   }
+  function texteCreneau(r) { return heure(r[0]) + NBSP + '–' + NBSP + heure(r[1]); }
 
-  /* Résumé des heures : « De 18h à 22h » si c'est pareil tous les jours d'ouverture,
-     sinon une ligne par horaire (voir lignesHoraires), affichées l'une sous l'autre */
+  /* Résumé des heures en texte : « De 18h à 22h » si c'est pareil tous les jours d'ouverture,
+     sinon « Mardi – jeudi : 18h – 22h30 · Vendredi – samedi : 18h – 1h » */
   function resumeHeures(D) {
     var g = horairesParHeures(D);
     if (!g.length) return '';
-    if (g.length > 1) return lignesHoraires(D).join('\n');
+    if (g.length > 1) return g.map(function (x) { return joursDuGroupe(x.jours) + NBSP + ': ' + x.creneaux.map(texteCreneau).join(', '); }).join(' · ');
     return cap(g[0].creneaux.map(function (r) { return 'de ' + heure(r[0]) + ' à ' + heure(r[1]); }).join(' et '));
+  }
+
+  /* Même résumé en HTML : quand les horaires varient, un petit tableau jours | heures (heures en gras),
+     pour l'accueil (jours en toutes lettres) et le pied de page de la carte (court = jours abrégés) */
+  function htmlResumeHeures(D, court) {
+    var g = horairesParHeures(D);
+    if (g.length < 2) return esc(textes(D).resumeHeures);
+    return '<span class="hdet">' + g.map(function (x) {
+      return '<span class="hdet__j">' + esc(joursDuGroupe(x.jours, court)) + '</span>' +
+        '<b class="hdet__h">' + x.creneaux.map(function (r) { return '<span>' + esc(texteCreneau(r)) + '</span>'; }).join(', ') + '</b>';
+    }).join('') + '</span>';
   }
 
   /* Heure d'ouverture si elle est la même tous les jours (« dès 18h »), même si la fermeture varie */
@@ -596,7 +605,7 @@
     donnees: donnees, parseCreneaux: parseCreneaux, creneauxTexte: creneauxTexte,
     parseDate: parseDate, dateTexte: dateTexte, fermeture: fermeture, estFerme: estFerme, messageFermeture: messageFermeture,
     statut: statut, maintenantParis: maintenantParis,
-    groupesHoraires: groupesHoraires, resumeJours: resumeJours, resumeHeures: resumeHeures, lignesHoraires: lignesHoraires, premiereOuverture: premiereOuverture,
+    groupesHoraires: groupesHoraires, resumeJours: resumeJours, resumeHeures: resumeHeures, htmlResumeHeures: htmlResumeHeures, premiereOuverture: premiereOuverture,
     pizzasVisibles: pizzasVisibles, fourchettePrix: fourchettePrix,
     valider: valider, validerCarte: validerCarte, validerInfos: validerInfos,
     fr: fr, textes: textes, htmlHistoire: htmlHistoire, htmlHoraires: htmlHoraires, htmlGalerie: htmlGalerie, altPhoto: altPhoto,

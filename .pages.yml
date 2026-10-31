@@ -22,7 +22,7 @@ settings:
 components:
   jour:
     type: string
-    description: "Exemple : 18h-22h. Avec une coupure : 11h30-14h, 18h-22h. Laisser vide si fermé."
+    description: "Exemple : 18h-22h. Avec une coupure : 11h30-14h, 18h-22h. Après minuit : 18h-1h. Vide = fermé ce jour-là."
     pattern:
       regex: '^$|^\s*\d{1,2}h(\d{2})?\s*[-–]\s*\d{1,2}h(\d{2})?(\s*,\s*\d{1,2}h(\d{2})?\s*[-–]\s*\d{1,2}h(\d{2})?)*\s*$'
       message: "Écrire par exemple 18h-22h (ou 11h30-14h, 18h-22h), ou laisser vide si fermé."
@@ -35,7 +35,7 @@ components:
 
 content:
   - name: carte
-    label: La carte
+    label: "La carte (page 1 : pizzas)"
     type: file
     path: contenu/carte.json
     format: json
@@ -56,6 +56,7 @@ content:
             required: true
           - name: ingredients
             label: Ingrédients
+            description: "Séparés par des virgules, par exemple « Tomate, mozzarella, basilic »."
             type: text
           - name: prix
             label: Prix en euros, un par taille, dans l'ordre des tailles
@@ -76,11 +77,12 @@ content:
             description: "Cochée, la pizza n'apparaît plus sur le site ni sur le PDF, sans être supprimée."
             type: boolean
       - name: mention
-        label: Phrase sous la carte
+        label: Phrase sous la carte (facultatif)
+        description: "Petite ligne en bas de la liste des pizzas, sur le site et le PDF."
         type: text
       - name: tailles
         label: Tailles
-        description: "Attention : l'ordre des tailles doit rester le même que l'ordre des prix de chaque pizza."
+        description: "Les colonnes de prix de la carte. Si tu ajoutes, retires ou déplaces une taille, fais pareil avec les prix de chaque pizza."
         type: object
         list:
           min: 1
@@ -96,7 +98,7 @@ content:
             type: string
 
   - name: boissons-desserts
-    label: Boissons et desserts
+    label: "Boissons et desserts (page 2 de la carte)"
     type: file
     path: contenu/boissons-desserts.json
     format: json
@@ -161,6 +163,7 @@ content:
     fields:
       - name: horaires
         label: Horaires d'ouverture
+        description: "Mis à jour partout : site, badge « Ouvert / Fermé », carte PDF, Google. Pense à mettre les mêmes sur ta fiche Google."
         type: object
         fields:
           - { name: lundi, label: Lundi, component: jour }
@@ -185,7 +188,7 @@ content:
           format: yyyy-MM-dd
       - name: annonce
         label: Bandeau d'annonce (facultatif)
-        description: "Message affiché tout en haut du site, par exemple « Nouveau : la pizza Burrata est arrivée ! ». Laisser vide pour ne rien afficher."
+        description: "Une phrase courte, tout en haut du site, par exemple « Nouveau : la pizza Burrata est arrivée ! ». Vide = pas de bandeau."
         type: string
 
   - name: photos
@@ -197,7 +200,7 @@ content:
     fields:
       - name: image
         label: Photo
-        description: "Photo d'origine, en pleine taille : le site la redresse, l'allège et la met légèrement en valeur. La première photo est la plus grande et sert d'aperçu quand on partage le lien du site. 4 ou 5 photos suffisent."
+        description: "JPG, PNG, WebP ou photo d'iPhone, en pleine taille : le site l'allège tout seul. Pizza bien centrée, lumière du jour. La 1re photo est la plus grande et sert d'aperçu quand on partage le lien. Glisser pour changer l'ordre ; 4 à 6 photos suffisent."
         type: image
         required: true
       - name: description
@@ -218,13 +221,16 @@ content:
         required: true
       - name: telephone
         label: Téléphone
+        description: "Écrit comme il doit s'afficher, par exemple 06 40 92 51 76. Sert aussi aux boutons « Appeler »."
         type: string
         required: true
       - name: adresse
         label: Adresse
+        description: "Numéro et rue, par exemple 842 avenue de la Doulia."
         type: string
       - name: ville
         label: Code postal et ville
+        description: "Par exemple 13112 La Destrousse."
         type: string
       - name: zoneLivraison
         label: Zone de livraison
@@ -237,6 +243,7 @@ content:
         list: true
       - name: reseaux
         label: Réseaux et commande en ligne
+        description: "Un lien vide n'apparaît pas sur le site."
         type: object
         fields:
           - { name: uberEats, label: Uber Eats, component: lien }
@@ -255,20 +262,25 @@ content:
     fields:
       - name: titre
         label: Grand titre
+        description: "Tout en haut de l'accueil. Une phrase courte. Si un champ de cette page est vide, le texte d'origine reste affiché."
         type: string
       - name: introduction
         label: Phrase d'introduction
+        description: "Sous le grand titre, 2 lignes environ."
         type: text
       - name: histoireTitre
         label: "« La maison » : titre"
         type: string
       - name: histoire
         label: "« La maison » : paragraphes"
+        description: "Un paragraphe par case. 2 ou 3 paragraphes courts suffisent."
         type: text
         list: true
       - name: histoireSignature
         label: "« La maison » : signature"
+        description: "Sous le texte, par exemple « L'équipe de la Piazzetta »."
         type: string
       - name: photosTitre
         label: Titre au-dessus des photos
+        description: "Par exemple « Tout juste sorties du four. »"
         type: string

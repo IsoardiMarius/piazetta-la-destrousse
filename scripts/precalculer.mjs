@@ -111,6 +111,7 @@ let accueil = nommer(lire('index.html'));
 accueil = remplirBinds(accueil);
 accueil = remplirTout(accueil, 'data-histoire', PZ.htmlHistoire(D));
 accueil = remplirTout(accueil, 'data-hours', PZ.htmlHoraires(D, null, ''));
+accueil = remplirTout(accueil, 'data-resume-heures', PZ.htmlResumeHeures(D));
 if (photos.length) {
   accueil = remplirTout(accueil, 'data-gallery', PZ.htmlGalerie(photos, D))
     .replace(/(<ul class="gallery" data-gallery)(?: data-count="\d+")*/, `$1 data-count="${Math.min(photos.length, 6)}"`);
@@ -143,6 +144,7 @@ let carte = nommer(lire('carte.html'));
 carte = remplirBinds(carte);
 carte = remplirTout(carte, 'data-head', PZ.htmlEnteteTailles(D));
 carte = remplirTout(carte, 'data-rows', PZ.htmlLignesCarte(D));
+carte = remplirTout(carte, 'data-resume-heures-court', PZ.htmlResumeHeures(D, true));
 /* Page 2 (boissons, desserts…) et renvoi depuis la page 1, seulement s'il y a des articles */
 carte = remplirTout(carte, 'data-rubriques', PZ.htmlRubriques(D));
 if (PZ.rubriquesVisibles(D).length) {

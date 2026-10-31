@@ -135,6 +135,11 @@ for (const k of ['telephone', 'resumeJoursCourt', 'resumeHeures', 'villeCourte',
   verifier(contenuDe(carte, `data-bind="${k}"`) === html(T[k]), `Carte : « ${k} » ne correspond pas au contenu`);
 }
 
+/* ---------- Résumé des heures (accueil et pied de page de la carte) ---------- */
+verifier(contenuDe(accueil, 'data-resume-heures') === PZ.htmlResumeHeures(D), 'Accueil : le résumé des heures ne correspond pas aux horaires');
+const resumesCarte = carte.split('data-resume-heures-court').length - 1;
+verifier(resumesCarte === 2 && contenuDe(carte, 'data-resume-heures-court') === PZ.htmlResumeHeures(D, true), 'Carte : le résumé des heures du pied de page ne correspond pas aux horaires');
+
 /* ---------- Carte, page 2 : boissons, desserts… ---------- */
 const rubriques = PZ.rubriquesVisibles(D);
 const page2 = contenuDe(carte, 'data-rubriques') || '';

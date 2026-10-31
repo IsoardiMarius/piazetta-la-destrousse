@@ -605,5 +605,7 @@ html.lb-open{overflow:hidden}
   @view-transition{navigation:none}
 }
 
-/* Résumé des heures : quand les horaires varient, une ligne par horaire */
-[data-bind="resumeHeures"]{white-space:pre-line}
+/* Résumé des heures quand elles varient selon les jours : petit tableau jours | heures, heures en gras */
+.hdet{display:grid;grid-template-columns:auto auto;justify-content:start;column-gap:14px;row-gap:2px;margin-top:2px}
+.strip__item .hdet .hdet__h{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.strip__item .hdet .hdet__h span{color:inherit;font-size:inherit;white-space:nowrap}
