@@ -14,11 +14,14 @@
 <link rel="stylesheet" href="assets/carte.css">
 <script>
   /* Modes : ?apercu (vignette du site), ?pdf (génération du PDF), ?imprimer (ouvre l'impression) */
-  (function (q) {
-    var d = document.documentElement;
+  (function (q, d) {
     if (/(^|[?&])(apercu|pdf)\b/.test(q)) d.classList.add('is-bare');
     if (/(^|[?&])imprimer\b/.test(q)) d.classList.add('is-print-auto');
-  })(location.search);
+    /* Taille de la feuille calculée dès le départ : pas de saut à l'affichage */
+    d.classList.add('js');
+    if (!d.classList.contains('is-bare')) d.style.setProperty('--s', Math.min(1, Math.min(window.innerWidth - 32, 900) / 794));
+    if (!d.classList.contains('is-bare')) setTimeout(function () { if (!d.hasAttribute('data-ready')) d.setAttribute('data-ready', 'attente'); }, 4000);
+  })(location.search, document.documentElement);
 </script>
 <script src="infos.js" defer></script>
 <script src="carte.js" defer></script>
@@ -45,6 +48,7 @@
 </nav>
 
 <div class="stage" data-stage>
+  <div class="stage__box">
   <article class="sheet" data-sheet aria-label="Carte des pizzas">
     <header class="sh-head">
       <img src="assets/logo-360.webp" alt="Piazzetta La Destrousse — Pizzeria artisanale" width="88" height="88">
@@ -83,6 +87,7 @@
       </div>
     </footer>
   </article>
+  </div>
 </div>
 
 </body>

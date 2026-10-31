@@ -46,21 +46,34 @@ body{margin:0;background:#E9E0D2;color:var(--ink);font-family:var(--f-body);-web
 .stage{
   display:flex;justify-content:center;padding:clamp(16px,4vw,48px) 16px clamp(32px,6vw,64px);
 }
-.stage__box{width:calc(794px * var(--s));height:calc(1123px * var(--s));flex:none}
+/* La « feuille » vierge est visible immédiatement, le contenu apparaît une fois prêt */
+.stage__box{
+  position:relative;width:calc(794px * var(--s));height:calc(1123px * var(--s));flex:none;
+  background:var(--bg);border-radius:6px;overflow:hidden;
+  box-shadow:0 1px 2px rgba(36,20,17,.08),0 30px 70px -30px rgba(36,20,17,.45);
+}
+.stage__box::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%) 0 0/250% 100%;
+  animation:shimmer 1.4s linear infinite;transition:opacity .4s var(--ease);
+}
+html[data-ready] .stage__box::before{opacity:0;animation:none}
+@keyframes shimmer{from{background-position:120% 0}to{background-position:-120% 0}}
 .sheet{
   width:794px;height:1123px;overflow:hidden;flex:none;
   display:flex;flex-direction:column;background:var(--bg);color:var(--ink);
-  border-radius:6px;box-shadow:0 1px 2px rgba(36,20,17,.08),0 30px 70px -30px rgba(36,20,17,.45);
   transform:scale(var(--s));transform-origin:0 0;
-  animation:sheet-in .7s var(--ease) both;
+  transition:opacity .5s var(--ease);
 }
-@keyframes sheet-in{from{opacity:0;transform:translateY(16px) scale(var(--s))}to{opacity:1;transform:scale(var(--s))}}
+html.js:not([data-ready]) .sheet{opacity:0}
 
 /* Vignette / génération PDF : la feuille seule, sans décor */
 .is-bare body{background:var(--bg);min-height:0}
 .is-bare .bar{display:none}
 .is-bare .stage{padding:0;display:block}
-.is-bare .sheet{border-radius:0;box-shadow:none;animation:none;transform:none}
+.is-bare .stage__box{width:auto;height:auto;border-radius:0;box-shadow:none}
+.is-bare .stage__box::before{display:none}
+.is-bare .sheet{transform:none;opacity:1!important;transition:none}
 
 /* ---------- Contenu de la feuille ---------- */
 .sh-head{padding:44px 56px 0;display:flex;align-items:center;gap:22px}
@@ -109,9 +122,11 @@ body{margin:0;background:#E9E0D2;color:var(--ink);font-family:var(--f-body);-web
   .bar{display:none!important}
   .stage{padding:0!important;display:block!important}
   .stage__box{width:auto!important;height:auto!important}
-  .sheet{transform:none!important;border-radius:0;box-shadow:none;animation:none;width:210mm;height:297mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .stage__box{border-radius:0!important;box-shadow:none!important;overflow:visible!important}
+  .stage__box::before{display:none!important}
+  .sheet{transform:none!important;opacity:1!important;width:210mm;height:297mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 @media (prefers-reduced-motion:reduce){
-  .sheet{animation:none}
+  .stage__box::before{animation:none}
   @view-transition{navigation:none}
 }

@@ -18,6 +18,30 @@
 <link rel="preload" href="assets/fonts/dmsans-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="assets/style.css">
+<script>
+  /* Chargement en douceur :
+     - le texte apparaît dès que les polices sont prêtes (0,7 s au maximum) ;
+     - le logo a sa place réservée et apparaît dès que l'image est prête. */
+  (function (d, doc) {
+    d.classList.add('js');
+    var once = function (cls) { var done = false; return function () { if (!done) { done = true; d.classList.add(cls); } }; };
+    var texte = once('is-ready'), logo = once('logo-ready');
+    setTimeout(texte, 700);
+    setTimeout(logo, 3000);
+    if (doc.fonts && doc.fonts.load) {
+      Promise.all([doc.fonts.load('700 1em "Bricolage Grotesque"'), doc.fonts.load('400 1em "DM Sans"')]).then(texte, texte);
+    } else { texte(); }
+    doc.addEventListener('DOMContentLoaded', function () {
+      var img = doc.querySelector('[data-hero-logo]');
+      if (!img) return logo();
+      if (img.decode) img.decode().then(logo, logo);
+      else if (img.complete) logo(); else img.addEventListener('load', logo);
+    });
+    /* Filet de sécurité : sans le script du site, tout reste visible */
+    setTimeout(function () { if (!d.classList.contains('site-ok')) d.classList.remove('js'); }, 5000);
+  })(document.documentElement, document);
+</script>
+<link rel="preload" as="image" href="assets/logo-720.webp" imagesrcset="assets/logo-360.webp 360w, assets/logo-720.webp 720w" imagesizes="(max-width: 760px) 220px, 420px" fetchpriority="high">
 <script src="infos.js" defer></script>
 <script src="carte.js" defer></script>
 <script src="assets/carte-lib.js" defer></script>
@@ -96,8 +120,8 @@
       </a>
     </div>
   </div>
-  <div class="hero__logo logo-in">
-    <img class="float" src="assets/logo-720.webp" srcset="assets/logo-360.webp 360w, assets/logo-720.webp 720w" sizes="(max-width: 760px) 220px, 420px" alt="Logo Piazzetta La Destrousse, pizzeria artisanale" width="420" height="420" fetchpriority="high">
+  <div class="hero__logo">
+    <span class="logo-in"><img class="float" data-hero-logo src="assets/logo-720.webp" srcset="assets/logo-360.webp 360w, assets/logo-720.webp 720w" sizes="(max-width: 760px) 220px, 420px" alt="Logo Piazzetta La Destrousse, pizzeria artisanale" width="420" height="420" fetchpriority="high"></span>
   </div>
 </section>
 
@@ -162,7 +186,7 @@
     </div>
     <a class="preview" href="carte.html" aria-label="Voir la carte" tabindex="-1">
       <div class="preview__sheet">
-        <iframe src="carte.html?apercu" title="Aperçu de la carte" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
+        <img src="assets/apercu-carte.jpg" alt="Aperçu de la carte des pizzas" width="286" height="404" loading="lazy" decoding="async" data-fade>
       </div>
     </a>
   </div>

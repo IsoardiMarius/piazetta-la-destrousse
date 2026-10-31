@@ -306,8 +306,8 @@
       var sizes = '(max-width: 760px) 80vw, ' + (grand ? '(max-width: 1200px) 50vw, 600px' : '300px');
       return '<li class="ph reveal" style="--i:' + (i % 5) + '">' +
         '<button type="button" class="ph__btn" data-ph="' + i + '" data-grande="' + esc(p.grande) + '" aria-label="Agrandir la photo"' +
-        (p.lqip ? ' style="background-image:url(\'' + p.lqip + '\')"' : '') + '>' +
-        '<img src="' + esc(p.src) + '" srcset="' + esc(p.srcset) + '" sizes="' + sizes + '" width="' + p.largeur + '" height="' + p.hauteur + '" alt="' + esc(altPhoto(p)) + '" loading="lazy" decoding="async">' +
+        (p.lqip ? ' style="--lqip:url(\'' + p.lqip + '\')"' : '') + '>' +
+        '<img src="' + esc(p.src) + '" srcset="' + esc(p.srcset) + '" sizes="' + sizes + '" width="' + p.largeur + '" height="' + p.hauteur + '" alt="' + esc(altPhoto(p)) + '" loading="lazy" decoding="async" data-fade>' +
         '</button></li>';
     }).join('');
   }

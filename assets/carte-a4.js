@@ -35,12 +35,6 @@
 
   /* Zoom d'affichage : la feuille s'adapte à la largeur de l'écran */
   var stage = $('[data-stage]');
-  if (!sheet.parentNode.classList.contains('stage__box')) {
-    var box = d.createElement('div');
-    box.className = 'stage__box';
-    stage.insertBefore(box, sheet);
-    box.appendChild(sheet);
-  }
   function zoom() {
     if (root.classList.contains('is-bare')) { root.style.setProperty('--s', 1); return; }
     var avail = Math.min(stage.clientWidth - 32, 900);

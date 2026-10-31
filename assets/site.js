@@ -5,7 +5,7 @@
 (function () {
   'use strict';
   var doc = document.documentElement;
-  doc.classList.add('js');
+  doc.classList.add('js', 'site-ok');
 
   var PZ = window.PZ;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -15,6 +15,16 @@
   function bind(key, val) { $$('[data-bind="' + key + '"]').forEach(function (el) { if (el.textContent !== val) el.textContent = val; }); }
 
   $$('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
+
+  /* Images : apparition en fondu une fois chargées (l'aperçu flou ou le fond disparaît) */
+  function fadeImages(root) {
+    $$('img[data-fade]', root).forEach(function (img) {
+      var done = function () { img.classList.add('is-loaded'); };
+      if (img.complete && img.naturalWidth) done();
+      else { img.addEventListener('load', done, { once: true }); img.addEventListener('error', done, { once: true }); }
+    });
+  }
+  fadeImages(document);
   setupPhotos();
 
   if (!PZ || !window.CARTE || !window.INFOS) { setupUi(); return; }
@@ -92,11 +102,7 @@
   function photosReady(sec, ul) {
     sec.hidden = false;
     $$('[data-photos-link]').forEach(function (el) { el.hidden = false; });
-    /* Apparition en fondu une fois l'image chargée (le flou de l'aperçu disparaît) */
-    $$('.ph__btn img', ul).forEach(function (img) {
-      var done = function () { img.parentNode.classList.add('is-loaded'); };
-      if (img.complete && img.naturalWidth) done(); else img.addEventListener('load', done, { once: true });
-    });
+    fadeImages(ul);
     setupLightbox(ul);
   }
 

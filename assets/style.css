@@ -186,7 +186,16 @@ a:hover{color:var(--brand-dark)}
   filter:blur(30px);transform:translateY(14%);z-index:-1;
   animation:shadow 7s ease-in-out 1.2s infinite;
 }
+.hero__logo .logo-in{position:relative;z-index:1;display:block}
 .hero__logo img{width:100%;height:auto;aspect-ratio:1;border-radius:50%}
+/* Place réservée au logo pendant son chargement */
+.js .hero__logo::after{
+  content:"";position:absolute;inset:2%;border-radius:50%;
+  background:radial-gradient(circle at 50% 38%,#EFE4D4,var(--chip) 70%);
+  animation:placeholder 1.6s ease-in-out infinite;transition:opacity .7s var(--ease) .3s;
+}
+.js.logo-ready .hero__logo::after{opacity:0;animation:none}
+.js:not(.logo-ready) .hero__logo::before{visibility:hidden}
 
 /* ---------- Bandeau ---------- */
 .strip{
@@ -241,10 +250,13 @@ a:hover{color:var(--brand-dark)}
   border-radius:20px;overflow:hidden;background:var(--chip);isolation:isolate;
   -webkit-tap-highlight-color:transparent;
 }
-.ph__btn{background-size:cover;background-position:center}
-.ph__btn img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease),opacity .6s var(--ease)}
-.js .ph__btn[style] img{opacity:0}
-.js .ph__btn.is-loaded img{opacity:1}
+/* Aperçu flou (quelques centaines d'octets) affiché pendant le chargement de la photo */
+.ph__btn::before{
+  content:"";position:absolute;inset:-12px;z-index:-1;
+  background:var(--lqip,none) center/cover no-repeat var(--chip);
+  filter:blur(14px) saturate(1.1);transform:scale(1.04);
+}
+.ph__btn img{position:relative;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease),opacity .7s var(--ease)}
 .ph__btn::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(36,20,17,.06);pointer-events:none}
 .ph__btn:hover img{transform:scale(1.05)}
 .ph__btn:focus-visible{outline:2.5px solid var(--brand);outline-offset:3px}
@@ -299,10 +311,7 @@ html.lb-open{overflow:hidden}
   transition:transform .6s var(--ease-spring),box-shadow .5s var(--ease);
 }
 .preview:hover .preview__sheet,.preview:focus-visible .preview__sheet{transform:rotate(0) translateY(-8px) scale(1.03);box-shadow:0 44px 80px -28px rgba(0,0,0,.65)}
-.preview__sheet iframe{
-  position:absolute;top:0;left:0;width:794px;height:1123px;border:0;pointer-events:none;
-  transform:scale(calc(var(--pw) / 794));transform-origin:0 0;
-}
+.preview__sheet img{width:100%;height:100%;object-fit:cover}
 
 /* ---------- Infos ---------- */
 .infos{padding-bottom:clamp(64px,8vw,104px);display:flex;flex-direction:column;gap:32px}
@@ -315,7 +324,8 @@ html.lb-open{overflow:hidden}
 .card:hover{border-color:var(--line-2);box-shadow:0 22px 44px -30px rgba(82,19,16,.45)}
 .card h3{margin:0;font-family:var(--f-display);font-weight:700;font-size:22px;letter-spacing:-.02em}
 .card__body{display:flex;flex-direction:column;gap:8px}
-.card__actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:auto}
+.card__actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:auto}
+.card__actions .btn{min-width:0;padding-inline:16px}
 .card__actions .btn--full{grid-column:1 / -1}
 .address{margin:0;font-family:var(--f-display);font-weight:600;font-size:24px;line-height:1.25;letter-spacing:-.02em}
 .hours{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
@@ -349,12 +359,20 @@ html.lb-open{overflow:hidden}
 @keyframes lb-zoom{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
 @keyframes lb-right{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
 @keyframes lb-left{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
+@keyframes placeholder{0%,100%{opacity:1}50%{opacity:.6}}
 @keyframes sway{0%,100%{transform:rotate(0)}50%{transform:rotate(-8deg)}}
 
 .rise{animation:rise .8s var(--ease) both}
 .d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}
-.logo-in{animation:logo-in 1.1s var(--ease) .1s both}
+.logo-in{animation:logo-in .9s var(--ease) both}
 .float{animation:float 7s ease-in-out 1.2s infinite}
+
+/* Chargement : images en fondu, animations d'entrée lancées une fois les polices et le logo prêts */
+.js img[data-fade]{opacity:0;transition:opacity .7s var(--ease)}
+.js img[data-fade].is-loaded{opacity:1}
+.js:not(.is-ready) .rise{animation-play-state:paused}
+.js:not(.logo-ready) .logo-in,.js:not(.logo-ready) .float{animation-play-state:paused}
+.brand img,.ftr__brand img{background:var(--brand)}
 
 /* Apparition au défilement (activée seulement si JavaScript tourne) */
 .js .reveal{opacity:0;transform:translateY(22px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:calc(var(--i,0) * 60ms)}
@@ -417,8 +435,12 @@ html.lb-open{overflow:hidden}
   .callbar__in{display:flex;gap:10px;max-width:480px;margin-inline:auto}
   .callbar .btn{flex:1 1 0;padding:0 12px}
 }
+@media (max-width:480px){
+  /* Côte à côte s'il y a la place, l'un sous l'autre sinon : jamais de débordement */
+  .card__actions{grid-template-columns:repeat(auto-fit,minmax(136px,1fr))}
+  .card__actions .btn{font-size:15px;gap:8px;padding-inline:12px;white-space:normal;text-align:center;line-height:1.2}
+}
 @media (max-width:360px){
-  .card__actions{grid-template-columns:1fr}
   .btn{padding:0 16px;gap:8px}
   .card{padding:20px 18px}
   .hours li{padding:0 8px;gap:8px}
