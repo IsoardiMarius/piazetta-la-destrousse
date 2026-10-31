@@ -134,7 +134,6 @@ a:hover{color:var(--brand-dark)}
 .navlink--ext .ext{opacity:.55;transition:transform .25s var(--ease),opacity .25s}
 .navlink--ext:hover .ext{opacity:1;transform:translate(1px,-1px)}
 .hdr__btns{display:flex;align-items:center;gap:8px}
-.hdr__appeler{display:none}
 .hdr__menu{display:none}
 .burger{position:relative;display:block;width:18px;height:12px}
 .burger span{position:absolute;left:0;right:0;height:2px;border-radius:2px;background:currentColor;transition:transform .35s var(--ease),top .35s var(--ease)}
@@ -540,8 +539,6 @@ html.lb-open{overflow:hidden}
   body{font-size:16px}
   .hdr__tel{display:none}
   .hdr .btn--icon-m{width:44px;padding:0}
-  /* Le bouton d'appel de la barre du haut, toujours visible, dit « Appeler » en toutes lettres */
-  .hdr__appeler{display:inline}
 
   .story{grid-template-columns:1fr;gap:20px}
   .gallery{
@@ -551,6 +548,10 @@ html.lb-open{overflow:hidden}
   }
   .gallery::-webkit-scrollbar{display:none}
   .gallery .ph{flex:0 0 78%;aspect-ratio:4/5;scroll-snap-align:start}
+  /* Carrousel : défilement horizontal seulement ; les photos apparaissent en fondu, sans décalage
+     vertical (sinon le carrousel devenait défilable en hauteur) */
+  .gallery{overflow-y:hidden;overscroll-behavior-x:contain}
+  .js .gallery .ph.reveal{transform:none}
   .gallery[data-count="1"] .ph{flex-basis:100%}
   .lb-prev,.lb-next{top:auto;bottom:max(12px,env(safe-area-inset-bottom));margin-top:0}
   .lb-count{bottom:max(26px,calc(env(safe-area-inset-bottom) + 14px))}
@@ -627,9 +628,3 @@ html.lb-open{overflow:hidden}
 .hdet{display:grid;grid-template-columns:auto auto;justify-content:start;column-gap:14px;row-gap:2px;margin-top:2px}
 .strip__item .hdet .hdet__h{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
 .strip__item .hdet .hdet__h span{color:inherit;font-size:inherit;white-space:nowrap}
-
-/* Très petits écrans : le bouton d'appel du haut redevient une simple icône */
-@media (max-width:359px){
-  .hdr__appeler{display:none}
-  .hdr__appel{width:44px;padding:0}
-}
