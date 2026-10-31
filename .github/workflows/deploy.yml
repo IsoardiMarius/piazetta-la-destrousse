@@ -4,9 +4,6 @@ name: Publier le site
 # (celle qu'on modifie depuis GitHub), quel que soit son nom.
 on:
   push:
-    paths-ignore:
-      - '**.md'
-      - 'docs/**'
   workflow_dispatch:
 
 permissions:
