@@ -63,10 +63,10 @@ window.INFOS = {
   introduction: "Une pâte légère travaillée avec soin, des produits frais et de l’huile d’olive.",
 
   /* Le petit mot de la maison */
-  histoireTitre: "Comme sur une petite place de village.",
+  histoireTitre: "Le goût des choses simples.",
   histoire: [
-    "Une piazzetta, c’est la petite place où l’on se croise, où l’on prend des nouvelles et où l’on ne regarde pas trop l’heure. C’est un peu l’idée de notre pizzeria.",
-    "Ici, la pâte prend le temps qu’il lui faut, la tomate est fraîche, l’huile d’olive ne se compte pas et la merguez vient de Cadolive, juste à côté. Le reste, c’est vous : un coup de fil, quelques minutes de patience, et le soir prend tout de suite un air de vacances.",
+    "À la Piazzetta, on fait les pizzas comme on aime les manger : une pâte légère, des produits frais, un filet d’huile d’olive et des recettes généreuses.",
+    "Rien de compliqué, juste le plaisir d’une bonne pizza à partager, à emporter ou livrée chez vous.",
   ],
   histoireSignature: "L’équipe de la Piazzetta",
 
