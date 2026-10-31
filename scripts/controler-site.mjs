@@ -107,6 +107,8 @@ const attendues = (contenu.photos || []).filter((p) => p && p.image && fs.exists
 verifier(photos.length === Math.min(attendues.length, 12), `Photos : ${photos.length} préparée(s) pour ${attendues.length} dans la liste`);
 const galerie = contenuDe(accueil, 'data-gallery') || '';
 verifier((galerie.match(/class="ph reveal"/g) || []).length === photos.length, 'Accueil : la galerie ne contient pas toutes les photos');
+const legendes = photos.filter((p) => p.texte).map((p) => p.texte);
+verifier((galerie.match(/class="ph__leg"/g) || []).length === legendes.length && legendes.every((t) => galerie.includes(`<span class="ph__leg">${PZ.esc(t)}</span>`)), 'Accueil : les légendes des photos ne correspondent pas au contenu');
 photos.forEach((p, i) => {
   verifier(existe(p.src) && existe(p.grande), `Photos : fichier manquant pour la photo n°${i + 1}`);
   verifier(galerie.includes(`src="${p.src}"`), `Accueil : la photo n°${i + 1} n'est pas dans la galerie`);

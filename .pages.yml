@@ -203,9 +203,13 @@ content:
         description: "JPG, PNG, WebP ou photo d'iPhone, en pleine taille : le site l'allège tout seul. Pizza bien centrée, lumière du jour. La 1re photo est la plus grande et sert d'aperçu quand on partage le lien. Glisser pour changer l'ordre ; 4 à 6 photos suffisent."
         type: image
         required: true
+      - name: legende
+        label: Légende affichée sur la photo (facultatif)
+        description: "Quelques mots, par exemple « La Burrata ». Vide = pas de légende."
+        type: string
       - name: description
-        label: Ce qu'on voit sur la photo (facultatif)
-        description: "Par exemple « Pizza Atlantique ». Non affiché : aide Google et les personnes malvoyantes."
+        label: Ce qu'on voit sur la photo (facultatif, non affiché)
+        description: "Par exemple « Pizza Atlantique ». Aide Google et les personnes malvoyantes. Si vide, la légende est utilisée."
         type: string
 
   - name: contact

@@ -467,6 +467,7 @@
         '<button type="button" class="ph__btn" data-ph="' + i + '" data-grande="' + esc(p.grande) + '" data-sk aria-label="Agrandir la photo"' +
         (p.lqip ? ' style="--lqip:url(\'' + p.lqip + '\')"' : '') + '>' +
         '<img src="' + esc(p.src) + '" srcset="' + esc(p.srcset) + '" sizes="' + sizes + '" width="' + p.largeur + '" height="' + p.hauteur + '" alt="' + esc(altPhoto(p, D)) + '" loading="lazy" decoding="async" data-fade>' +
+        (p.texte ? '<span class="ph__leg">' + esc(p.texte) + '</span>' : '') +
         '<span class="sk">' + SK_PIZZA + '</span>' +
         '</button></li>';
     }).join('');

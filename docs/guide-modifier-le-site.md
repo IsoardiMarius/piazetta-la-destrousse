@@ -56,6 +56,7 @@ Horaires et congés › Bandeau d'annonce, par exemple « Nouveau : la pizza Bur
 
 **Ajouter une photo**
 Photos › **Ajouter** (« Add ») › choisis la photo dans ton téléphone › écris ce qu'on voit (par exemple « Pizza Reine ») › Enregistrer.
+Si tu veux un petit texte sur la photo, remplis « Légende affichée » (quelques mots, par exemple « La Burrata ») ; sinon laisse vide.
 Envoie la photo d'origine (JPG ou photo d'iPhone) : le site s'occupe de l'alléger et de la mettre en valeur. 4 ou 5 photos suffisent.
 La première photo est la plus grande, et c'est elle qu'on voit (en rond) quand on partage le lien du site : mets en premier une pizza ronde vue du dessus, bien centrée.
 Conseils : lumière du jour, sans flash, pizza au centre de la photo avec un peu de marge autour. Évite les photos où l'on reconnaît des clients ou des employés sans leur accord.

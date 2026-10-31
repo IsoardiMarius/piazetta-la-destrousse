@@ -72,13 +72,13 @@ def photos_a_publier():
             if not chemin or not fichier.is_file():
                 print(f"⚠️  Photo n°{i + 1} ignorée : image « {chemin or '(vide)'} » introuvable.")
                 continue
-            resultat.append((fichier, str(p.get("description") or "").strip()))
+            resultat.append((fichier, str(p.get("description") or "").strip(), str(p.get("legende") or "").strip()))
         return resultat
     fichiers = sorted(
         (f for f in SOURCE.iterdir() if f.suffix.lower() in EXTENSIONS),
         key=lambda f: f.name.lower(),
     ) if SOURCE.is_dir() else []
-    return [(f, ("Pizza " + legende(f.name)) if legende(f.name) else "") for f in fichiers]
+    return [(f, ("Pizza " + legende(f.name)) if legende(f.name) else "", "") for f in fichiers]
 
 
 def main():
@@ -91,7 +91,7 @@ def main():
     dest.mkdir(parents=True, exist_ok=True)
     liste, vus = [], set()
 
-    for f, description in fichiers:
+    for f, description, texte in fichiers:
         try:
             im = Image.open(f)
             im = ImageOps.exif_transpose(im).convert("RGB")
@@ -131,7 +131,8 @@ def main():
             "srcset": ", ".join(f"{p} {w}w" for p, w, _ in variantes),
             "largeur": grande[1],
             "hauteur": grande[2],
-            "legende": description,
+            "legende": description or texte,   # texte lu par Google et les lecteurs d'écran
+            "texte": texte,                     # légende affichée sur la photo (facultative)
         })
         if im.width < 1000:
             print(f"⚠️  {f.name} est petite ({im.width} px de large) : elle risque d'être floue. Préférez la photo d'origine.")

@@ -133,7 +133,7 @@
     var dlg = $('[data-lightbox]');
     if (!dlg || typeof dlg.showModal !== 'function') return;
     var btns = $$('[data-ph]', ul);
-    var img = $('[data-lb-img]', dlg), count = $('[data-lb-count]', dlg);
+    var img = $('[data-lb-img]', dlg), count = $('[data-lb-count]', dlg), cap = $('[data-lb-cap]', dlg);
     var idx = 0, startX = null, opener = null;
     function show(i, dir) {
       idx = (i + btns.length) % btns.length;
@@ -154,6 +154,9 @@
       if (img.complete && img.naturalWidth) go();
       else { img.onload = go; img.onerror = go; }
       count.textContent = btns.length > 1 ? (idx + 1) + ' / ' + btns.length : '';
+      /* Légende facultative de la photo, reprise sous la grande photo */
+      var leg = $('.ph__leg', b);
+      if (cap) { cap.textContent = leg ? leg.textContent : ''; cap.hidden = !leg; }
       dlg.classList.toggle('is-single', btns.length < 2);
     }
     ul.addEventListener('click', function (e) {
