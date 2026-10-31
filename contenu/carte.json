@@ -15,6 +15,17 @@
   ],
   "pizzas": [
     {
+      "nom": "Pizza Saison",
+      "ingredients": "Légumes de saison\nTomate fraîche, champignons frais, mozzarella, jambon de Parme, crème de basilic, tomate cerise, olives",
+      "prix": [
+        14,
+        2,
+        29
+      ],
+      "badge": "Pizza de la semaine",
+      "masquee": false
+    },
+    {
       "nom": "Reine",
       "ingredients": "Tomate fraîche, jambon, emmental, champignons frais, origan, olives",
       "prix": [
@@ -122,17 +133,6 @@
         20,
         29
       ],
-      "masquee": false
-    },
-    {
-      "nom": "Pizza Saison",
-      "ingredients": "Légumes de saison\nTomate fraîche, champignons frais, mozzarella, jambon de Parme, crème de basilic, tomate cerise, olives",
-      "prix": [
-        14,
-        2,
-        29
-      ],
-      "badge": "Pizza de la semaine",
       "masquee": false
     }
   ],
