@@ -198,3 +198,6 @@ html:not(.is-bare) .sh-next:hover .ic{transform:translateX(3px)}
   .sheet{transition:none}
   @view-transition{navigation:none}
 }
+
+/* Résumé des heures : quand les horaires varient, une ligne par horaire */
+[data-bind="resumeHeures"]{white-space:pre-line}

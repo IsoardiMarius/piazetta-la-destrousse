@@ -597,3 +597,6 @@ html.lb-open{overflow:hidden}
   .js .sk::before,.js .preview__sheet::after{display:none}
   @view-transition{navigation:none}
 }
+
+/* Résumé des heures : quand les horaires varient, une ligne par horaire */
+[data-bind="resumeHeures"]{white-space:pre-line}

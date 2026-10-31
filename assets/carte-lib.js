@@ -179,32 +179,73 @@
     return plages;
   }
 
-  /* « Du mardi au samedi » ; si les horaires varient d'un jour à l'autre, le détail
-     est dans le tableau des horaires et le résumé des heures dit « Horaires selon le jour » */
+  /* « Du mardi au samedi » : les jours d'ouverture ; les heures sont résumées par resumeHeures */
   function resumeJours(D) {
-    return plagesOuverture(D).map(function (g, i) {
+    var plages = plagesOuverture(D).map(function (g) {
       var s;
       if (g.du === g.au) s = 'le ' + g.du;
       else if (JOURS.indexOf(g.au) - JOURS.indexOf(g.du) === 1) s = g.du + ' et ' + g.au;
       else s = 'du ' + g.du + ' au ' + g.au;
-      return i === 0 ? cap(s) : s;
-    }).join(' · ');
+      return s;
+    });
+    /* « Du mardi au jeudi et le samedi » */
+    return cap(listeFr(plages));
   }
 
+  /* Version courte pour le pied de page de la carte : « Mardi – samedi », « Vendredi », « Lun., mer.–ven. et dim. » */
+  function resumeJoursCourt(D) {
+    var p = plagesOuverture(D);
+    if (!p.length) return '';
+    if (p.length === 1) return p[0].du === p[0].au ? cap(p[0].du) : cap(p[0].du) + ' – ' + p[0].au;
+    return cap(listeFr(p.map(function (g) {
+      var a = JOURS.indexOf(g.du), b = JOURS.indexOf(g.au);
+      return JOURS_COURTS[a] + (b > a ? '–' + JOURS_COURTS[b] : '');
+    })));
+  }
+
+  /* Jours ouverts regroupés par horaire identique (même s'ils ne se suivent pas), dans l'ordre de la semaine :
+     [{ jours: [1, 2, 3, 4, 6], creneaux: [[1080, 1320]] }, { jours: [5], creneaux: [[690, 840], [1080, 1350]] }] */
+  function horairesParHeures(D) {
+    var groupes = [], parCle = {};
+    JOURS.forEach(function (j, i) {
+      var c = parseCreneaux((D.horaires || {})[j]).filter(Boolean);
+      if (!c.length) return;
+      var cle = c.map(function (r) { return r.join('-'); }).join(',');
+      if (!parCle[cle]) { parCle[cle] = { jours: [], creneaux: c }; groupes.push(parCle[cle]); }
+      parCle[cle].jours.push(i);
+    });
+    return groupes;
+  }
+  var JOURS_COURTS = ['lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.', 'dim.'];
+  /* Une ligne par horaire : « Mar.–ven. et dim. : 18h – 22h », « Sam. : 11h30 – 14h, 18h – 22h30 » */
+  function lignesHoraires(D) {
+    return horairesParHeures(D).map(function (g) {
+      var plages = [];
+      g.jours.forEach(function (i) {
+        var l = plages[plages.length - 1];
+        if (l && l[1] === i - 1) l[1] = i; else plages.push([i, i]);
+      });
+      var jours = listeFr(plages.map(function (p) { return JOURS_COURTS[p[0]] + (p[1] > p[0] ? '–' + JOURS_COURTS[p[1]] : ''); }));
+      /* Insécable autour du tiret (le « gluon » \u2060 empêche la coupure juste après le tiret) */
+      var heures = g.creneaux.map(function (r) { return heure(r[0]) + NBSP + '–\u2060' + NBSP + heure(r[1]); }).join(', ');
+      return cap(jours) + NBSP + ': ' + heures;
+    });
+  }
+
+  /* Résumé des heures : « De 18h à 22h » si c'est pareil tous les jours d'ouverture,
+     sinon une ligne par horaire (voir lignesHoraires), affichées l'une sous l'autre */
   function resumeHeures(D) {
-    var g = groupesHoraires(D);
+    var g = horairesParHeures(D);
     if (!g.length) return '';
-    var same = g.every(function (x) { return x.cle === g[0].cle; });
-    if (!same) return 'Horaires selon le jour';
-    var c = parseCreneaux(g[0].creneaux).filter(Boolean);
-    return cap(c.map(function (r) { return 'de ' + heure(r[0]) + ' à ' + heure(r[1]); }).join(' et '));
+    if (g.length > 1) return lignesHoraires(D).join('\n');
+    return cap(g[0].creneaux.map(function (r) { return 'de ' + heure(r[0]) + ' à ' + heure(r[1]); }).join(' et '));
   }
 
+  /* Heure d'ouverture si elle est la même tous les jours (« dès 18h »), même si la fermeture varie */
   function premiereOuverture(D) {
-    var g = groupesHoraires(D);
-    if (!g.length || !g.every(function (x) { return x.cle === g[0].cle; })) return '';
-    var c = parseCreneaux(g[0].creneaux).filter(Boolean);
-    return c.length ? heure(c[0][0]) : '';
+    var g = horairesParHeures(D);
+    if (!g.length || !g.every(function (x) { return x.creneaux[0][0] === g[0].creneaux[0][0]; })) return '';
+    return heure(g[0].creneaux[0][0]);
   }
 
   /* ---------- Carte ---------- */
@@ -341,9 +382,8 @@
     T.nomPied = nomOfficiel(D) + ' · Pizzeria artisanale';
     var jours = resumeJours(D), heures = resumeHeures(D), ouv = premiereOuverture(D);
     T.resumeJours = jours || 'Horaires : nous appeler';
-    T.resumeJoursCourt = jours ? jours.replace(/^Du (\S+) au (\S+)$/, function (_, a, b) { return cap(a) + ' – ' + b; }) : 'Sur appel';
+    T.resumeJoursCourt = jours ? resumeJoursCourt(D) : 'Sur appel';
     T.resumeHeures = heures || (D.telephone ? 'Au ' + D.telephone : '');
-    T.resumeHeuresMin = heures ? lower1(heures) : '';
     T.statutDefaut = jours ? jours + (ouv ? ' dès ' + ouv : '') : 'Commandes par téléphone';
     var zone = D.zoneLivraison || villeSeule(D);
     T.accroche = jours ? 'À ' + zone + ', ' + lower1(jours) + (ouv ? ' dès ' + ouv : '') + '.' : 'À ' + zone + '.';
@@ -465,7 +505,7 @@
     var cs = communes(D);
     return nomCourt(D) + ', pizzeria artisanale à ' + villeSeule(D) + ' : pizzas à emporter ou livrées' + (cs.length ? ' à ' + listeFr(cs) : '') + ', ' +
       (T.resumeJours ? lower1(T.resumeJours) + (premiereOuverture(D) ? ' dès ' + premiereOuverture(D) : '') : '') + '. ' +
-      pizzasVisibles(D).length + ' pizzas' + (fp ? ' de ' + prix(fp.min) + ' à ' + prix(fp.max) : '') + '. ' +
+      pizzasVisibles(D).length + ' pizza' + (pizzasVisibles(D).length > 1 ? 's' : '') + (fp ? ' de ' + prix(fp.min) + ' à ' + prix(fp.max) : '') + '. ' +
       'Tél. ' + (D.telephone || '') + '.';
   }
   function descriptionCarte(D) {
@@ -556,7 +596,7 @@
     donnees: donnees, parseCreneaux: parseCreneaux, creneauxTexte: creneauxTexte,
     parseDate: parseDate, dateTexte: dateTexte, fermeture: fermeture, estFerme: estFerme, messageFermeture: messageFermeture,
     statut: statut, maintenantParis: maintenantParis,
-    groupesHoraires: groupesHoraires, resumeJours: resumeJours, resumeHeures: resumeHeures, premiereOuverture: premiereOuverture,
+    groupesHoraires: groupesHoraires, resumeJours: resumeJours, resumeHeures: resumeHeures, lignesHoraires: lignesHoraires, premiereOuverture: premiereOuverture,
     pizzasVisibles: pizzasVisibles, fourchettePrix: fourchettePrix,
     valider: valider, validerCarte: validerCarte, validerInfos: validerInfos,
     fr: fr, textes: textes, htmlHistoire: htmlHistoire, htmlHoraires: htmlHoraires, htmlGalerie: htmlGalerie, altPhoto: altPhoto,
