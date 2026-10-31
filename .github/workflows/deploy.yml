@@ -30,6 +30,10 @@ jobs:
       - name: Vérifier la carte (carte.js)
         run: node scripts/verifier-carte.mjs
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - name: Installer le navigateur pour le PDF
         run: |
           npm ci --no-audit --no-fund
@@ -42,6 +46,14 @@ jobs:
         run: |
           mkdir _site
           cp -r index.html carte.html carte.js infos.js carte.pdf assets _site/
+          # Nouvelle adresse des fichiers à chaque publication : les visiteurs ne gardent jamais une ancienne version en cache.
+          V="${GITHUB_SHA::8}"
+          sed -i -E "s#(href|src)=\"((assets/[^\"?]+|carte|infos)\.(css|js))\"#\1=\"\2?v=$V\"#g; s#\"carte\.pdf\"#\"carte.pdf?v=$V\"#g" _site/*.html
+
+      - name: Préparer les photos (dossier photos/)
+        run: |
+          pip install --quiet pillow pillow-heif
+          python scripts/preparer-photos.py _site
 
       - uses: actions/configure-pages@v5
 

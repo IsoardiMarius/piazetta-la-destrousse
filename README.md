@@ -8,12 +8,15 @@ Site vitrine de la pizzeria, publié avec GitHub Pages.
 | --- | --- | --- |
 | Les pizzas, les ingrédients, les prix, les tailles | **[`carte.js`](carte.js)** | [✏️ Modifier la carte](https://github.com/IsoardiMarius/piazetta-la-destrousse/edit/claude/affectionate-euler-l61emv/carte.js) |
 | Les horaires, une fermeture pour congés, une annonce, le téléphone, l'adresse, les textes de l'accueil | **[`infos.js`](infos.js)** | [✏️ Modifier les infos](https://github.com/IsoardiMarius/piazetta-la-destrousse/edit/claude/affectionate-euler-l61emv/infos.js) |
+| Les photos de la page d'accueil | dossier **[`photos/`](photos/)** | [📷 Ajouter des photos](https://github.com/IsoardiMarius/piazetta-la-destrousse/upload/claude/affectionate-euler-l61emv/photos) |
 
 1. Cliquez sur le lien direct (ou ouvrez le fichier puis cliquez sur le crayon ✏️).
 2. Modifiez le texte entre les guillemets `"..."`.
 3. Cliquez sur **Commit changes**.
 
-Une à deux minutes plus tard, tout est à jour : la page d'accueil, la page « La carte », le **PDF téléchargeable** (regénéré automatiquement), les horaires et le badge « Ouvert / Fermé ».
+Une à deux minutes plus tard, tout est à jour : la page d'accueil, la carte, le **PDF téléchargeable** (regénéré à chaque publication avec la carte, les horaires et les coordonnées du moment), le badge « Ouvert / Fermé » et les photos.
+
+Pour les photos, le mode d'emploi complet est dans [`photos/LISEZ-MOI.md`](photos/LISEZ-MOI.md). En bref : on dépose les photos dans le dossier, le site les redresse, les allège, les met légèrement en valeur et retire les données GPS du téléphone.
 
 ### Exemples dans `carte.js`
 
@@ -80,7 +83,8 @@ Puis ouvrir http://localhost:8000. Pour générer le PDF en local : `npm install
 | `carte.js` | **À modifier** : la carte (pizzas, prix, tailles) |
 | `infos.js` | **À modifier** : horaires, congés, annonce, contact, textes |
 | `index.html` | Page d'accueil |
-| `carte.html` | Page « La carte » (et sa version A4, source du PDF) |
+| `photos/` | **À remplir** : les photos de la page d'accueil |
+| `carte.html` | Aperçu de la carte A4 avec boutons Imprimer et PDF (source du PDF) |
 | `assets/` | Styles, scripts, logo, polices auto-hébergées |
 | `scripts/` | Vérification de la carte et génération du PDF |
 

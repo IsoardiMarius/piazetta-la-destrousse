@@ -70,4 +70,8 @@ window.INFOS = {
   ],
   histoireSignature: "L’équipe de la Piazzetta",
 
+  /* Titre au-dessus des photos. Les photos elles-mêmes se mettent dans le
+     dossier « photos » (voir le fichier LISEZ-MOI.md de ce dossier). */
+  photosTitre: "Tout juste sorties du four.",
+
 };

@@ -1,48 +1,72 @@
-/* ==========================================================================
-   Page « La carte » : boutons fichiers, encart commande, et version A4
-   (impression, PDF, aperçu). 794 × 1123 px = une page A4 à 96 ppp.
-   ========================================================================== */
-
-.menu-page{padding-top:clamp(32px,5vw,64px)}
-.menu-page .menu__head{margin-bottom:clamp(20px,3vw,32px)}
-.menu__tools{display:flex;flex-direction:column;align-items:flex-end;gap:14px}
-.menu__files{display:flex;flex-wrap:wrap;gap:4px 18px}
-.linkbtn{
-  display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 2px;
-  background:none;border:0;cursor:pointer;color:var(--brand);
-  font:600 15px/1 var(--f-body);text-decoration:underline;text-decoration-color:rgba(107,26,20,.3);text-underline-offset:4px;
-  transition:text-decoration-color .2s var(--ease),color .2s var(--ease);
+/* Carte A4 — 794 × 1123 px = une page A4 à 96 ppp */
+:root{
+  --bg:#F6F0E6;--ink:#241411;--brand:#6B1A14;--brand-dark:#521310;
+  --muted:#6B5853;--muted-2:#5E4C47;--line:#E2D5C4;--cream:#F6EEE3;--cream-muted:#EAD9C8;
+  --f-display:'Bricolage Grotesque',ui-sans-serif,system-ui,sans-serif;
+  --f-body:'DM Sans',ui-sans-serif,system-ui,sans-serif;
+  --k:1;            /* ajusté automatiquement pour que la carte tienne sur une page */
+  --s:1;            /* zoom d'affichage à l'écran */
+  --cols:3;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  color-scheme:light;
 }
-.linkbtn:hover{color:var(--brand-dark);text-decoration-color:currentColor}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:#E9E0D2;color:var(--ink);font-family:var(--f-body);-webkit-font-smoothing:antialiased;min-height:100vh}
+.ic{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+@view-transition{navigation:auto}
 
-.order{
-  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px 32px;
-  margin:clamp(40px,6vw,64px) 0 clamp(64px,8vw,96px);padding:clamp(24px,4vw,36px);
-  border-radius:24px;background:var(--card);border:1px solid var(--line);
+/* ---------- Barre d'actions (écran uniquement) ---------- */
+.bar{
+  position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px max(16px,env(safe-area-inset-left));
+  background:rgba(233,224,210,.82);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(107,26,20,.1);
 }
-.order > div{display:flex;flex-direction:column;gap:6px;max-width:560px}
-.order__title{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(22px,2.4vw,28px);letter-spacing:-.02em;line-height:1.15}
-
-.hdr__home{display:none}
-@media (max-width:760px){
-  .hdr__home{display:inline-flex}
-  .menu__tools{align-items:stretch}
-  .menu__files{justify-content:center}
-  .order .btn{flex:1 1 100%}
+.bar__group{display:flex;gap:8px;min-width:0}
+.bar__btn{flex:none}
+.bar__btn{
+  display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:999px;
+  border:1.5px solid rgba(107,26,20,.25);background:transparent;color:var(--brand);
+  font:600 15px/1 var(--f-body);text-decoration:none;cursor:pointer;white-space:nowrap;
+  transition:background-color .2s var(--ease),border-color .2s var(--ease),transform .2s var(--ease);
+  -webkit-tap-highlight-color:transparent;
+}
+.bar__btn:hover{background:rgba(107,26,20,.06);border-color:var(--brand)}
+.bar__btn:active{transform:scale(.97)}
+.bar__btn--primary{background:var(--brand);border-color:var(--brand);color:var(--cream)}
+.bar__btn--primary:hover{background:var(--brand-dark);border-color:var(--brand-dark)}
+.bar__btn:focus-visible{outline:2.5px solid var(--brand);outline-offset:3px}
+@media (max-width:480px){
+  .bar__back span{display:none}
+  .bar__back{width:44px;padding:0;justify-content:center}
 }
 
-/* ---------- Version A4 ---------- */
-.print-sheet{position:absolute;left:-10000px;top:0;visibility:hidden;pointer-events:none}
-
+/* ---------- Scène : centre et met à l'échelle la feuille ---------- */
+.stage{
+  display:flex;justify-content:center;padding:clamp(16px,4vw,48px) 16px clamp(32px,6vw,64px);
+}
+.stage__box{width:calc(794px * var(--s));height:calc(1123px * var(--s));flex:none}
 .sheet{
-  --k:1;--cols:3;
-  width:794px;height:1123px;overflow:hidden;
-  display:flex;flex-direction:column;background:var(--bg);color:var(--ink);font-family:var(--f-body);line-height:normal;
+  width:794px;height:1123px;overflow:hidden;flex:none;
+  display:flex;flex-direction:column;background:var(--bg);color:var(--ink);
+  border-radius:6px;box-shadow:0 1px 2px rgba(36,20,17,.08),0 30px 70px -30px rgba(36,20,17,.45);
+  transform:scale(var(--s));transform-origin:0 0;
+  animation:sheet-in .7s var(--ease) both;
 }
+@keyframes sheet-in{from{opacity:0;transform:translateY(16px) scale(var(--s))}to{opacity:1;transform:scale(var(--s))}}
+
+/* Vignette / génération PDF : la feuille seule, sans décor */
+.is-bare body{background:var(--bg);min-height:0}
+.is-bare .bar{display:none}
+.is-bare .stage{padding:0;display:block}
+.is-bare .sheet{border-radius:0;box-shadow:none;animation:none;transform:none}
+
+/* ---------- Contenu de la feuille ---------- */
 .sh-head{padding:44px 56px 0;display:flex;align-items:center;gap:22px}
 .sh-head img{width:88px;height:88px;border-radius:50%;flex:none}
 .sh-title{display:flex;flex-direction:column;gap:4px;flex:1 1 auto;min-width:0}
-.sh-title h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:44px;line-height:1;letter-spacing:-.03em;color:var(--brand)}
+.sh-title h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:44px;line-height:1;letter-spacing:-.03em;color:var(--brand)}
 .sh-title p{margin:0;font-size:14px;color:var(--muted)}
 .sh-order{display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right}
 .sh-order span{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -52,7 +76,7 @@
 .sh-list{display:flex;flex-direction:column}
 .row{
   display:grid;grid-template-columns:minmax(0,1fr) repeat(var(--cols),calc(60px * var(--k)));column-gap:10px;
-  align-items:baseline;padding:calc(6px * var(--k)) 0 calc(7px * var(--k));border-bottom:1px solid #E2D5C4;
+  align-items:baseline;padding:calc(6px * var(--k)) 0 calc(7px * var(--k));border-bottom:1px solid var(--line);
 }
 .row--head{align-items:end;padding:0 0 10px;border-bottom:2px solid var(--brand)}
 .row__label{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
@@ -66,6 +90,7 @@
 .row__price{text-align:right;font-weight:600;font-size:calc(15px * var(--k));font-variant-numeric:tabular-nums;white-space:nowrap}
 .sh-mention{margin:calc(14px * var(--k)) 0 0;font-size:12.5px;line-height:1.5;color:var(--muted);text-align:center}
 .sh-mention:empty{display:none}
+
 .sh-foot{
   background:var(--brand);color:var(--cream);padding:30px 56px 40px;
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:start;
@@ -77,16 +102,16 @@
 .sh-foot__item strong{font-family:var(--f-display);font-weight:700;font-size:20px;line-height:1.2}
 .sh-foot__item span{font-size:13px;color:var(--cream-muted)}
 
-/* Aperçu et génération du PDF : uniquement la feuille */
-.is-bare body{background:var(--bg);overflow:hidden}
-.is-bare body > :not(.print-sheet):not(svg){display:none!important}
-.is-bare .print-sheet{position:static;visibility:visible}
-
-/* Impression : uniquement la feuille, sur une page A4 */
+/* ---------- Impression ---------- */
 @page{size:A4;margin:0}
 @media print{
   html,body{background:var(--bg)!important;width:210mm;height:297mm;overflow:hidden}
-  body > :not(.print-sheet):not(svg){display:none!important}
-  .print-sheet{position:static;visibility:visible}
-  .sheet{width:210mm;height:297mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .bar{display:none!important}
+  .stage{padding:0!important;display:block!important}
+  .stage__box{width:auto!important;height:auto!important}
+  .sheet{transform:none!important;border-radius:0;box-shadow:none;animation:none;width:210mm;height:297mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+@media (prefers-reduced-motion:reduce){
+  .sheet{animation:none}
+  @view-transition{navigation:none}
 }
