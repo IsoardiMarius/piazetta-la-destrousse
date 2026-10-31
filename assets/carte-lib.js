@@ -479,12 +479,15 @@
     }).join('');
   }
 
+  /* Texte saisi sur plusieurs lignes : les retours à la ligne sont gardés */
+  function multiligne(t) { return esc(String(t).trim()).replace(/[ \t]*\r?\n[ \t\r\n]*/g, '<br>'); }
+
   function htmlLignesCarte(D) {
     var tailles = D.tailles || [];
     return pizzasVisibles(D).map(function (p) {
       return '<div class="row">' +
         '<div class="row__name"><b>' + esc(p.nom) + (p.badge ? '<em>' + esc(p.badge) + '</em>' : '') + '</b>' +
-        (p.ingredients ? '<span>' + esc(p.ingredients) + '</span>' : '') + '</div>' +
+        (p.ingredients ? '<span>' + multiligne(p.ingredients) + '</span>' : '') + '</div>' +
         tailles.map(function (t, i) { return '<span class="row__price">' + prix((p.prix || [])[i]) + '</span>'; }).join('') +
         '</div>';
     }).join('');
@@ -619,7 +622,7 @@
     pizzasVisibles: pizzasVisibles, fourchettePrix: fourchettePrix,
     valider: valider, validerCarte: validerCarte, validerInfos: validerInfos,
     fr: fr, textes: textes, htmlHistoire: htmlHistoire, htmlHoraires: htmlHoraires, htmlGalerie: htmlGalerie, altPhoto: altPhoto,
-    htmlEnteteTailles: htmlEnteteTailles, htmlLignesCarte: htmlLignesCarte,
+    htmlEnteteTailles: htmlEnteteTailles, htmlLignesCarte: htmlLignesCarte, multiligne: multiligne,
     description: description, descriptionCarte: descriptionCarte, jsonLd: jsonLd,
     liensGoogle: liensGoogle, htmlReseaux: htmlReseaux, htmlLiensHero: htmlLiensHero, nomOfficiel: nomOfficiel, villeSeule: villeSeule,
     nomCourt: nomCourt, nomPdf: nomPdf, rubriquesVisibles: rubriquesVisibles, htmlRubriques: htmlRubriques, titrePage2: titrePage2, SK_PIZZA: SK_PIZZA

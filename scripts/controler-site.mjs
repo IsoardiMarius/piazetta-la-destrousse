@@ -121,7 +121,7 @@ verifier(lignes.length === pizzas.length, `Carte : ${lignes.length} pizzas affic
 pizzas.forEach((p, i) => {
   const l = lignes[i] || '';
   verifier(present(l, p.nom), `Carte : la pizza n°${i + 1} devrait être « ${p.nom} »`);
-  if (p.ingredients) verifier(present(l, p.ingredients), `Carte : ingrédients de « ${p.nom} » absents`);
+  if (p.ingredients) verifier(l.includes(PZ.multiligne(p.ingredients)), `Carte : ingrédients de « ${p.nom} » absents`);
   if (p.badge) verifier(present(l, p.badge), `Carte : badge de « ${p.nom} » absent`);
   const prixAffiches = (l.match(/<span class="row__price">([^<]*)<\/span>/g) || []).map((x) => x.replace(/<[^>]+>/g, ''));
   const prixAttendus = tailles.map((_, j) => PZ.prix((p.prix || [])[j]));
