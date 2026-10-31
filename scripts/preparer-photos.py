@@ -58,11 +58,31 @@ def mettre_en_valeur(im):
     return im
 
 
-def main():
+def photos_a_publier():
+    """Liste des photos et de leur description, dans l'ordre choisi.
+
+    Source : contenu/photos.json (modifié depuis Pages CMS). À défaut, toutes les
+    photos du dossier photos/, par ordre alphabétique (description tirée du nom)."""
+    liste_json = RACINE / "contenu" / "photos.json"
+    if liste_json.exists():
+        resultat = []
+        for i, p in enumerate(json.loads(liste_json.read_text(encoding="utf-8")) or []):
+            chemin = str((p or {}).get("image") or "").lstrip("/")
+            fichier = RACINE / chemin
+            if not chemin or not fichier.is_file():
+                print(f"⚠️  Photo n°{i + 1} ignorée : image « {chemin or '(vide)'} » introuvable.")
+                continue
+            resultat.append((fichier, str(p.get("description") or "").strip()))
+        return resultat
     fichiers = sorted(
         (f for f in SOURCE.iterdir() if f.suffix.lower() in EXTENSIONS),
         key=lambda f: f.name.lower(),
     ) if SOURCE.is_dir() else []
+    return [(f, ("Pizza " + legende(f.name)) if legende(f.name) else "") for f in fichiers]
+
+
+def main():
+    fichiers = photos_a_publier()
     if len(fichiers) > MAX_PHOTOS:
         print(f"⚠️  {len(fichiers)} photos trouvées : seules les {MAX_PHOTOS} premières sont affichées.")
         fichiers = fichiers[:MAX_PHOTOS]
@@ -71,7 +91,7 @@ def main():
     dest.mkdir(parents=True, exist_ok=True)
     liste, vus = [], set()
 
-    for f in fichiers:
+    for f, description in fichiers:
         try:
             im = Image.open(f)
             im = ImageOps.exif_transpose(im).convert("RGB")
@@ -111,7 +131,7 @@ def main():
             "srcset": ", ".join(f"{p} {w}w" for p, w, _ in variantes),
             "largeur": grande[1],
             "hauteur": grande[2],
-            "legende": legende(f.name),
+            "legende": description,
         })
         if im.width < 1000:
             print(f"⚠️  {f.name} est petite ({im.width} px de large) : elle risque d'être floue. Préférez la photo d'origine.")

@@ -13,7 +13,7 @@ async function ouvrir(browser, options = {}) {
   await page.goto(url, { waitUntil: 'load' });
   await page.waitForSelector('html[data-ready="ok"], html[data-ready="error"]', { timeout: 20000 });
   if ((await page.getAttribute('html', 'data-ready')) !== 'ok') {
-    throw new Error('La carte ne s’est pas affichée correctement (vérifiez carte.js et infos.js).');
+    throw new Error('La carte ne s’est pas affichée correctement (vérifiez le dossier contenu/).');
   }
   return page;
 }

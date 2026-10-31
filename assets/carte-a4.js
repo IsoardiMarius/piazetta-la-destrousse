@@ -1,4 +1,4 @@
-/* Carte A4 : construite à partir de carte.js et infos.js, ajustée pour tenir sur une page. */
+/* Carte A4 : construite à partir du contenu (dossier contenu/, via donnees.js), ajustée pour tenir sur une page. */
 (function () {
   'use strict';
   var PZ = window.PZ, d = document, root = d.documentElement;
@@ -9,7 +9,7 @@
   if (!PZ || !window.CARTE || !window.INFOS) { root.setAttribute('data-ready', 'error'); return; }
   var C = PZ.donnees(window);
   var erreurs = PZ.validerCarte(window.CARTE).concat(PZ.validerInfos(window.INFOS));
-  if (erreurs.length) console.warn('[carte.js] ' + erreurs.join('\n'));
+  if (erreurs.length) console.warn('[contenu] ' + erreurs.join('\n'));
 
   var sheet = $('[data-sheet]');
   sheet.style.setProperty('--cols', (C.tailles || []).length);

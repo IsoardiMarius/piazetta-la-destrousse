@@ -6,8 +6,8 @@
 //   node scripts/generer-apercus.mjs <dossier-du-site>
 import fs from 'node:fs';
 import path from 'node:path';
-import vm from 'node:vm';
 import { createRequire } from 'node:module';
+import { chargerContenu } from './contenu.mjs';
 import { pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
 
@@ -18,9 +18,7 @@ const dossier = path.resolve(process.argv[2] || '_site');
 const lire = (f) => fs.readFileSync(path.join(dossier, f), 'utf8');
 const existe = (f) => fs.existsSync(path.join(dossier, f));
 
-const window = {};
-vm.runInNewContext(lire('carte.js') + '\n' + lire('infos.js'), { window });
-const D = PZ.donnees(window);
+const D = PZ.donnees(chargerContenu());
 const T = PZ.textes(D);
 const photos = existe('assets/photos.json') ? JSON.parse(lire('assets/photos.json')) : [];
 const fp = PZ.fourchettePrix(D);

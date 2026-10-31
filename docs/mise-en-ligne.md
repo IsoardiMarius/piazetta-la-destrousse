@@ -10,6 +10,7 @@ Adresse du site : **https://piazzetta-ladestrousse.com**
 | --- | --- | --- |
 | Code du site | GitHub, dépôt public `IsoardiMarius/piazetta-la-destrousse` | Compte GitHub du développeur (IsoardiMarius) |
 | Hébergement | GitHub Pages (gratuit, dépôt public) | Même compte GitHub |
+| Contenu (carte, horaires, photos, contact, textes) | Dossier `contenu/` du dépôt, modifié depuis **Pages CMS** (app.pagescms.org) | Le gérant (invité par e-mail) et le développeur |
 | Publication | GitHub Actions, workflow « Publier le site » (`.github/workflows/deploy.yml`) | Automatique à chaque modification |
 | Nom de domaine | `piazzetta-ladestrousse.com`, acheté sur Cloudflare Registrar | Compte Cloudflare du développeur, payé avec sa carte (renouvellement automatique) ; le gérant le rembourse (environ 10 € par an, par Wero) |
 | DNS (aiguillage du domaine vers le site) | Cloudflare, rubrique DNS du domaine | Même compte Cloudflare |
@@ -32,18 +33,30 @@ Aucun mot de passe, aucune carte bancaire et aucun identifiant ne sont stockés 
 
 **Ce que fait la publication**, à chaque modification (2 minutes environ, suivi dans l'onglet **Actions**) :
 
-1. vérifie `carte.js` et `infos.js` (en cas d'erreur, la publication s'arrête et l'ancien site reste en ligne) ;
-2. génère le PDF de la carte et sa vignette ;
-3. prépare les photos du dossier `photos/` (redressées, allégées en 4 tailles, légèrement mises en valeur, données GPS retirées) ;
+1. vérifie le contenu du dossier `contenu/` : une erreur grave (fichier abîmé, carte vide) arrête la publication et l'ancien site reste en ligne ; une erreur mineure (prix manquant, photo introuvable…) est ignorée et signalée dans le résumé de la publication ;
+2. génère `donnees.js` (le contenu lu par les pages), puis le PDF de la carte et sa vignette ;
+3. prépare les photos de la liste `contenu/photos.json`, dans l'ordre choisi (redressées, allégées en 4 tailles, légèrement mises en valeur, données GPS retirées) ;
 4. dessine les images d'aperçu des liens (SMS, WhatsApp, Facebook) ;
 5. récupère l'adresse officielle du site auprès de GitHub (`https://piazzetta-ladestrousse.com`) ;
 6. pré-remplit les pages et ajoute ce qu'il faut pour Google (titres, descriptions, adresse canonique, fiche « Restaurant », `sitemap.xml`, `robots.txt`) ;
 7. change l'adresse des fichiers pour que personne ne garde une ancienne version en cache ;
-8. met le site en ligne.
+8. met le site en ligne ;
+9. en cas d'échec, ouvre une alerte (« issue ») sur GitHub, ce qui envoie un e-mail au propriétaire du dépôt ; elle se ferme toute seule à la publication réussie suivante.
 
 L'adresse du domaine n'est écrite nulle part en dur dans les scripts : si le domaine change un jour, il suffit de modifier le domaine personnalisé dans GitHub puis de relancer la publication.
 
-## 2. Nom de domaine (Cloudflare)
+## 2. Interface d'édition (Pages CMS)
+
+[Pages CMS](https://pagescms.org) (gratuit, open source) affiche des formulaires pour modifier le contenu sans toucher au code. Chaque enregistrement modifie un fichier du dossier `contenu/` (ou ajoute une photo dans `photos/`) et déclenche la publication automatique.
+
+- **Configuration des formulaires** : fichier [`.pages.yml`](../.pages.yml) à la racine du dépôt (rubriques, libellés, aides, vérification du format des horaires et des liens).
+- **Mise en place** (une seule fois, par le développeur) : se connecter sur https://app.pagescms.org avec le compte GitHub, installer l'application Pages CMS sur le dépôt `piazetta-la-destrousse` (accès à ce seul dépôt), ouvrir le projet, puis **Settings › Collaborators** › inviter le gérant par son adresse e-mail.
+- **Le gérant** se connecte avec le lien reçu par e-mail, **sans compte GitHub**. Il peut modifier le contenu et les photos, mais pas la configuration ni les accès.
+- **Les modifications** sont enregistrées dans l'historique du dépôt avec le message « Modification : … (via Pages CMS) ».
+- **Si Pages CMS disparaissait** : le site continue de fonctionner. Le contenu reste dans le dépôt et se modifie directement sur GitHub (fichiers JSON du dossier `contenu/`). Pages CMS étant open source, on peut aussi l'héberger soi-même.
+- Mode d'emploi pour le gérant : [`guide-modifier-le-site.md`](guide-modifier-le-site.md).
+
+## 3. Nom de domaine (Cloudflare)
 
 **Achat** : `piazzetta-ladestrousse.com`, sur Cloudflare Registrar (prix coûtant, sans surcoût au renouvellement), depuis le **compte Cloudflare du développeur**, payé avec sa carte. Renouvellement automatique activé. Le gérant rembourse le développeur chaque année (environ 10 €, par Wero). Aucune carte bancaire du gérant n'a été transmise.
 
@@ -68,7 +81,7 @@ L'adresse du domaine n'est écrite nulle part en dur dans les scripts : si le do
 - `www.piazzetta-ladestrousse.com` → `piazzetta-ladestrousse.com` ;
 - l'ancienne adresse `isoardimarius.github.io/piazetta-la-destrousse/` → `piazzetta-ladestrousse.com`.
 
-## 3. Historique de la mise en place
+## 4. Historique de la mise en place
 
 1. Création du site statique (HTML, CSS, JavaScript, sans framework ni base de données) à partir de la maquette.
 2. Activation de GitHub Pages, d'abord en « Deploy from a branch », puis **passage à « GitHub Actions »** pour bénéficier du PDF, des photos et des optimisations (les deux modes se concurrençaient à chaque publication).
@@ -81,25 +94,26 @@ L'adresse du domaine n'est écrite nulle part en dur dans les scripts : si le do
 9. Publication relancée (Actions › Publier le site › Run workflow) : le site utilise désormais `https://piazzetta-ladestrousse.com` pour Google et les aperçus de liens. Vérifié dans le journal de la publication du 31 octobre 2026.
 10. Site déclaré dans Google Search Console (propriété « Domaine », TXT dans Cloudflare), plan du site envoyé, indexation demandée pour l'accueil et la carte.
 11. Branche par défaut renommée en `main`.
+12. Contenu déplacé dans le dossier `contenu/` (fichiers JSON) et interface Pages CMS mise en place pour que le gérant modifie le site lui-même ; alerte par e-mail en cas d'échec de publication.
 
-## 4. Entretien
+## 5. Entretien
 
 | Quand | Quoi |
 | --- | --- |
 | Chaque année | Le domaine se renouvelle automatiquement sur le compte Cloudflare du développeur : vérifier que sa carte est à jour (Cloudflare envoie des rappels par e-mail). Le gérant rembourse environ 10 € par Wero. |
-| À chaque changement de carte, d'horaires ou de photos | Modifier `carte.js`, `infos.js` ou le dossier `photos/` sur GitHub : tout le reste est automatique. |
+| À chaque changement de carte, d'horaires ou de photos | Le gérant le fait dans Pages CMS (ou le développeur, dans Pages CMS ou sur GitHub) : tout le reste est automatique. |
 | De temps en temps | Onglet **Actions** : les publications doivent être vertes. GitHub signale aussi que certaines actions du workflow fonctionnent avec une ancienne version de Node.js : sans conséquence aujourd'hui, mais il faudra passer à leurs nouvelles versions quand elles seront disponibles. |
 
-## 5. En cas de problème
+## 6. En cas de problème
 
 | Symptôme | Cause probable | Que faire |
 | --- | --- | --- |
-| Une modification n'apparaît pas | Publication en échec ou cache du navigateur | Onglet **Actions** : si la publication est rouge, le message indique quoi corriger dans `carte.js` ou `infos.js`. Sinon, attendre 2 minutes et recharger la page. |
+| Une modification n'apparaît pas | Publication en cours, en échec, ou cache du navigateur | Attendre 2 minutes et recharger. Sinon, onglet **Actions** : le résumé de la publication indique ce qui bloque. En cas d'échec, une alerte « La publication du site a échoué » est aussi ouverte (onglet **Issues**) et envoyée par e-mail. |
 | Le site affiche une erreur de certificat | Certificat en cours de renouvellement ou DNS modifié | Vérifier que les enregistrements DNS sont toujours en « DNS only » et que le domaine personnalisé est toujours saisi dans Settings › Pages. |
 | Le site ne répond plus du tout | Domaine expiré ou DNS supprimé | Vérifier le domaine sur Cloudflare (Domain Registration) et les enregistrements DNS. |
 | Revenir à une version précédente | Erreur de contenu | Sur GitHub, ouvrir l'historique du fichier modifié, reprendre l'ancien contenu et enregistrer : la publication repart automatiquement. |
 | Changer de nom de domaine | — | Acheter le nouveau domaine, recréer les mêmes enregistrements DNS, le saisir dans Settings › Pages, relancer la publication. Garder l'ancien domaine au moins un an pour ne pas perdre les visiteurs. |
 
-## 6. Encore à faire hors du site
+## 7. Encore à faire hors du site
 
 Voir **[`referencement.md`](referencement.md)** : mettre l'adresse `https://piazzetta-ladestrousse.com` sur la fiche Google, Facebook et Uber Eats, déclarer le site dans Google Search Console, et collecter des avis avec le QR code.

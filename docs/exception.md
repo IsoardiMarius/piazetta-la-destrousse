@@ -42,3 +42,18 @@
   - HTTPS imposé (certificat délivré par GitHub) ; domaine vérifié sur le compte GitHub pour empêcher son détournement ;
   - aucun secret dans le dépôt ; tous les réglages sont documentés dans `docs/mise-en-ligne.md`.
 - **Décision** : écart accepté par le builder (demande explicite).
+
+## 4. Interface d'édition Pages CMS
+
+- **Date** : 31 octobre 2026
+- **Demandé par** : le builder du projet
+- **Demande** : permettre au gérant de la pizzeria de modifier lui-même le site (carte, prix, horaires, congés, photos, contact) sans toucher au code.
+- **Règle concernée** (recommandation) : « Évite d'envoyer des données de l'organisation vers un service externe non approuvé ».
+- **Risques signalés au builder** : Pages CMS est un service externe, maintenu principalement par une personne, qui obtient un droit d'écriture sur le dépôt via une application GitHub ; l'adresse e-mail du gérant y est enregistrée pour l'invitation ; la gratuité de la version en ligne est annoncée « pour l'instant ».
+- **Mesures prises** :
+  - les données concernées sont uniquement le contenu public de la pizzeria (carte, horaires, photos), aucune donnée de l'organisation ni donnée personnelle de tiers ;
+  - application installée sur ce seul dépôt ; le gérant, invité par e-mail, ne peut modifier que le contenu (ni la configuration, ni les accès, ni le code) ;
+  - toute modification est historisée dans le dépôt et peut être annulée ;
+  - aucune dépendance bloquante : sans Pages CMS, le site fonctionne et le contenu se modifie directement sur GitHub ; l'outil est open source et peut être hébergé par nos soins ;
+  - vérification automatique du contenu à chaque publication et alerte par e-mail en cas d'échec.
+- **Décision** : écart accepté par le builder (demande explicite).

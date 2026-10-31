@@ -1,7 +1,7 @@
 name: Publier le site
 
-# Publie automatiquement à chaque push sur la branche par défaut du dépôt
-# (celle qu'on modifie depuis GitHub), quel que soit son nom.
+# Publie automatiquement à chaque modification de la branche par défaut du dépôt
+# (depuis Pages CMS ou directement sur GitHub), quel que soit son nom.
 on:
   push:
   workflow_dispatch:
@@ -10,6 +10,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  issues: write
 
 concurrency:
   group: pages
@@ -27,8 +28,10 @@ jobs:
         with:
           node-version: 22
 
-      - name: Vérifier la carte (carte.js)
-        run: node scripts/verifier-carte.mjs
+      - name: Préparer et vérifier le contenu (dossier contenu/)
+        run: |
+          node scripts/verifier-contenu.mjs
+          node scripts/contenu.mjs
 
       - uses: actions/setup-python@v5
         with:
@@ -45,9 +48,9 @@ jobs:
       - name: Rassembler les fichiers du site
         run: |
           mkdir _site
-          cp -r index.html carte.html 404.html carte.js infos.js carte.pdf assets _site/
+          cp -r index.html carte.html 404.html donnees.js carte.pdf assets _site/
 
-      - name: Préparer les photos (dossier photos/)
+      - name: Préparer les photos (liste contenu/photos.json)
         run: |
           pip install --quiet pillow pillow-heif
           python scripts/preparer-photos.py _site
@@ -65,7 +68,7 @@ jobs:
         run: |
           # Nouvelle adresse des fichiers à chaque publication : les visiteurs ne gardent jamais une ancienne version.
           V="${GITHUB_SHA::8}"
-          sed -i -E "s#(href|src)=\"((assets/[^\"?]+|carte|infos)\.(css|js))\"#\1=\"\2?v=$V\"#g; s#\"carte\.pdf\"#\"carte.pdf?v=$V\"#g; s#\"assets/apercu-carte\.jpg\"#\"assets/apercu-carte.jpg?v=$V\"#g" _site/*.html
+          sed -i -E "s#(href|src)=\"((assets/[^\"?]+|donnees)\.(css|js))\"#\1=\"\2?v=$V\"#g; s#\"carte\.pdf\"#\"carte.pdf?v=$V\"#g; s#\"assets/apercu-carte\.jpg\"#\"assets/apercu-carte.jpg?v=$V\"#g" _site/*.html
 
       - uses: actions/upload-pages-artifact@v4
         with:
@@ -80,3 +83,47 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # En cas d'échec : une alerte (« issue ») est ouverte sur GitHub, ce qui envoie un e-mail
+  # au propriétaire du dépôt. Le site en ligne, lui, ne change pas.
+  alerte:
+    needs: [build, deploy]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Ouvrir ou compléter l'alerte
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          LIEN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          MODIF: ${{ github.event.head_commit.message || 'publication lancée à la main' }}
+        run: |
+          node scripts/verifier-contenu.mjs > /dev/null 2>&1 || true
+          {
+            echo "La publication du **$(date -u '+%d/%m/%Y à %H:%M') (UTC)** a échoué. **Le site en ligne n'a pas changé** : il garde la version précédente."
+            echo
+            echo "Modification en cause : « $(printf '%s' "$MODIF" | head -n 1) »"
+            echo
+            if [ -f rapport-contenu.md ]; then cat rapport-contenu.md; echo; fi
+            echo "Détails de la publication : $LIEN"
+            echo
+            echo "Cette alerte se ferme toute seule à la prochaine publication réussie."
+          } > alerte.md
+          TITRE="La publication du site a échoué"
+          NUM=$(gh issue list --state open --search "\"$TITRE\" in:title" --json number --jq '.[0].number')
+          if [ -n "$NUM" ]; then gh issue comment "$NUM" --body-file alerte.md; else gh issue create --title "$TITRE" --body-file alerte.md; fi
+
+  fin-alerte:
+    needs: deploy
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fermer l'alerte s'il y en avait une
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          for n in $(gh issue list --state open --search "\"La publication du site a échoué\" in:title" --json number --jq '.[].number'); do
+            gh issue close "$n" --comment "Publication réussie : le site est de nouveau à jour."
+          done

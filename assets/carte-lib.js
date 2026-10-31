@@ -1,5 +1,5 @@
 /* Outils partagés par le site, la carte A4 et les scripts de vérification.
-   Rien à modifier ici : le contenu est dans carte.js et infos.js. */
+   Rien à modifier ici : le contenu est dans le dossier contenu/ (modifiable depuis Pages CMS). */
 (function (root) {
   'use strict';
 
@@ -29,7 +29,7 @@
     return 'tel:' + d;
   }
 
-  /* Rassemble carte.js et infos.js en un seul objet. */
+  /* Rassemble la carte (window.CARTE) et les infos (window.INFOS) en un seul objet. */
   function donnees(w) {
     var D = {}, k;
     var I = w.INFOS || {}, C = w.CARTE || {};
@@ -72,6 +72,8 @@
   /* ---------- Dates et fermeture exceptionnelle ---------- */
 
   function parseDate(s) {
+    var iso = String(s || '').trim().match(/^(\d{4})-(\d{2})-(\d{2})/);  /* format du calendrier : 2027-08-01 */
+    if (iso) return parseDate(iso[3] + '/' + iso[2] + '/' + iso[1]);
     var m = String(s || '').trim().match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})$/);
     if (!m) return null;
     var y = +m[3]; if (y < 100) y += 2000;
@@ -193,7 +195,7 @@
   /* ---------- Carte ---------- */
 
   function pizzasVisibles(D) {
-    return (D.pizzas || []).filter(function (p) { return p && !p.masquee; });
+    return (D.pizzas || []).filter(function (p) { return p && p.nom && !p.masquee; });
   }
 
   function fourchettePrix(D) {
@@ -205,48 +207,45 @@
 
   /* ---------- Validation (messages lisibles, en français) ---------- */
 
-  function validerCarte(C) {
-    var err = [];
-    if (!C || typeof C !== 'object') return ['carte.js ne définit pas window.CARTE.'];
-    if (!Array.isArray(C.tailles) || !C.tailles.length) err.push('« tailles » doit contenir au moins une taille.');
-    var nbT = (C.tailles || []).length;
-    (C.tailles || []).forEach(function (t, i) {
-      if (!t || !t.nom) err.push('Taille n°' + (i + 1) + ' : le « nom » est vide.');
-    });
-    if (!Array.isArray(C.pizzas) || !C.pizzas.length) err.push('« pizzas » doit contenir au moins une pizza.');
-    (C.pizzas || []).forEach(function (p, i) {
-      var label = 'Pizza n°' + (i + 1) + (p && p.nom ? ' (' + p.nom + ')' : '');
-      if (!p || !p.nom) err.push(label + ' : le « nom » est vide.');
-      if (!p || !Array.isArray(p.prix)) { err.push(label + ' : « prix » doit être une liste, ex. [11, 17, 26].'); return; }
-      if (p.prix.length !== nbT) err.push(label + ' : ' + p.prix.length + ' prix pour ' + nbT + ' tailles.');
-      p.prix.forEach(function (x) {
-        if (typeof x !== 'number' || !isFinite(x) || x < 0) err.push(label + ' : le prix « ' + x + ' » n’est pas un nombre (écrire 12.5 et non "12,50").');
+  /* Vérification du contenu.
+     - erreurs : rendent le site impossible à construire (publication arrêtée, l'ancien site reste en ligne) ;
+     - avertissements : le site est publié quand même, l'élément fautif est ignoré ou affiché « – ». */
+  function valider(C, I) {
+    var erreurs = [], avert = [];
+    C = C || {}; I = I || {};
+    var tailles = Array.isArray(C.tailles) ? C.tailles : [];
+    if (!tailles.length) erreurs.push('La carte : il faut au moins une taille.');
+    tailles.forEach(function (t, i) { if (!t || !t.nom) avert.push('La carte : la taille n°' + (i + 1) + ' n’a pas de nom.'); });
+    var pizzas = Array.isArray(C.pizzas) ? C.pizzas : [];
+    if (!pizzas.filter(function (p) { return p && p.nom && !p.masquee; }).length) erreurs.push('La carte : il faut au moins une pizza affichée.');
+    pizzas.forEach(function (p, i) {
+      var label = 'La carte : pizza n°' + (i + 1) + (p && p.nom ? ' (' + p.nom + ')' : '');
+      if (!p || !p.nom) { avert.push(label + ' n’a pas de nom.'); return; }
+      var prixListe = Array.isArray(p.prix) ? p.prix : [];
+      if (prixListe.length !== tailles.length) avert.push(label + ' : ' + prixListe.length + ' prix pour ' + tailles.length + ' tailles (les prix manquants s’affichent « – »).');
+      prixListe.forEach(function (x) {
+        if (typeof x !== 'number' || !isFinite(x) || x < 0) avert.push(label + ' : le prix « ' + x + ' » n’est pas un nombre.');
       });
     });
-    return err.map(function (e) { return 'carte.js — ' + e; });
-  }
-
-  function validerInfos(I) {
-    var err = [];
-    if (!I || typeof I !== 'object') return ['infos.js ne définit pas window.INFOS.'];
-    if (!I.telephone) err.push('« telephone » est vide.');
-    if (!I.horaires || typeof I.horaires !== 'object') err.push('« horaires » est manquant.');
-    else JOURS.forEach(function (j) {
-      if (!(j in I.horaires)) { err.push('Horaires : le jour « ' + j + ' » est manquant.'); return; }
-      parseCreneaux(I.horaires[j]).forEach(function (r) {
-        if (!r) err.push('Horaires du ' + j + ' : « ' + I.horaires[j] + ' » n’est pas compris (format attendu : "18h-22h").');
+    if (!I.telephone) avert.push('Contact : le téléphone est vide.');
+    var h = I.horaires && typeof I.horaires === 'object' ? I.horaires : {};
+    JOURS.forEach(function (j) {
+      parseCreneaux(h[j]).forEach(function (r) {
+        if (!r) avert.push('Horaires : « ' + h[j] + ' » (' + j + ') n’est pas compris, le jour s’affiche « Fermé ». Format attendu : 18h-22h.');
       });
     });
     ['fermetureDu', 'fermetureAu'].forEach(function (k) {
-      if (I[k] && !parseDate(I[k])) err.push('« ' + k + ' » : « ' + I[k] + ' » n’est pas une date (format attendu : "01/08/2027").');
+      if (I[k] && !parseDate(I[k])) avert.push('Horaires : la date de fermeture « ' + I[k] + ' » n’est pas comprise, elle est ignorée.');
     });
-    if (I.histoire != null && !Array.isArray(I.histoire) && typeof I.histoire !== 'string') err.push('« histoire » doit être un texte ou une liste de paragraphes.');
-    if (I.communesLivrees != null && !Array.isArray(I.communesLivrees)) err.push('« communesLivrees » doit être une liste, ex. ["La Destrousse", "Peypin"].');
-    if (I.reseaux && typeof I.reseaux === 'object') Object.keys(I.reseaux).forEach(function (k) {
-      if (I.reseaux[k] && !/^https?:\/\//.test(I.reseaux[k])) err.push('Réseau « ' + k + ' » : l’adresse doit commencer par https://');
+    var r = I.reseaux && typeof I.reseaux === 'object' ? I.reseaux : {};
+    Object.keys(r).forEach(function (k) {
+      if (r[k] && !/^https?:\/\//.test(r[k])) avert.push('Contact : l’adresse « ' + k + ' » doit commencer par https:// (lien ignoré).');
     });
-    return err.map(function (e) { return 'infos.js — ' + e; });
+    return { erreurs: erreurs, avertissements: avert };
   }
+  /* Compatibilité : liste de tous les messages */
+  function validerCarte(C) { return valider(C, { telephone: 'x' }).erreurs; }
+  function validerInfos(I) { var v = valider({ tailles: [{ nom: 'x' }], pizzas: [{ nom: 'x', prix: [0] }] }, I); return v.erreurs.concat(v.avertissements); }
 
   /* ---------- Textes et blocs HTML (partagés par le navigateur et la publication) ---------- */
 
@@ -342,7 +341,7 @@
     }).join('') + (note ? '<li class="hours__note">' + esc(note) + '</li>' : '');
   }
 
-  function altPhoto(p) { return (p.legende ? 'Pizza ' + p.legende : 'Pizza artisanale') + ' de la Piazzetta, pizzeria à La Destrousse'; }
+  function altPhoto(p) { return (p.legende || 'Pizza artisanale') + ' de la Piazzetta, pizzeria à La Destrousse'; }
 
   function htmlGalerie(photos) {
     return photos.map(function (p, i) {
@@ -457,7 +456,7 @@
     statut: statut, maintenantParis: maintenantParis,
     groupesHoraires: groupesHoraires, resumeJours: resumeJours, resumeHeures: resumeHeures, premiereOuverture: premiereOuverture,
     pizzasVisibles: pizzasVisibles, fourchettePrix: fourchettePrix,
-    validerCarte: validerCarte, validerInfos: validerInfos,
+    valider: valider, validerCarte: validerCarte, validerInfos: validerInfos,
     fr: fr, textes: textes, htmlHistoire: htmlHistoire, htmlHoraires: htmlHoraires, htmlGalerie: htmlGalerie, altPhoto: altPhoto,
     htmlEnteteTailles: htmlEnteteTailles, htmlLignesCarte: htmlLignesCarte,
     description: description, descriptionCarte: descriptionCarte, jsonLd: jsonLd,

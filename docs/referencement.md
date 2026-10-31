@@ -25,7 +25,7 @@ Sur business.google.com, ou en cherchant « Piazzetta La Destrousse » sur Googl
 - [ ] **Horaires** : identiques au site, avec les **horaires exceptionnels** (congés, jours fériés) renseignés à l'avance.
 - [ ] **Site web** : `https://piazzetta-ladestrousse.com`
 - [ ] **Lien vers le menu** : `https://piazzetta-ladestrousse.com/carte.html`
-- [ ] **Zone desservie** : les communes de livraison (les mêmes que `communesLivrees` dans `infos.js`).
+- [ ] **Zone desservie** : les communes de livraison (les mêmes que « Communes livrées » dans Pages CMS, rubrique « Contact et réseaux »).
 - [ ] **Description** : 2 ou 3 phrases naturelles, par exemple « Pizzeria artisanale à La Destrousse : pâte légère, produits frais, huile d'olive. Pizzas à emporter ou livrées du mardi au samedi dès 18h. »
 - [ ] **Photos** : les 5 photos du site et quelques autres (devanture, four, équipe). En ajouter une ou deux par mois.
 - [ ] **Attributs** : « À emporter », « Livraison », moyens de paiement acceptés.
@@ -48,8 +48,8 @@ Partout où un champ « site web » existe, mettre **l'adresse du site : `https:
 Nom, adresse et téléphone écrits **exactement** comme sur le site, à chaque endroit :
 
 - [ ] Uber Eats : renommer « Piazzetta Destrousse » → « Piazzetta La Destrousse » et ajouter le site `https://piazzetta-ladestrousse.com` si Uber Eats Manager le permet.
-- [ ] Facebook : renommer la page « Piazzetta La Destrousse » et ajouter `https://piazzetta-ladestrousse.com` dans « À propos ». Le lien Facebook est déjà dans `infos.js`.
-- [ ] Instagram : si un compte est créé, ajouter son adresse dans `infos.js` (rubrique `reseaux`) : le lien apparaît en bas du site et est signalé à Google.
+- [ ] Facebook : renommer la page « Piazzetta La Destrousse » et ajouter `https://piazzetta-ladestrousse.com` dans « À propos ». Le lien Facebook est déjà sur le site.
+- [ ] Instagram : si un compte est créé, ajouter son adresse dans Pages CMS, rubrique « Contact et réseaux » : le lien apparaît en bas du site et est signalé à Google.
 - [ ] PagesJaunes (inscription gratuite sur pagesjaunes.fr/pros).
 - [ ] Éventuellement TripAdvisor, Apple Plans (Apple Business Connect), Bing Places.
 
@@ -69,7 +69,7 @@ Google fait davantage confiance à un site cité par d'autres sites de la régio
 - [ ] Publier le lien dans les **groupes Facebook locaux** (« Tu es de La Destrousse si… », groupes d'entraide des communes voisines).
 - [ ] Office de tourisme du Pays d'Aubagne et de l'Étoile, associations ou clubs sportifs que la pizzeria soutient : leur demander un lien.
 
-## 6. Dans `infos.js`
+## 6. Dans Pages CMS (rubrique « Contact et réseaux »)
 
-- [x] **`communesLivrees`** : laissé vide, le site affiche « La Destrousse et alentours ». Si un jour vous voulez ressortir sur « pizzeria Peypin », etc., lister les communes livrées (ex. `["La Destrousse", "Peypin"]`).
-- [x] **`reseaux`** : Facebook et Uber Eats renseignés. Ajouter Instagram s'il est créé.
+- [x] **Communes livrées** : laissé vide, le site affiche « La Destrousse et alentours ». Si un jour vous voulez ressortir sur « pizzeria Peypin », etc., lister les communes livrées (ex. `["La Destrousse", "Peypin"]`).
+- [x] **Réseaux** : Facebook et Uber Eats renseignés. Ajouter Instagram s'il est créé.

@@ -1,0 +1,22 @@
+[
+  {
+    "image": "/photos/1-atlantique.webp",
+    "description": "Pizza Atlantique"
+  },
+  {
+    "image": "/photos/2-royale.webp",
+    "description": "Pizza Royale"
+  },
+  {
+    "image": "/photos/3-yéyé.webp",
+    "description": "Pizza Yéyé"
+  },
+  {
+    "image": "/photos/4-orientale.webp",
+    "description": "Pizza Orientale"
+  },
+  {
+    "image": "/photos/5-pizza.webp",
+    "description": ""
+  }
+]

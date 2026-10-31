@@ -1,4 +1,4 @@
-// Pré-remplit les pages publiées avec le contenu de carte.js, infos.js et des photos,
+// Pré-remplit les pages publiées avec le contenu du dossier contenu/ et les photos,
 // et ajoute ce qu'il faut pour Google et les aperçus de liens (WhatsApp, Facebook…).
 // Les visiteurs et les moteurs de recherche reçoivent ainsi des pages déjà complètes,
 // sans attendre JavaScript.
@@ -7,8 +7,8 @@
 //   node scripts/precalculer.mjs <dossier-du-site> <adresse-du-site>
 import fs from 'node:fs';
 import path from 'node:path';
-import vm from 'node:vm';
 import { createRequire } from 'node:module';
+import { chargerContenu } from './contenu.mjs';
 
 const require = createRequire(import.meta.url);
 const PZ = require('../assets/carte-lib.js');
@@ -21,9 +21,7 @@ const lire = (f) => fs.readFileSync(path.join(dossier, f), 'utf8');
 const existe = (f) => fs.existsSync(path.join(dossier, f));
 const ecrire = (f, contenu) => fs.writeFileSync(path.join(dossier, f), contenu);
 
-const window = {};
-vm.runInNewContext(lire('carte.js') + '\n' + lire('infos.js'), { window });
-const D = PZ.donnees(window);
+const D = PZ.donnees(chargerContenu());
 const T = PZ.textes(D);
 const photos = existe('assets/photos.json') ? JSON.parse(lire('assets/photos.json')) : [];
 

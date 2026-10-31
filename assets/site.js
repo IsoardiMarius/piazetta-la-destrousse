@@ -1,5 +1,5 @@
 /* Piazzetta — comportement des pages.
-   Le contenu vient de infos.js et carte.js. À la publication, les pages sont déjà
+   Le contenu vient du dossier contenu/ (via donnees.js). À la publication, les pages sont déjà
    pré-remplies (scripts/precalculer.mjs) ; ce script ne fait que les mettre à jour
    (statut d'ouverture, jour en cours) et gérer les interactions. */
 (function () {

@@ -1,0 +1,140 @@
+{
+  "tailles": [
+    {
+      "nom": "Petite",
+      "taille": "30 cm"
+    },
+    {
+      "nom": "Big",
+      "taille": "35 cm"
+    },
+    {
+      "nom": "Mega",
+      "taille": "50 cm"
+    }
+  ],
+  "pizzas": [
+    {
+      "nom": "Reine",
+      "ingredients": "Tomate fraîche, jambon, emmental, champignons frais, origan, olives",
+      "prix": [
+        11,
+        17,
+        26
+      ],
+      "badge": "",
+      "masquee": false
+    },
+    {
+      "nom": "Fermière",
+      "ingredients": "Tomate fraîche, jambon, emmental, champignons frais, œuf, crème, parmesan, origan, olives",
+      "prix": [
+        12,
+        18,
+        27
+      ],
+      "badge": "",
+      "masquee": false
+    },
+    {
+      "nom": "Chérie",
+      "ingredients": "Tomate fraîche, jambon, emmental, champignons frais, chèvre frais, crème, parmesan, origan, olives",
+      "prix": [
+        13,
+        19,
+        28
+      ],
+      "badge": "",
+      "masquee": false
+    },
+    {
+      "nom": "5 Fromages",
+      "ingredients": "Tomate fraîche, jambon, emmental, champignons frais, chèvre frais, cantal, mozzarella, parmesan, crème de basilic, olives",
+      "prix": [
+        15,
+        21,
+        30
+      ],
+      "badge": "",
+      "masquee": false
+    },
+    {
+      "nom": "Provençale",
+      "ingredients": "Tomate fraîche, emmental, champignons frais, aubergine, courgette, poivron, persillade, olives",
+      "prix": [
+        13,
+        19,
+        28
+      ],
+      "badge": "",
+      "masquee": false
+    },
+    {
+      "nom": "Atlantique",
+      "ingredients": "Tomate fraîche, emmental, champignons frais, saumon fumé, crème, ciboulette, olives",
+      "prix": [
+        14,
+        20,
+        29
+      ],
+      "badge": "",
+      "masquee": false
+    },
+    {
+      "nom": "Chef",
+      "ingredients": "Tomate fraîche, emmental, champignons frais, poivron, tapenade, petits anchois marinés, olives",
+      "prix": [
+        14,
+        20,
+        29
+      ],
+      "badge": "",
+      "masquee": false
+    },
+    {
+      "nom": "Orientale",
+      "ingredients": "Tomate fraîche, emmental, champignons frais, merguez de Cadolive, poivron, parmesan, œuf, origan, olives",
+      "prix": [
+        13,
+        19,
+        28
+      ],
+      "badge": "",
+      "masquee": false
+    },
+    {
+      "nom": "Royale",
+      "ingredients": "Tomate fraîche, jambon, emmental, champignons frais, œuf, parmesan, poivron, chorizo, origan, olives",
+      "prix": [
+        13,
+        19,
+        28
+      ],
+      "badge": "",
+      "masquee": false
+    },
+    {
+      "nom": "Grand-Mère",
+      "ingredients": "Tomate fraîche, jambon, emmental, champignons frais, lardons, artichaut, persillade, œuf, crème, olives",
+      "prix": [
+        13,
+        19,
+        28
+      ],
+      "badge": "",
+      "masquee": false
+    },
+    {
+      "nom": "Yéyé",
+      "ingredients": "Tomate fraîche, champignons frais, mozzarella, jambon de Parme, crème de basilic, tomate cerise, olives",
+      "prix": [
+        14,
+        20,
+        29
+      ],
+      "badge": "",
+      "masquee": false
+    }
+  ],
+  "mention": "Recette artisanale à l’huile d’olive · Produits frais · Pâte légère et savoureuse, comme autrefois"
+}
