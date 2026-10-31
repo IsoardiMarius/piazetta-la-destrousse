@@ -8,16 +8,18 @@ Tu peux changer toi-même la carte, les prix, les horaires, les congés, les pho
 2. Connecte-toi avec ton adresse e-mail : tu reçois un lien de connexion par e-mail, clique dessus.
 3. Choisis le site **piazetta-la-destrousse**.
 
-À gauche (ou dans le menu ☰ sur téléphone), tu as 6 rubriques :
+À gauche (ou dans le menu ☰ sur téléphone), tu as 6 rubriques, de la plus utilisée à la moins utilisée :
 
 | Rubrique | Pour… |
 | --- | --- |
-| **La carte** | ajouter, supprimer ou réordonner une pizza, changer un prix ou des ingrédients |
-| **Boissons et desserts** | la page 2 de la carte : boissons, desserts, et d'autres rubriques si tu veux (glaces…) |
+| **La carte : pizzas** | ajouter, supprimer ou réordonner une pizza, changer un prix ou des ingrédients |
+| **La carte : boissons et desserts** | la page 2 de la carte : boissons, desserts, et d'autres rubriques si tu veux (glaces…) |
 | **Horaires et congés** | changer les horaires, prévenir d'une fermeture (vacances, jour férié), afficher un message en haut du site |
-| **Photos** | ajouter, retirer ou réordonner les photos |
-| **Contact et réseaux** | téléphone, e-mail, adresse, zone de livraison, liens Uber Eats / Facebook / Instagram |
-| **Textes de l'accueil** | les phrases de la page d'accueil |
+| **Photos** | ajouter, retirer ou réordonner les photos, ajouter une légende |
+| **Textes de l'accueil** | toutes les phrases de la page d'accueil, rangées dans l'ordre de la page |
+| **La pizzeria : nom, logo, contact** | nom, logo, téléphone, e-mail, adresse, livraison ou à emporter, liens Uber Eats / Facebook / Instagram |
+
+Sous chaque case, une petite aide dit où le texte apparaît. Si tu vides un texte par erreur, le texte d'origine revient tout seul.
 
 Après chaque changement : clique sur **Enregistrer** (« Save »). **1 à 2 minutes plus tard**, le site, la carte et le PDF sont à jour tout seuls. Si tu ne vois pas le changement tout de suite, attends un peu et recharge la page.
 
@@ -50,6 +52,12 @@ Pendant ces dates, le site affiche « Fermé » et un bandeau prévient les clie
 **Changer un horaire**
 Écris par exemple `18h-22h`. Avec une coupure le midi : `11h30-14h, 18h-22h`. Laisse vide si c'est fermé ce jour-là.
 Le badge « Ouvert / Fermé », le résumé des jours et des heures, la carte PDF et Google se mettent à jour tout seuls.
+
+**Arrêter (ou reprendre) la livraison**
+La pizzeria : nom, logo, contact › décoche **Livraison** › Enregistrer. Tout le site, la carte et Google passent en « à emporter » ; recoche pour revenir.
+
+**Changer le logo**
+La pizzeria : nom, logo, contact › **Logo** › choisis une image carrée (au moins 720 px de côté) › Enregistrer. Elle est affichée dans un rond partout, y compris l'icône de l'onglet.
 
 **Afficher un message en haut du site**
 Horaires et congés › Bandeau d'annonce, par exemple « Nouveau : la pizza Burrata est arrivée ! ». Vide le champ pour l'enlever.

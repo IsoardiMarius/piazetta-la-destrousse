@@ -37,6 +37,11 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Préparer le logo (s'il a été changé dans Pages CMS)
+        run: |
+          pip install --quiet pillow pillow-heif
+          python scripts/preparer-photos.py --logo .
+
       - name: Installer le navigateur pour le PDF
         run: |
           npm ci --no-audit --no-fund
@@ -51,9 +56,7 @@ jobs:
           cp -r index.html carte.html 404.html donnees.js carte.pdf assets _site/
 
       - name: Préparer les photos (liste contenu/photos.json)
-        run: |
-          pip install --quiet pillow pillow-heif
-          python scripts/preparer-photos.py _site
+        run: python scripts/preparer-photos.py _site
 
       - name: Générer les images d'aperçu des liens (SMS, WhatsApp, Facebook…)
         run: node scripts/generer-apercus.mjs _site

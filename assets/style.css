@@ -105,12 +105,19 @@ a:hover{color:var(--brand-dark)}
 /* ---------- En-tête ---------- */
 .hdr{
   position:sticky;top:0;z-index:30;
+  border-bottom:1px solid transparent;
+  transition:border-color .3s var(--ease),box-shadow .3s var(--ease);
+}
+/* Fond flouté sur une couche à part : le menu mobile, qui dépasse sous la barre, n'est pas un enfant
+   d'un élément flouté (sur iPhone, ce qui dépasse d'un tel élément est parfois mal redessiné) */
+.hdr::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
   background:rgba(246,240,230,.78);
   -webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px);
-  border-bottom:1px solid transparent;
-  transition:border-color .3s var(--ease),box-shadow .3s var(--ease),background-color .3s var(--ease);
+  transition:background-color .3s var(--ease);
 }
-.hdr.is-scrolled{border-bottom-color:var(--line);background:rgba(246,240,230,.9);box-shadow:0 10px 30px -24px rgba(36,20,17,.35)}
+.hdr.is-scrolled{border-bottom-color:var(--line);box-shadow:0 10px 30px -24px rgba(36,20,17,.35)}
+.hdr.is-scrolled::before{background:rgba(246,240,230,.9)}
 .hdr__in{height:var(--hdr-h);display:flex;align-items:center;justify-content:space-between;gap:16px}
 .brand{display:flex;align-items:center;gap:12px;min-width:0;text-decoration:none;color:var(--ink);min-height:44px;white-space:nowrap}
 .brand img{flex-shrink:0}
@@ -141,12 +148,16 @@ a:hover{color:var(--brand-dark)}
   background:var(--bg);
   border-bottom:1px solid var(--line);box-shadow:0 30px 50px -30px rgba(36,20,17,.4);
   padding:8px 0 20px;
-  clip-path:inset(0 0 100% 0);opacity:0;
-  transition:clip-path .45s var(--ease),opacity .3s var(--ease);
+  /* Toujours opaque (pas de fondu : le logo derrière transparaissait) : le menu glisse depuis
+     sous la barre du haut, placé derrière son fond flouté (z-index négatif dans l'en-tête) */
+  z-index:-2;transform:translateY(-100%);will-change:transform;
+  transition:transform .45s var(--ease);
 }
 .mnav[hidden]{display:none}
 .mnav{max-height:calc(100dvh - var(--hdr-h));overflow-y:auto;overscroll-behavior:contain}
-.mnav.is-open{clip-path:inset(0 0 0 0);opacity:1}
+.mnav.is-open{transform:none}
+/* Menu ouvert : le logo flottant derrière se met en pause */
+html.menu-ouvert .float,html.menu-ouvert .hero__logo::before{animation-play-state:paused}
 .mnav__list{list-style:none;margin:0;display:flex;flex-direction:column}
 .mnav__list li[hidden]{display:none}
 .mnav__list a{

@@ -12,12 +12,14 @@ Ouvrir **https://app.pagescms.org**, se connecter (avec GitHub, ou avec le lien 
 
 | Rubrique | Ce qu'on y change |
 | --- | --- |
-| **La carte** | Pizzas (ajouter, supprimer, réordonner, masquer, badge « Nouveau »), ingrédients, prix, tailles, phrase sous la carte |
-| **Boissons et desserts** | Page 2 de la carte : rubriques (Boissons, Desserts…), articles, prix ; la page et le renvoi « en page 2 » n'apparaissent que s'il y a au moins un article |
+| **La carte : pizzas** | Pizzas (ajouter, supprimer, réordonner, masquer, badge « Nouveau »), ingrédients, prix, tailles, phrase sous la liste, titre et sous-titre du haut de la carte |
+| **La carte : boissons et desserts** | Page 2 de la carte : rubriques, articles, prix, titre et sous-titre ; la page et le renvoi « en page 2 » n'apparaissent que s'il y a au moins un article |
 | **Horaires et congés** | Horaires de chaque jour, fermeture exceptionnelle (calendrier), bandeau d'annonce |
-| **Photos** | Ajouter, retirer et réordonner les photos de l'accueil |
-| **Contact et réseaux** | Nom, téléphone, e-mail, adresse, zone de livraison, Uber Eats, Facebook, Instagram |
-| **Textes de l'accueil** | Grand titre, introduction, « La maison », titre des photos |
+| **Photos** | Ajouter, retirer, réordonner les photos ; légende facultative |
+| **Textes de l'accueil** | Tous les textes de la page d'accueil, dans l'ordre de la page (titre, introduction, point fort du bandeau, « La maison », photos, bloc carte, pied de page) et ceux de la page « adresse introuvable » |
+| **La pizzeria : nom, logo, contact** | Nom, logo, téléphone, e-mail, adresse, cases **Vente à emporter** / **Livraison** (tous les textes concernés s'adaptent), zone et communes livrées, Uber Eats, Facebook, Instagram |
+
+Tout ce qui est affiché est modifiable ici. Les seuls textes calculés automatiquement (et donc toujours justes) sont le résumé des horaires, le badge « Ouvert / Fermé », le nombre de pizzas et la fourchette de prix.
 
 Cliquer sur **Enregistrer** : 1 à 2 minutes plus tard, tout est à jour et regénéré automatiquement (pages, carte, **PDF**, photos, aperçus de liens, données pour Google, badge « Ouvert / Fermé »).
 

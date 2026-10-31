@@ -1,18 +1,4 @@
 {
-  "tailles": [
-    {
-      "nom": "Petite",
-      "taille": "30 cm"
-    },
-    {
-      "nom": "Big",
-      "taille": "35 cm"
-    },
-    {
-      "nom": "Mega",
-      "taille": "50 cm"
-    }
-  ],
   "pizzas": [
     {
       "nom": "Pizza Saison",
@@ -136,5 +122,22 @@
       "masquee": false
     }
   ],
-  "mention": "Recette artisanale à l’huile d’olive · Produits frais · Pâte légère et savoureuse, comme autrefois"
+  "mention": "Recette artisanale à l’huile d’olive · Produits frais · Pâte légère et savoureuse, comme autrefois",
+  "tailles": [
+    {
+      "nom": "Petite",
+      "taille": "30 cm"
+    },
+    {
+      "nom": "Big",
+      "taille": "35 cm"
+    },
+    {
+      "nom": "Mega",
+      "taille": "50 cm"
+    }
+  ],
+  "enTeteTitre": "La carte",
+  "enTeteSousTitre": "",
+  "titreListe": "Nos pizzas"
 }

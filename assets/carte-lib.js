@@ -387,22 +387,55 @@
   }
 
   /* Valeur de chaque élément data-bind="..." des pages */
+  /* Livraison et / ou vente à emporter (cases à cocher dans Pages CMS) : adapte tous les textes concernés */
+  function service(D) {
+    var l = D.livraison !== false, e = D.emporter !== false;
+    if (!l && !e) e = true;
+    return {
+      livraison: l, emporter: e,
+      titre: l && e ? 'Livraison et à emporter' : l ? 'Livraison' : 'À emporter',
+      phrase: l && e ? 'à emporter ou en livraison' : l ? 'en livraison' : 'à emporter',
+      livrees: l && e ? 'à emporter ou livrées' : l ? 'livrées' : 'à emporter'
+    };
+  }
+
+  /* Textes modifiables dans Pages CMS : un champ vidé par erreur reprend le texte d'origine */
+  var TEXTES_DEFAUT = {
+    pointFortTitre: 'Recette artisanale',
+    pointFortTexte: 'Produits frais, huile d’olive',
+    carteTexte: 'Toute la carte, avec les ingrédients de chaque pizza, est aussi disponible en PDF.',
+    piedDePage: 'Pizzeria artisanale',
+    introuvableTitre: 'Cette page s’est égarée.',
+    introuvableTexte: 'L’adresse demandée n’existe pas ou plus. La carte, elle, est toujours là.',
+    enTeteTitre: 'La carte',
+    titreListe: 'Nos pizzas'
+  };
+
   function textes(D) {
     var T = {};
-    /* Un champ vidé par erreur garde le texte par défaut de la page */
     var rempli = function (k) { return typeof D[k] === 'string' && D[k].trim() !== ''; };
-    ['titre', 'introduction', 'histoireTitre', 'photosTitre'].forEach(function (k) { if (rempli(k)) T[k] = fr(D[k]); });
+    var S = service(D);
+    var defauts = {
+      titre: 'Pizzas artisanales, ' + S.livrees + '.',
+      introduction: 'Une pâte légère travaillée avec soin, des produits frais et de l’huile d’olive.',
+      histoireTitre: 'Le goût des choses simples.',
+      photosTitre: 'Tout juste sorties du four.'
+    };
+    Object.keys(defauts).forEach(function (k) { T[k] = fr(rempli(k) ? D[k] : defauts[k]); });
     ['histoireSignature', 'adresse', 'ville', 'zoneLivraison', 'mention', 'telephone'].forEach(function (k) { if (typeof D[k] === 'string') T[k] = D[k]; });
+    Object.keys(TEXTES_DEFAUT).forEach(function (k) { T[k] = fr(rempli(k) ? D[k].trim() : TEXTES_DEFAUT[k]); });
+    T.service = S.titre;
+    T.enTeteSousTitre = rempli('enTeteSousTitre') ? D.enTeteSousTitre.trim() : 'Pizzas artisanales · ' + cap(S.phrase);
     T.email = emailValide(D);
     T.nom = nomOfficiel(D);
     T.nomCourt = nomCourt(D);
-    T.nomPied = nomOfficiel(D) + ' · Pizzeria artisanale';
+    T.nomPied = nomOfficiel(D) + (T.piedDePage ? ' · ' + T.piedDePage : '');
     var jours = resumeJours(D), heures = resumeHeures(D), ouv = premiereOuverture(D);
     T.resumeJours = jours || 'Horaires : nous appeler';
     T.resumeJoursCourt = jours ? resumeJoursCourt(D) : 'Sur appel';
     T.resumeHeures = heures || (D.telephone ? 'Au ' + D.telephone : '');
     T.statutDefaut = jours ? jours + (ouv ? ' dès ' + ouv : '') : 'Commandes par téléphone';
-    var zone = D.zoneLivraison || villeSeule(D);
+    var zone = (service(D).livraison && D.zoneLivraison) || villeSeule(D);
     T.accroche = jours ? 'À ' + zone + ', ' + lower1(jours) + (ouv ? ' dès ' + ouv : '') + '.' : 'À ' + zone + '.';
     var tailles = D.tailles || [], n = pizzasVisibles(D).length;
     T.titreCarte = n + ' pizza' + (n > 1 ? 's' : '') + ' artisanale' + (n > 1 ? 's' : '') + ', ' + tailles.length + ' taille' + (tailles.length > 1 ? 's' : '') + '.';
@@ -414,12 +447,15 @@
     if (ville) T.villeCourte = ville;
     T.lieu = 'Pizzeria à ' + villeSeule(D);
     var cs = communes(D);
-    T.livraisonTexte = 'Livraison à ' + (cs.length ? listeFr(cs) : (D.zoneLivraison || villeSeule(D))) + '.';
-    if (D.adresse) T.adresseCourte = D.adresse.replace(/\bavenue\b/i, 'av.') + ' · et alentours';
+    T.livraisonTexte = S.livraison ? 'Livraison à ' + (cs.length ? listeFr(cs) : (D.zoneLivraison || villeSeule(D))) + '.' : '';
+    T.retraitTexte = S.emporter ? 'Retrait des commandes sur place.' : '';
+    T.zoneService = S.livraison ? (D.zoneLivraison || villeSeule(D)) : 'Retrait sur place à ' + villeSeule(D);
+    if (D.adresse) T.adresseCourte = D.adresse.replace(/\bavenue\b/i, 'av.') + (S.livraison ? ' · et alentours' : '');
     var rv = rubriquesVisibles(D);
     T.titrePage2 = titrePage2(D);
     T.suitePage2 = T.titrePage2 + ' en page 2';
-    T.sousTitrePage2 = rv.length ? rv.map(function (r) { return r.titre; }).filter(Boolean).join(' · ') + ' · À emporter et en livraison' : '';
+    var st2 = String(page2(D).sousTitre || '').trim();
+    T.sousTitrePage2 = rv.length ? (st2 || rv.map(function (r) { return r.titre; }).filter(Boolean).concat([cap(S.phrase)]).join(' · ')) : '';
     T.mentionPage2 = typeof page2(D).mention === 'string' ? page2(D).mention : '';
     return T;
   }
@@ -474,7 +510,7 @@
   }
 
   function htmlEnteteTailles(D) {
-    return '<span class="row__label">Nos pizzas</span>' + (D.tailles || []).map(function (t) {
+    return '<span class="row__label">' + esc(textes(D).titreListe) + '</span>' + (D.tailles || []).map(function (t) {
       return '<div class="size"><b>' + esc(t.taille || t.nom) + '</b>' + (t.taille ? '<small>' + esc(t.nom) + '</small>' : '') + '</div>';
     }).join('');
   }
@@ -524,7 +560,8 @@
   function description(D) {
     var T = textes(D), fp = fourchettePrix(D);
     var cs = communes(D);
-    return nomCourt(D) + ', pizzeria artisanale à ' + villeSeule(D) + ' : pizzas à emporter ou livrées' + (cs.length ? ' à ' + listeFr(cs) : '') + ', ' +
+    var S = service(D);
+    return nomCourt(D) + ', pizzeria artisanale à ' + villeSeule(D) + ' : pizzas ' + S.livrees + (S.livraison && cs.length ? ' à ' + listeFr(cs) : '') + ', ' +
       (T.resumeJours ? lower1(T.resumeJours) + (premiereOuverture(D) ? ' dès ' + premiereOuverture(D) : '') : '') + '. ' +
       pizzasVisibles(D).length + ' pizza' + (pizzasVisibles(D).length > 1 ? 's' : '') + (fp ? ' de ' + prix(fp.min) + ' à ' + prix(fp.max) : '') + '. ' +
       'Tél. ' + (D.telephone || '') + '.';
@@ -533,7 +570,7 @@
     var noms = pizzasVisibles(D).map(function (p) { return p.nom; });
     var rv = rubriquesVisibles(D);
     return 'Carte et prix des pizzas — ' + nomCourt(D) + ', pizzeria à ' + villeSeule(D) + ' : ' + noms.join(', ') + '. ' + textes(D).sousTitreCarte +
-      (rv.length ? ' ' + cap(listeFr(rv.map(function (r) { return r.titre.toLowerCase(); }).filter(Boolean))) + '.' : '') + ' À emporter ou en livraison.';
+      (rv.length ? ' ' + cap(listeFr(rv.map(function (r) { return r.titre.toLowerCase(); }).filter(Boolean))) + '.' : '') + ' ' + cap(service(D).phrase) + '.';
   }
 
   /* Fiche « Restaurant » pour Google (données structurées schema.org) */
@@ -570,7 +607,7 @@
       priceRange: fp ? (Math.round(fp.min) + '–' + Math.round(fp.max) + ' €') : undefined,
       acceptsReservations: false,
       address: { '@type': 'PostalAddress', streetAddress: D.adresse, postalCode: cp ? cp[1] : undefined, addressLocality: cp ? cp[2] : D.ville, addressCountry: 'FR' },
-      areaServed: cs.length ? cs.map(function (c) { return { '@type': 'City', name: c }; }) : { '@type': 'City', name: villeSeule(D) },
+      areaServed: !service(D).livraison ? undefined : cs.length ? cs.map(function (c) { return { '@type': 'City', name: c }; }) : { '@type': 'City', name: villeSeule(D) },
       hasMap: G.fiche,
       sameAs: [G.fiche].concat(reseaux(D).map(function (x) { return x.url; })),
       menu: base + 'carte.html',
@@ -625,7 +662,7 @@
     htmlEnteteTailles: htmlEnteteTailles, htmlLignesCarte: htmlLignesCarte, multiligne: multiligne,
     description: description, descriptionCarte: descriptionCarte, jsonLd: jsonLd,
     liensGoogle: liensGoogle, htmlReseaux: htmlReseaux, htmlLiensHero: htmlLiensHero, nomOfficiel: nomOfficiel, villeSeule: villeSeule,
-    nomCourt: nomCourt, nomPdf: nomPdf, rubriquesVisibles: rubriquesVisibles, htmlRubriques: htmlRubriques, titrePage2: titrePage2, SK_PIZZA: SK_PIZZA
+    nomCourt: nomCourt, nomPdf: nomPdf, rubriquesVisibles: rubriquesVisibles, htmlRubriques: htmlRubriques, titrePage2: titrePage2, SK_PIZZA: SK_PIZZA, service: service
   };
   root.PZ = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

@@ -52,7 +52,7 @@ const accueil = page(`
     <img class="logo" src="assets/logo-360.webp" alt="">
     <div class="kicker">${esc(T.lieu)}</div>
     <h1>${esc(PZ.nomCourt(D))}</h1>
-    <div class="sub">Pizzas artisanales à emporter ou en livraison</div>
+    <div class="sub">Pizzas artisanales ${esc(PZ.service(D).phrase)}</div>
     <div class="tel">${tel}${esc(D.telephone || '')}</div>
   </div>
   ${photos.length ? `<img class="pizza" src="${esc(photos[0].grande)}" alt="">` : `<img class="pizza" src="assets/logo-720.webp" alt="" style="object-fit:contain;background:#F6F0E6">`}
@@ -64,7 +64,7 @@ const carte = page(`
     <img class="logo" src="assets/logo-360.webp" alt="">
     <div class="kicker">La carte · ${esc(PZ.nomCourt(D))}</div>
     <h1>${n} pizza${n > 1 ? 's' : ''}</h1>
-    <div class="sub">${nt} taille${nt > 1 ? 's' : ''}${fp ? `, de ${esc(PZ.prix(fp.min))} à ${esc(PZ.prix(fp.max))}` : ''}.<br>À emporter ou en livraison.</div>
+    <div class="sub">${nt} taille${nt > 1 ? 's' : ''}${fp ? `, de ${esc(PZ.prix(fp.min))} à ${esc(PZ.prix(fp.max))}` : ''}.<br>${esc(PZ.cap(PZ.service(D).phrase))}.</div>
     <div class="tel">${tel}${esc(D.telephone || '')}</div>
   </div>
   ${existe('assets/apercu-carte.jpg') ? '<img class="feuille" src="assets/apercu-carte.jpg" alt="">' : ''}

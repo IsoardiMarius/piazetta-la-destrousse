@@ -9,6 +9,11 @@
 
 Utilisation : python3 scripts/preparer-photos.py [dossier-de-sortie]
 (par défaut, la sortie est le dossier du projet ; en CI, c'est _site).
+
+Logo : python3 scripts/preparer-photos.py --logo [dossier]
+Si un logo est choisi dans Pages CMS (contenu/contact.json, champ « logo »), produit toutes
+ses tailles dans <dossier>/assets (site, icône d'onglet, icône iPhone, aperçu de lien).
+Sans logo choisi, rien n'est modifié : le logo d'origine reste en place.
 """
 import base64
 import io
@@ -28,7 +33,9 @@ except ImportError:
 
 RACINE = Path(__file__).resolve().parent.parent
 SOURCE = RACINE / "photos"
-SORTIE = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else RACINE
+MODE_LOGO = len(sys.argv) > 1 and sys.argv[1] == "--logo"
+_args = sys.argv[2:] if MODE_LOGO else sys.argv[1:]
+SORTIE = Path(_args[0]).resolve() if _args else RACINE
 EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".heic", ".heif"}
 LARGEURS = (480, 800, 1200, 1600)
 MAX_PHOTOS = 12
@@ -142,5 +149,42 @@ def main():
     print(f"✅ {len(liste)} photo(s) préparée(s).")
 
 
+CREME = (246, 240, 230)
+
+
+def preparer_logo():
+    """Toutes les tailles du logo, à partir de l'image choisie dans Pages CMS (affichée dans un rond)."""
+    contact = RACINE / "contenu" / "contact.json"
+    chemin = str((json.loads(contact.read_text(encoding="utf-8")) if contact.exists() else {}).get("logo") or "").lstrip("/")
+    if not chemin:
+        print("Logo : celui d'origine est conservé (aucun logo choisi dans Pages CMS).")
+        return
+    fichier = RACINE / chemin
+    try:
+        im = ImageOps.exif_transpose(Image.open(fichier)).convert("RGBA")
+    except Exception as e:  # logo introuvable ou illisible : on garde celui d'origine
+        print(f"⚠️  Logo « {chemin} » illisible ou introuvable ({e}) : le logo d'origine est conservé.")
+        return
+    cote = min(im.size)  # carré centré : le logo est affiché dans un rond
+    gauche, haut = (im.width - cote) // 2, (im.height - cote) // 2
+    im = im.crop((gauche, haut, gauche + cote, haut + cote))
+    if cote < 360:
+        print(f"⚠️  Logo petit ({cote} px) : il risque d'être flou. Préférez une image d'au moins 720 px de côté.")
+    dest = SORTIE / "assets"
+    dest.mkdir(parents=True, exist_ok=True)
+    for taille in (120, 360, 720):
+        im.resize((taille, taille), Image.LANCZOS).save(dest / f"logo-{taille}.webp", "WEBP", quality=90, method=6)
+    im.resize((48, 48), Image.LANCZOS).save(dest / "favicon-48.png")
+    fond = Image.new("RGB", (180, 180), CREME)
+    petit = im.resize((180, 180), Image.LANCZOS)
+    fond.paste(petit, (0, 0), petit)
+    fond.save(dest / "apple-touch-icon.png")
+    apercu = Image.new("RGB", (1200, 630), CREME)
+    grand = im.resize((480, 480), Image.LANCZOS)
+    apercu.paste(grand, (360, 75), grand)
+    apercu.save(dest / "og-image.jpg", "JPEG", quality=88)
+    print(f"✅ Logo préparé à partir de « {chemin} » ({cote} px).")
+
+
 if __name__ == "__main__":
-    main()
+    preparer_logo() if MODE_LOGO else main()

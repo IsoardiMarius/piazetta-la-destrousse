@@ -214,6 +214,7 @@
         clearTimeout(closeTimer);
         toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
         toggle.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+        doc.classList.toggle('menu-ouvert', open);
         if (open) {
           menu.hidden = false;
           requestAnimationFrame(function () { requestAnimationFrame(function () { menu.classList.add('is-open'); }); });

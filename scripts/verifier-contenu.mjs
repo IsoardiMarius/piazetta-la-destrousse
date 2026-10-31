@@ -22,6 +22,10 @@ const { erreurs, avertissements } = PZ.valider(contenu.CARTE, contenu.INFOS);
   if (!chemin) avertissements.push(`Photos : la photo n°${i + 1} n’a pas d’image (ignorée).`);
   else if (!fs.existsSync(chemin)) avertissements.push(`Photos : l’image « ${chemin} » est introuvable (ignorée).`);
 });
+{
+  const logo = String((contenu.INFOS && contenu.INFOS.logo) || '').replace(/^\//, '');
+  if (logo && !fs.existsSync(logo)) avertissements.push(`Logo : l’image « ${logo} » est introuvable (le logo d’origine est conservé).`);
+}
 rapporter(erreurs, avertissements);
 if (erreurs.length) process.exit(1);
 const D = PZ.donnees(contenu);

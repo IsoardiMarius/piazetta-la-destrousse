@@ -75,10 +75,21 @@ for (const [nom, page] of [['index.html', accueil], ['carte.html', carte]]) {
 }
 
 /* ---------- Page d'accueil ---------- */
-for (const k of ['titre', 'introduction', 'histoireTitre', 'photosTitre', 'histoireSignature', 'telephone', 'resumeJours', 'resumeHeures', 'statutDefaut', 'accroche', 'titreCarte', 'sousTitreCarte', 'livraisonTexte', 'lieu', 'nomPied', 'nomCourt', 'adresse', 'ville', 'email']) {
-  if (T[k] === undefined || !accueil.includes(`data-bind="${k}"`)) continue;
-  const valeur = contenuDe(accueil, `data-bind="${k}"`);
-  verifier(valeur === html(T[k]), `Accueil : « ${k} » affiche « ${valeur} » au lieu de « ${T[k]} »`);
+/* Chaque texte relié au contenu (data-bind), sur chaque page, doit afficher exactement le contenu */
+const page404 = lire('404.html');
+for (const [nom, page] of [['Accueil', accueil], ['Carte', carte], ['Page introuvable', page404]]) {
+  const cles = new Set([...page.matchAll(/\sdata-bind="([^"]+)"/g)].map((m) => m[1]));
+  for (const k of cles) {
+    if (T[k] === undefined) { verifier(false, `${nom} : le texte « ${k} » n'existe pas dans le contenu`); continue; }
+    const valeurs = [];
+    let reste = page, i;
+    while ((i = reste.indexOf(`data-bind="${k}"`)) >= 0) {
+      const debut = reste.lastIndexOf('<', i);
+      valeurs.push(contenuDe(reste.slice(debut), `data-bind="${k}"`));
+      reste = reste.slice(i + 10);
+    }
+    valeurs.forEach((v) => verifier(v === html(T[k]), `${nom} : « ${k} » affiche « ${v} » au lieu de « ${T[k]} »`));
+  }
 }
 verifier(contenuDe(accueil, 'data-histoire') === PZ.htmlHistoire(D), 'Accueil : le texte « La maison » ne correspond pas au contenu');
 verifier(contenuDe(accueil, 'data-hours') === PZ.htmlHoraires(D, null, ''), 'Accueil : les horaires affichés ne correspondent pas au contenu');
@@ -132,10 +143,6 @@ const nomsVisibles = new Set(pizzas.map((p) => p.nom));
   .forEach((p) => verifier(!lignes.some((l) => l.includes(`<b>${PZ.esc(p.nom)}<`)), `Carte : « ${p.nom} » est masquée mais affichée`));
 const entete = contenuDe(carte, 'data-head') || '';
 tailles.forEach((t) => verifier(present(entete, t.taille || t.nom), `Carte : la taille « ${t.taille || t.nom} » n'est pas dans l'en-tête`));
-for (const k of ['telephone', 'email', 'resumeJoursCourt', 'resumeHeures', 'villeCourte', 'mention', 'titrePage2', 'sousTitrePage2', 'mentionPage2', 'suitePage2']) {
-  if (T[k] === undefined || !carte.includes(`data-bind="${k}"`)) continue;
-  verifier(contenuDe(carte, `data-bind="${k}"`) === html(T[k]), `Carte : « ${k} » ne correspond pas au contenu`);
-}
 
 /* ---------- E-mail (accueil et carte) ---------- */
 const email = PZ.emailValide(D);
