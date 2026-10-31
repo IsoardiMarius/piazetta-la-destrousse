@@ -124,9 +124,18 @@
 
   /* ---------- Statut d'ouverture en temps réel (heure de Paris) ---------- */
 
+  /* Heure de Paris, quel que soit le fuseau de l'appareil. Construite à partir des nombres
+     (jour, heure, minute) : relire un texte comme « 12:22 AM » donnait midi au lieu de minuit sur iPhone. */
   function maintenantParis() {
-    try { return new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' })); }
-    catch (e) { return new Date(); }
+    try {
+      var p = {};
+      new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Europe/Paris', hourCycle: 'h23',
+        year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'
+      }).formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+      var d = new Date(+p.year, +p.month - 1, +p.day, +p.hour % 24, +p.minute, +p.second);
+      return isNaN(d.getTime()) ? new Date() : d;
+    } catch (e) { return new Date(); }
   }
 
   function statut(D, now) {

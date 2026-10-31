@@ -265,18 +265,5 @@
       }, { rootMargin: '-45% 0px -50% 0px' });
       links.forEach(function (a) { var el = document.getElementById(a.getAttribute('href').slice(1)); if (el) spy.observe(el); });
     }
-
-    /* Barre du bas (mobile) : apparaît une fois les boutons principaux dépassés */
-    var callbar = $('[data-callbar]');
-    var anchor = $('[data-callbar-anchor]');
-    var footer = $('.ftr');
-    if (callbar && anchor && 'IntersectionObserver' in window) {
-      var anchorVisible = true, footerVisible = false;
-      var upd = function () { callbar.classList.toggle('is-visible', !anchorVisible && !footerVisible); };
-      new IntersectionObserver(function (e) { anchorVisible = e[0].isIntersecting || e[0].boundingClientRect.top > 0; upd(); }).observe(anchor);
-      if (footer) new IntersectionObserver(function (e) { footerVisible = e[0].isIntersecting; upd(); }).observe(footer);
-    } else if (callbar) {
-      callbar.classList.add('is-visible');
-    }
   }
 })();

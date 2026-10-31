@@ -134,6 +134,7 @@ a:hover{color:var(--brand-dark)}
 .navlink--ext .ext{opacity:.55;transition:transform .25s var(--ease),opacity .25s}
 .navlink--ext:hover .ext{opacity:1;transform:translate(1px,-1px)}
 .hdr__btns{display:flex;align-items:center;gap:8px}
+.hdr__appeler{display:none}
 .hdr__menu{display:none}
 .burger{position:relative;display:block;width:18px;height:12px}
 .burger span{position:absolute;left:0;right:0;height:2px;border-radius:2px;background:currentColor;transition:transform .35s var(--ease),top .35s var(--ease)}
@@ -421,7 +422,6 @@ html.lb-open{overflow:hidden}
 .ftr__social a:hover{text-decoration-color:currentColor}
 
 /* ---------- Barre d'appel mobile ---------- */
-.callbar{display:none}
 
 /* ---------- Animations ---------- */
 @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
@@ -540,6 +540,8 @@ html.lb-open{overflow:hidden}
   body{font-size:16px}
   .hdr__tel{display:none}
   .hdr .btn--icon-m{width:44px;padding:0}
+  /* Le bouton d'appel de la barre du haut, toujours visible, dit « Appeler » en toutes lettres */
+  .hdr__appeler{display:inline}
 
   .story{grid-template-columns:1fr;gap:20px}
   .gallery{
@@ -569,17 +571,6 @@ html.lb-open{overflow:hidden}
   .infos__grid{grid-template-columns:minmax(0,1fr)}
   .address{font-size:21px}
   .ftr__in{flex-direction:column;align-items:flex-start;padding-bottom:calc(28px + env(safe-area-inset-bottom))}
-  .callbar{
-    display:block;position:fixed;left:0;right:0;bottom:0;z-index:30;
-    padding:12px 16px calc(12px + env(safe-area-inset-bottom));
-    background:rgba(246,240,230,.9);
-    -webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px);
-    border-top:1px solid var(--line);
-    transform:translateY(110%);transition:transform .5s var(--ease);
-  }
-  .callbar.is-visible{transform:none}
-  .callbar__in{display:flex;gap:10px;max-width:480px;margin-inline:auto}
-  .callbar .btn{flex:1 1 0;padding:0 12px}
 }
 @media (max-width:480px){
   /* Côte à côte s'il y a la place, l'un sous l'autre sinon : jamais de débordement */
@@ -601,7 +592,6 @@ html.lb-open{overflow:hidden}
   .hero__logo{order:0;max-width:190px;justify-self:end}
   .hero__text{gap:16px}
   .h-display{font-size:clamp(30px,5vw,44px)}
-  .callbar{display:none!important}
   .lightbox__fig img{max-height:calc(100dvh - 72px)}
   .lb-prev,.lb-next{top:50%;bottom:auto;margin-top:-24px}
   .mnav{padding-bottom:12px}
@@ -637,3 +627,9 @@ html.lb-open{overflow:hidden}
 .hdet{display:grid;grid-template-columns:auto auto;justify-content:start;column-gap:14px;row-gap:2px;margin-top:2px}
 .strip__item .hdet .hdet__h{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
 .strip__item .hdet .hdet__h span{color:inherit;font-size:inherit;white-space:nowrap}
+
+/* Très petits écrans : le bouton d'appel du haut redevient une simple icône */
+@media (max-width:359px){
+  .hdr__appeler{display:none}
+  .hdr__appel{width:44px;padding:0}
+}
