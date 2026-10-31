@@ -123,6 +123,17 @@
         29
       ],
       "masquee": false
+    },
+    {
+      "nom": "Pizza Saison",
+      "ingredients": "Légumes de saison\nTomate fraîche, champignons frais, mozzarella, jambon de Parme, crème de basilic, tomate cerise, olives",
+      "prix": [
+        14,
+        6,
+        29
+      ],
+      "badge": "Pizza de la semaine",
+      "masquee": false
     }
   ],
   "mention": "Recette artisanale à l’huile d’olive · Produits frais · Pâte légère et savoureuse, comme autrefois"
