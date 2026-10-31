@@ -6,7 +6,7 @@ Le site est optimisé : titres, descriptions, fiche « Restaurant » pour Google
 
 | Où | Ce qu'on trouve | À faire |
 | --- | --- | --- |
-| Site | **Piazzetta La Destrousse**, 842 avenue de la Doulia, 13112 La Destrousse, 06 40 92 51 76, du mardi au samedi 18h–22h | Référence : c'est ce qu'il faut recopier partout |
+| [Site](https://piazzetta-ladestrousse.com) | **Piazzetta La Destrousse**, 842 avenue de la Doulia, 13112 La Destrousse, 06 40 92 51 76, du mardi au samedi 18h–22h | Référence : c'est ce qu'il faut recopier partout |
 | [Uber Eats](https://www.ubereats.com/fr/store/piazzetta-destrousse/3hAM1KrBRzO7w2VnZtQnDQ) | **« Piazzetta Destrousse »**, 842 avenue de la Doulia, ouverture à 18h | Renommer en **« Piazzetta La Destrousse »** dans Uber Eats Manager |
 | [Facebook](https://www.facebook.com/p/PiazzettaDestrousse-Pizzeria-61593981164995/) | Page **« PiazzettaDestrousse - Pizzeria »** | Renommer en **« Piazzetta La Destrousse »** et vérifier adresse, téléphone, horaires et lien vers le site |
 | Fiche Google | Existe (identifiant `ChIJn-yuT0iZyRIRGalZ9F80kp4`), contenu non vérifiable d'ici | Vérifier les points ci-dessous |
@@ -23,8 +23,8 @@ Sur business.google.com, ou en cherchant « Piazzetta La Destrousse » sur Googl
 - [ ] **Catégorie principale** : « Pizzeria ». **Catégories secondaires** : « Livraison de pizzas », « Pizzas à emporter », « Restaurant italien ».
 - [ ] **Adresse et téléphone** : identiques au site.
 - [ ] **Horaires** : identiques au site, avec les **horaires exceptionnels** (congés, jours fériés) renseignés à l'avance.
-- [ ] **Site web** : l'adresse du site (le nom de domaine une fois acheté).
-- [ ] **Lien vers le menu** : l'adresse de la page carte (`…/carte.html`).
+- [ ] **Site web** : `https://piazzetta-ladestrousse.com`
+- [ ] **Lien vers le menu** : `https://piazzetta-ladestrousse.com/carte.html`
 - [ ] **Zone desservie** : les communes de livraison (les mêmes que `communesLivrees` dans `infos.js`).
 - [ ] **Description** : 2 ou 3 phrases naturelles, par exemple « Pizzeria artisanale à La Destrousse : pâte légère, produits frais, huile d'olive. Pizzas à emporter ou livrées du mardi au samedi dès 18h. »
 - [ ] **Photos** : les 5 photos du site et quelques autres (devanture, four, équipe). En ajouter une ou deux par mois.
@@ -35,6 +35,7 @@ Sur business.google.com, ou en cherchant « Piazzetta La Destrousse » sur Googl
 
 Le nombre d'avis, leur note et leur fraîcheur pèsent beaucoup dans le classement local.
 
+- [ ] Pour les flyers ou la vitrine, un QR code vers le site est aussi prêt : **[`qr-site.png`](qr-site.png)** ([`qr-site.svg`](qr-site.svg) pour un imprimeur).
 - [ ] Imprimer le QR code **[`qr-avis-google.png`](qr-avis-google.png)** (ou la version vectorielle [`qr-avis-google.svg`](qr-avis-google.svg) pour un imprimeur) : il ouvre directement la page « Laisser un avis ». À coller sur les cartons à pizza, au comptoir ou sur les flyers, avec une phrase comme « Vous avez aimé ? Laissez-nous un avis ».
 - [ ] Le bouton **« Votre avis »** du site (rubrique « Nous trouver ») ouvre la même page.
 - [ ] **Répondre à chaque avis**, positif comme négatif, poliment et rapidement.
@@ -44,15 +45,15 @@ Le nombre d'avis, leur note et leur fraîcheur pèsent beaucoup dans le classeme
 
 Nom, adresse et téléphone écrits **exactement** comme sur le site, à chaque endroit :
 
-- [ ] Uber Eats (renommer « Piazzetta Destrousse » → « Piazzetta La Destrousse »).
-- [ ] Facebook : renommer la page « Piazzetta La Destrousse » et ajouter le lien du site dans « À propos ». Le lien Facebook est déjà dans `infos.js`.
+- [ ] Uber Eats : renommer « Piazzetta Destrousse » → « Piazzetta La Destrousse » et ajouter le site `https://piazzetta-ladestrousse.com` si Uber Eats Manager le permet.
+- [ ] Facebook : renommer la page « Piazzetta La Destrousse » et ajouter `https://piazzetta-ladestrousse.com` dans « À propos ». Le lien Facebook est déjà dans `infos.js`.
 - [ ] Instagram : si un compte est créé, ajouter son adresse dans `infos.js` (rubrique `reseaux`) : le lien apparaît en bas du site et est signalé à Google.
 - [ ] PagesJaunes (inscription gratuite sur pagesjaunes.fr/pros).
 - [ ] Éventuellement TripAdvisor, Apple Plans (Apple Business Connect), Bing Places.
 
 ## 4. Les outils de Google et Bing
 
-- [ ] **Google Search Console** (search.google.com/search-console) : ajouter le site, puis déclarer le plan du site `sitemap.xml`. Permet aussi de voir sur quelles recherches le site apparaît.
+- [ ] **Google Search Console** (search.google.com/search-console) : choisir **« Domaine »** et saisir `piazzetta-ladestrousse.com`. Google donne un enregistrement TXT à ajouter dans Cloudflare (DNS › Records, « DNS only »). Une fois validé, déclarer le plan du site : `https://piazzetta-ladestrousse.com/sitemap.xml`. Search Console montre ensuite sur quelles recherches le site apparaît.
 - [ ] **Bing Webmaster Tools** : importer le site depuis Search Console en un clic.
 
 ## 5. Dans `infos.js`

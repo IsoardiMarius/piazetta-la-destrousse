@@ -1,6 +1,8 @@
 # Piazzetta La Destrousse — site web
 
-Site vitrine de la pizzeria, publié avec GitHub Pages.
+Site vitrine de la pizzeria : **https://piazzetta-ladestrousse.com**
+
+Hébergement, publication, nom de domaine et réglages (GitHub, Cloudflare) : tout est recensé dans **[`docs/mise-en-ligne.md`](docs/mise-en-ligne.md)**.
 
 ## Modifier le site : deux fichiers, c'est tout
 
@@ -56,15 +58,13 @@ Si un fichier contient une faute (guillemet ou virgule oubliés, prix ou horaire
 
 La carte A4 (PDF) s'ajuste toute seule pour tenir sur une page, même si vous ajoutez des pizzas.
 
-## Publication sur GitHub Pages
+## Publication
 
-Le fichier [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) vérifie la carte, génère le PDF puis publie le site **à chaque push sur la branche par défaut** du dépôt (celle que GitHub propose quand on modifie un fichier en ligne). Rien d'autre à faire : modifier `carte.js` ou `infos.js` suffit.
+Le site est hébergé sur GitHub Pages et relié au domaine **piazzetta-ladestrousse.com** (acheté sur Cloudflare). Le fichier [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) vérifie la carte, génère le PDF, prépare les photos et publie le site **à chaque push sur la branche par défaut** du dépôt (celle que GitHub propose quand on modifie un fichier en ligne). Rien d'autre à faire : modifier `carte.js`, `infos.js` ou le dossier `photos/` suffit.
 
 - Suivre une publication : onglet **Actions › Publier le site**.
 - Relancer à la main : **Actions › Publier le site › Run workflow**.
-- Réglage GitHub nécessaire, une seule fois : **Settings › Pages › Build and deployment › Source : GitHub Actions** (et non « Deploy from a branch », qui publierait le site sans le PDF).
-
-Adresse du site : `https://isoardimarius.github.io/piazetta-la-destrousse/`
+- Réglages GitHub et Cloudflare en place, enregistrements DNS, entretien et dépannage : **[`docs/mise-en-ligne.md`](docs/mise-en-ligne.md)**.
 
 > GitHub Pages n'est gratuit que pour un dépôt **public** (ou avec un abonnement GitHub payant).
 

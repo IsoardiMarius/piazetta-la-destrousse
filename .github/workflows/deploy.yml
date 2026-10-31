@@ -39,7 +39,7 @@ jobs:
           npm ci --no-audit --no-fund
           npx playwright install --with-deps chromium
 
-      - name: Générer le PDF de la carte et son image d'aperçu
+      - name: Générer le PDF et la vignette de la carte
         run: node scripts/generer-pdf.mjs
 
       - name: Rassembler les fichiers du site

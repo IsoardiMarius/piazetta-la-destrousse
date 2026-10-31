@@ -28,3 +28,17 @@
 - **Contexte RGPD** : le site ne collecte aucune donnée personnelle (pas de cookie, de formulaire ni de statistiques), mais l'hébergeur GitHub enregistre l'adresse IP des visiteurs ; aucune information n'est donc donnée à ce sujet aux visiteurs.
 - **Alternative proposée** : remettre une page courte, avec ces informations, dans le pied de page.
 - **Décision** : écart accepté par le builder (demande explicite).
+
+## 3. Nom de domaine sur Cloudflare (complément à l'exception n°1)
+
+- **Date** : 31 octobre 2026
+- **Demandé par** : le builder du projet
+- **Demande** : relier le site à un nom de domaine personnalisé, `piazzetta-ladestrousse.com`, acheté sur Cloudflare Registrar.
+- **Risques signalés au builder** : Cloudflare est un service externe (société américaine). En mode « Proxied », toutes les visites transiteraient par ses serveurs ; les coordonnées du titulaire du domaine sont enregistrées chez le registraire.
+- **Mesures prises** :
+  - domaine acheté sur le compte Cloudflare **de la pizzeria**, payé par son gérant : aucune carte bancaire transmise, le domaine appartient au commerce ;
+  - le builder est invité sur ce compte avec un rôle d'administrateur, sans accès aux moyens de paiement ;
+  - enregistrements DNS en **« DNS only »** : Cloudflare ne sert qu'à l'aiguillage du domaine, les visites ne passent pas par ses serveurs ;
+  - HTTPS imposé (certificat délivré par GitHub) ; domaine vérifié sur le compte GitHub pour empêcher son détournement ;
+  - aucun secret dans le dépôt ; tous les réglages sont documentés dans `docs/mise-en-ligne.md`.
+- **Décision** : écart accepté par le builder (demande explicite).
