@@ -36,8 +36,8 @@
 - **Demande** : relier le site à un nom de domaine personnalisé, `piazzetta-ladestrousse.com`, acheté sur Cloudflare Registrar.
 - **Risques signalés au builder** : Cloudflare est un service externe (société américaine). En mode « Proxied », toutes les visites transiteraient par ses serveurs ; les coordonnées du titulaire du domaine sont enregistrées chez le registraire.
 - **Mesures prises** :
-  - domaine acheté sur le compte Cloudflare **de la pizzeria**, payé par son gérant : aucune carte bancaire transmise, le domaine appartient au commerce ;
-  - le builder est invité sur ce compte avec un rôle d'administrateur, sans accès aux moyens de paiement ;
+  - domaine acheté sur le **compte Cloudflare du builder**, avec sa propre carte ; le gérant de la pizzeria le rembourse (environ 10 € par an, par Wero) : aucune carte bancaire du gérant n'a été transmise ;
+  - point d'attention : le domaine dépend du compte du builder ; à transférer vers un compte au nom de la pizzeria si elle doit un jour le gérer seule ;
   - enregistrements DNS en **« DNS only »** : Cloudflare ne sert qu'à l'aiguillage du domaine, les visites ne passent pas par ses serveurs ;
   - HTTPS imposé (certificat délivré par GitHub) ; domaine vérifié sur le compte GitHub pour empêcher son détournement ;
   - aucun secret dans le dépôt ; tous les réglages sont documentés dans `docs/mise-en-ligne.md`.

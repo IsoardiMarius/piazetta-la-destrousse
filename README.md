@@ -8,9 +8,9 @@ Hébergement, publication, nom de domaine et réglages (GitHub, Cloudflare) : to
 
 | Je veux changer… | Fichier | Lien direct |
 | --- | --- | --- |
-| Les pizzas, les ingrédients, les prix, les tailles | **[`carte.js`](carte.js)** | [✏️ Modifier la carte](https://github.com/IsoardiMarius/piazetta-la-destrousse/edit/claude/affectionate-euler-l61emv/carte.js) |
-| Les horaires, une fermeture pour congés, une annonce, le téléphone, l'adresse, les textes de l'accueil | **[`infos.js`](infos.js)** | [✏️ Modifier les infos](https://github.com/IsoardiMarius/piazetta-la-destrousse/edit/claude/affectionate-euler-l61emv/infos.js) |
-| Les photos de la page d'accueil | dossier **[`photos/`](photos/)** | [📷 Ajouter des photos](https://github.com/IsoardiMarius/piazetta-la-destrousse/upload/claude/affectionate-euler-l61emv/photos) |
+| Les pizzas, les ingrédients, les prix, les tailles | **[`carte.js`](carte.js)** | [✏️ Modifier la carte](https://github.com/IsoardiMarius/piazetta-la-destrousse/edit/main/carte.js) |
+| Les horaires, une fermeture pour congés, une annonce, le téléphone, l'adresse, les textes de l'accueil | **[`infos.js`](infos.js)** | [✏️ Modifier les infos](https://github.com/IsoardiMarius/piazetta-la-destrousse/edit/main/infos.js) |
+| Les photos de la page d'accueil | dossier **[`photos/`](photos/)** | [📷 Ajouter des photos](https://github.com/IsoardiMarius/piazetta-la-destrousse/upload/main/photos) |
 
 1. Cliquez sur le lien direct (ou ouvrez le fichier puis cliquez sur le crayon ✏️).
 2. Modifiez le texte entre les guillemets `"..."`.
