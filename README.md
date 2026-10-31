@@ -40,7 +40,7 @@ Le fichier [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) vérif
 
 - Suivre une publication : onglet **Actions › Publier le site**.
 - Relancer à la main : **Actions › Publier le site › Run workflow**.
-- Réglage GitHub nécessaire (déjà en place) : **Settings › Pages › Source : GitHub Actions**.
+- Réglage GitHub nécessaire, une seule fois : **Settings › Pages › Build and deployment › Source : GitHub Actions** (et non « Deploy from a branch », qui publierait le site sans le PDF).
 
 Adresse du site : `https://isoardimarius.github.io/piazetta-la-destrousse/`
 
