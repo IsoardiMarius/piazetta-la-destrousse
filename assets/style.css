@@ -118,7 +118,12 @@ a:hover{color:var(--brand-dark)}
 .brand:hover img{transform:rotate(-12deg) scale(1.06)}
 .brand span{font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:-.02em}
 .hdr__right{display:flex;align-items:center;gap:28px}
-.hdr__links{display:flex;gap:28px;margin:0;padding:0;list-style:none}
+.hdr__links{display:flex;align-items:center;gap:24px;margin:0;padding:0;list-style:none}
+.hdr__links li[hidden]{display:none}
+.navlink--ext{gap:3px}
+.navlink--ext::after{right:17px}
+.navlink--ext .ext{opacity:.55;transition:transform .25s var(--ease),opacity .25s}
+.navlink--ext:hover .ext{opacity:1;transform:translate(1px,-1px)}
 .hdr__btns{display:flex;align-items:center;gap:8px}
 .hdr__menu{display:none}
 .burger{position:relative;display:block;width:18px;height:12px}
@@ -155,6 +160,8 @@ a:hover{color:var(--brand-dark)}
 .mnav.is-open .mnav__list li:nth-child(2) a{transition-delay:.04s}
 .mnav.is-open .mnav__list li:nth-child(3) a{transition-delay:.08s}
 .mnav.is-open .mnav__list li:nth-child(4) a{transition-delay:.12s}
+.mnav.is-open .mnav__list li:nth-child(5) a{transition-delay:.16s}
+.mnav.is-open .mnav__list li:nth-child(6) a{transition-delay:.2s}
 .mnav__cta{padding-top:18px}
 
 /* ---------- Bandeau d'annonce ---------- */
@@ -162,8 +169,8 @@ a:hover{color:var(--brand-dark)}
 .annonce[hidden]{display:none}
 .annonce__in{display:flex;align-items:center;justify-content:center;gap:10px;padding-top:10px;padding-bottom:10px;text-align:center}
 .annonce p{margin:0;text-wrap:balance}
-.navlink{position:relative;color:var(--ink-2);text-decoration:none;font-weight:500;font-size:15px;padding:10px 0}
-.navlink::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:1.5px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .35s var(--ease)}
+.navlink{position:relative;display:inline-flex;align-items:center;min-height:44px;color:var(--ink-2);text-decoration:none;font-weight:500;font-size:15px}
+.navlink::after{content:"";position:absolute;left:0;right:0;bottom:9px;height:1.5px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .35s var(--ease)}
 .navlink:hover,.navlink[aria-current="true"]{color:var(--brand)}
 .navlink:hover::after,.navlink[aria-current="true"]::after{transform:scaleX(1);transform-origin:left}
 
@@ -392,15 +399,20 @@ html.lb-open{overflow:hidden}
   .preview{margin:0}
 }
 
+/* ---------- En-tête : menu à bouton sous 1040 px (la barre complète n'y tient plus) ---------- */
+@media (max-width:1040px){
+  .hdr__links{display:none}
+  .hdr__carte{display:none}
+  .hdr__menu{display:inline-flex}
+}
+
 /* ---------- Mobile ---------- */
 @media (max-width:760px){
   :root{--hdr-h:60px}
   body{font-size:16px}
-  .hdr__links{display:none}
   .hdr__tel{display:none}
   .hdr .btn--icon-m{width:44px;padding:0}
-  .hdr__carte{display:none}
-  .hdr__menu{display:inline-flex}
+
   .story{grid-template-columns:1fr;gap:20px}
   .gallery{
     display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;

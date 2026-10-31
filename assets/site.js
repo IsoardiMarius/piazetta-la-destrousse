@@ -50,6 +50,13 @@
   });
   var G = PZ.liensGoogle(D);
   $$('[data-google]').forEach(function (a) { a.href = G[a.getAttribute('data-google')] || G.fiche; });
+  /* Liens Uber Eats / Facebook de l'en-tête et du menu : affichés seulement s'ils sont renseignés */
+  var R = D.reseaux || {};
+  $$('[data-reseau]').forEach(function (a) {
+    var url = R[a.getAttribute('data-reseau')];
+    var item = a.closest('[data-reseau-item]') || a;
+    if (/^https?:\/\//.test(url || '')) { a.href = url; item.hidden = false; } else item.hidden = true;
+  });
   var res = $('[data-reseaux]');
   if (res) { var hr = PZ.htmlReseaux(D); if (res.innerHTML !== hr) res.innerHTML = hr; res.hidden = !hr; }
 
@@ -197,7 +204,7 @@
       document.addEventListener('click', function (e) {
         if (toggle.getAttribute('aria-expanded') === 'true' && !e.target.closest('.hdr')) setMenu(false);
       });
-      window.matchMedia('(min-width: 761px)').addEventListener('change', function (m) { if (m.matches) setMenu(false); });
+      window.matchMedia('(min-width: 1041px)').addEventListener('change', function (m) { if (m.matches) setMenu(false); });
     }
 
     /* Lien actif dans la navigation */

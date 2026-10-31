@@ -66,6 +66,12 @@ function liens(page) {
     .replace(/aria-label="Appeler le [^"]*"/g, `aria-label="${attr('Appeler le ' + D.telephone)}"`);
   const G = PZ.liensGoogle(D);
   page = page.replace(/<a\b([^>]*?)\shref="[^"]*"([^>]*\sdata-google="(\w+)"[^>]*)>/g, (_, avant, apres, type) => `<a${avant} href="${attr(G[type] || G.fiche)}"${apres}>`);
+  const R = D.reseaux || {};
+  for (const [cle, url] of Object.entries(R)) {
+    if (!/^https?:\/\//.test(url || '')) continue;
+    page = page.replace(new RegExp(`(<a\\b[^>]*?)\\shref="[^"]*"([^>]*\\sdata-reseau="${cle}")`, 'g'), `$1 href="${attr(url)}"$2`)
+      .replace(new RegExp(`(<li\\b[^>]*\\sdata-reseau-item="${cle}")\\s+hidden`, 'g'), '$1');
+  }
   const reseaux = PZ.htmlReseaux(D);
   if (reseaux) page = afficher(remplirTout(page, 'data-reseaux', reseaux), 'data-reseaux');
   return page;
