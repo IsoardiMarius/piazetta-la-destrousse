@@ -23,6 +23,12 @@
     return s + NBSP + '€';
   }
 
+  /* Adresse e-mail du contenu si elle est bien formée, sinon chaîne vide (rien n'est affiché) */
+  function emailValide(D) {
+    var e = String(D.email || '').trim();
+    return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e) ? e : '';
+  }
+
   function telLink(tel) {
     var d = String(tel || '').replace(/[^\d+]/g, '');
     if (d.charAt(0) === '0') d = '+33' + d.slice(1);
@@ -302,6 +308,7 @@
       });
     });
     if (!I.telephone) avert.push('Contact : le téléphone est vide.');
+    if (I.email && !emailValide(I)) avert.push('Contact : l’adresse e-mail « ' + I.email + ' » n’est pas valide (elle n’est pas affichée).');
     var h = I.horaires && typeof I.horaires === 'object' ? I.horaires : {};
     JOURS.forEach(function (j) {
       parseCreneaux(h[j]).forEach(function (r) {
@@ -386,6 +393,7 @@
     var rempli = function (k) { return typeof D[k] === 'string' && D[k].trim() !== ''; };
     ['titre', 'introduction', 'histoireTitre', 'photosTitre'].forEach(function (k) { if (rempli(k)) T[k] = fr(D[k]); });
     ['histoireSignature', 'adresse', 'ville', 'zoneLivraison', 'mention', 'telephone'].forEach(function (k) { if (typeof D[k] === 'string') T[k] = D[k]; });
+    T.email = emailValide(D);
     T.nom = nomOfficiel(D);
     T.nomCourt = nomCourt(D);
     T.nomPied = nomOfficiel(D) + ' · Pizzeria artisanale';
@@ -551,6 +559,7 @@
       description: description(D),
       url: base,
       telephone: telLink(D.telephone).replace('tel:', ''),
+      email: emailValide(D) || undefined,
       image: images,
       logo: base + 'assets/logo-360.webp',
       servesCuisine: ['Pizza', 'Italienne'],
@@ -601,7 +610,7 @@
   }
 
   var api = {
-    JOURS: JOURS, JS_DAY: JS_DAY, cap: cap, esc: esc, prix: prix, telLink: telLink, heure: heure,
+    JOURS: JOURS, JS_DAY: JS_DAY, cap: cap, esc: esc, prix: prix, telLink: telLink, emailValide: emailValide, heure: heure,
     donnees: donnees, parseCreneaux: parseCreneaux, creneauxTexte: creneauxTexte,
     parseDate: parseDate, dateTexte: dateTexte, fermeture: fermeture, estFerme: estFerme, messageFermeture: messageFermeture,
     statut: statut, maintenantParis: maintenantParis,

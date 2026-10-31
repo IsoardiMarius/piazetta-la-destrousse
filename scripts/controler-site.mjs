@@ -75,7 +75,7 @@ for (const [nom, page] of [['index.html', accueil], ['carte.html', carte]]) {
 }
 
 /* ---------- Page d'accueil ---------- */
-for (const k of ['titre', 'introduction', 'histoireTitre', 'photosTitre', 'histoireSignature', 'telephone', 'resumeJours', 'resumeHeures', 'statutDefaut', 'accroche', 'titreCarte', 'sousTitreCarte', 'livraisonTexte', 'lieu', 'nomPied', 'nomCourt', 'adresse', 'ville']) {
+for (const k of ['titre', 'introduction', 'histoireTitre', 'photosTitre', 'histoireSignature', 'telephone', 'resumeJours', 'resumeHeures', 'statutDefaut', 'accroche', 'titreCarte', 'sousTitreCarte', 'livraisonTexte', 'lieu', 'nomPied', 'nomCourt', 'adresse', 'ville', 'email']) {
   if (T[k] === undefined || !accueil.includes(`data-bind="${k}"`)) continue;
   const valeur = contenuDe(accueil, `data-bind="${k}"`);
   verifier(valeur === html(T[k]), `Accueil : « ${k} » affiche « ${valeur} » au lieu de « ${T[k]} »`);
@@ -130,9 +130,19 @@ const nomsVisibles = new Set(pizzas.map((p) => p.nom));
   .forEach((p) => verifier(!lignes.some((l) => l.includes(`<b>${PZ.esc(p.nom)}<`)), `Carte : « ${p.nom} » est masquée mais affichée`));
 const entete = contenuDe(carte, 'data-head') || '';
 tailles.forEach((t) => verifier(present(entete, t.taille || t.nom), `Carte : la taille « ${t.taille || t.nom} » n'est pas dans l'en-tête`));
-for (const k of ['telephone', 'resumeJoursCourt', 'resumeHeures', 'villeCourte', 'mention', 'titrePage2', 'sousTitrePage2', 'mentionPage2', 'suitePage2']) {
+for (const k of ['telephone', 'email', 'resumeJoursCourt', 'resumeHeures', 'villeCourte', 'mention', 'titrePage2', 'sousTitrePage2', 'mentionPage2', 'suitePage2']) {
   if (T[k] === undefined || !carte.includes(`data-bind="${k}"`)) continue;
   verifier(contenuDe(carte, `data-bind="${k}"`) === html(T[k]), `Carte : « ${k} » ne correspond pas au contenu`);
+}
+
+/* ---------- E-mail (accueil et carte) ---------- */
+const email = PZ.emailValide(D);
+for (const [nom, page, attendu] of [['Accueil', accueil, 2], ['Carte', carte, 2]]) {
+  const liensMail = [...page.matchAll(/<a\b[^>]*\sdata-email(?=[\s>])[^>]*>/g)].map((m) => m[0]);
+  verifier(liensMail.length === attendu, `${nom} : ${liensMail.length} lien(s) e-mail au lieu de ${attendu}`);
+  const blocs = [...page.matchAll(/<[^>]*\sdata-email-bloc(?=[\s>])[^>]*>/g)].map((m) => m[0]);
+  verifier(blocs.every((b) => /\shidden(?=[\s>])/.test(b) === !email), email ? `${nom} : l'e-mail est renseigné mais masqué` : `${nom} : un e-mail est affiché alors qu'il est vide`);
+  if (email) verifier(liensMail.every((l) => l.includes(`href="mailto:${html(email)}"`)), `${nom} : lien e-mail incorrect`);
 }
 
 /* ---------- Résumé des heures (accueil et pied de page de la carte) ---------- */
@@ -165,6 +175,7 @@ if (base) {
     verifier(ld.name === PZ.nomOfficiel(D), 'Google : nom différent du contenu');
     verifier(ld.telephone === tel.replace('tel:', ''), 'Google : téléphone différent du contenu');
     verifier(ld.address.streetAddress === D.adresse, 'Google : adresse différente du contenu');
+    verifier((ld.email || '') === PZ.emailValide(D), 'Google : e-mail différent du contenu');
     const items = ld.hasMenu.hasMenuSection[0].hasMenuItem;
     verifier(items.length === pizzas.length && items.every((it, i) => it.name === pizzas[i].nom && it.offers.length === tailles.length), 'Google : la carte transmise ne correspond pas au contenu');
     const sections = ld.hasMenu.hasMenuSection.slice(1);

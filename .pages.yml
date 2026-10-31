@@ -224,6 +224,13 @@ content:
         description: "Écrit comme il doit s'afficher, par exemple 06 40 92 51 76. Sert aussi aux boutons « Appeler »."
         type: string
         required: true
+      - name: email
+        label: E-mail (facultatif)
+        description: "Affiché sur le site et la carte PDF, avec un lien pour écrire. Vide = pas d'e-mail affiché."
+        type: string
+        pattern:
+          regex: '^$|^[^@\s]+@[^@\s]+\.[^@\s]+$'
+          message: "Adresse e-mail incomplète, par exemple nom@gmail.com"
       - name: adresse
         label: Adresse
         description: "Numéro et rue, par exemple 842 avenue de la Doulia."

@@ -16,7 +16,7 @@ Tu peux changer toi-même la carte, les prix, les horaires, les congés, les pho
 | **Boissons et desserts** | la page 2 de la carte : boissons, desserts, et d'autres rubriques si tu veux (glaces…) |
 | **Horaires et congés** | changer les horaires, prévenir d'une fermeture (vacances, jour férié), afficher un message en haut du site |
 | **Photos** | ajouter, retirer ou réordonner les photos |
-| **Contact et réseaux** | téléphone, adresse, zone de livraison, liens Uber Eats / Facebook / Instagram |
+| **Contact et réseaux** | téléphone, e-mail, adresse, zone de livraison, liens Uber Eats / Facebook / Instagram |
 | **Textes de l'accueil** | les phrases de la page d'accueil |
 
 Après chaque changement : clique sur **Enregistrer** (« Save »). **1 à 2 minutes plus tard**, le site, la carte et le PDF sont à jour tout seuls. Si tu ne vois pas le changement tout de suite, attends un peu et recharge la page.

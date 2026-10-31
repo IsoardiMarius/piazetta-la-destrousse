@@ -16,7 +16,7 @@ Ouvrir **https://app.pagescms.org**, se connecter (avec GitHub, ou avec le lien 
 | **Boissons et desserts** | Page 2 de la carte : rubriques (Boissons, Desserts…), articles, prix ; la page et le renvoi « en page 2 » n'apparaissent que s'il y a au moins un article |
 | **Horaires et congés** | Horaires de chaque jour, fermeture exceptionnelle (calendrier), bandeau d'annonce |
 | **Photos** | Ajouter, retirer et réordonner les photos de l'accueil |
-| **Contact et réseaux** | Nom, téléphone, adresse, zone de livraison, Uber Eats, Facebook, Instagram |
+| **Contact et réseaux** | Nom, téléphone, e-mail, adresse, zone de livraison, Uber Eats, Facebook, Instagram |
 | **Textes de l'accueil** | Grand titre, introduction, « La maison », titre des photos |
 
 Cliquer sur **Enregistrer** : 1 à 2 minutes plus tard, tout est à jour et regénéré automatiquement (pages, carte, **PDF**, photos, aperçus de liens, données pour Google, badge « Ouvert / Fermé »).

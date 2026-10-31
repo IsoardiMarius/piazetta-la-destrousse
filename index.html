@@ -211,6 +211,10 @@
       <div class="card__body">
         <p class="address"><span data-bind="adresse">842 avenue de la Doulia</span><br><span data-bind="ville">13112 La Destrousse</span></p>
         <p class="muted">Retrait des commandes sur place. <span data-bind="livraisonTexte">Livraison à La Destrousse et alentours.</span></p>
+        <p class="mail" data-email-bloc hidden>
+          <svg class="ic" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><use href="#i-mail"></use></svg>
+          <a href="mailto:piazzettadestrousse@gmail.com" data-email data-bind="email">piazzettadestrousse@gmail.com</a>
+        </p>
       </div>
       <div class="card__actions">
         <a class="btn btn--primary btn--full" href="tel:+33640925176" data-tel>
@@ -240,6 +244,7 @@
     </div>
     <div class="ftr__links">
       <nav class="ftr__social" aria-label="Réseaux et commande en ligne" data-reseaux hidden></nav>
+      <a class="ftr__mail" href="mailto:piazzettadestrousse@gmail.com" data-email data-bind="email" data-email-bloc hidden>piazzettadestrousse@gmail.com</a>
       <span>© <span data-year>2026</span></span>
     </div>
   </div>
@@ -276,6 +281,7 @@
 </dialog>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 6L2 7"></path></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></symbol>
   <symbol id="i-ext" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></symbol>

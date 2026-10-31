@@ -21,6 +21,9 @@
   if (rows.innerHTML !== hRows) rows.innerHTML = hRows;
   var T = PZ.textes(C);
   Object.keys(T).forEach(function (k) { bind(k, T[k]); });
+  var email = PZ.emailValide(C);
+  $$('[data-email]').forEach(function (a) { a.href = 'mailto:' + email; });
+  $$('[data-email-bloc]').forEach(function (el) { el.hidden = !email; });
   var hResume = PZ.htmlResumeHeures(C, true);
   $$('[data-resume-heures-court]').forEach(function (el) { if (el.innerHTML !== hResume) el.innerHTML = hResume; });
 

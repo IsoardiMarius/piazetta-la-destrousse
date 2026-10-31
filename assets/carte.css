@@ -169,7 +169,7 @@ html:not(.is-bare) .sh-next:hover .ic{transform:translateX(3px)}
 
 .sh-foot{
   position:relative;background:var(--brand);color:var(--cream);padding:30px 56px 40px;
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:start;
+  display:grid;grid-template-columns:repeat(3,auto);justify-content:space-between;gap:24px;align-items:start;
   -webkit-print-color-adjust:exact;print-color-adjust:exact;
 }
 .sh-foot__item{display:flex;gap:12px;align-items:flex-start}
@@ -177,6 +177,8 @@ html:not(.is-bare) .sh-next:hover .ic{transform:translateX(3px)}
 .sh-foot__item div{display:flex;flex-direction:column;gap:2px;min-width:0}
 .sh-foot__item strong{font-family:var(--f-display);font-weight:700;font-size:20px;line-height:1.2}
 .sh-foot__item span{font-size:13px;color:var(--cream-muted)}
+.sh-mail{font-size:13px;color:var(--cream);text-decoration:none}
+.sh-mail[hidden]{display:none}
 
 /* ---------- Impression ---------- */
 @page{size:A4;margin:0}

@@ -55,6 +55,10 @@
     a.href = PZ.telLink(D.telephone);
     if (a.hasAttribute('aria-label')) a.setAttribute('aria-label', 'Appeler le ' + D.telephone);
   });
+  /* E-mail : liens et blocs affichés seulement si l'adresse est renseignée */
+  var email = PZ.emailValide(D);
+  $$('[data-email]').forEach(function (a) { a.href = 'mailto:' + email; });
+  $$('[data-email-bloc]').forEach(function (el) { el.hidden = !email; });
   var G = PZ.liensGoogle(D);
   $$('[data-google]').forEach(function (a) { a.href = G[a.getAttribute('data-google')] || G.fiche; });
   /* Liens Uber Eats / Facebook de l'en-tête et du menu : affichés seulement s'ils sont renseignés */

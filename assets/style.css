@@ -368,6 +368,14 @@ html.lb-open{overflow:hidden}
 .card__actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:auto}
 .card__actions .btn{min-width:0;padding-inline:16px}
 .card__actions .btn--full{grid-column:1 / -1}
+.mail{display:flex;align-items:center;gap:8px;margin:2px 0 0;min-width:0}
+.mail[hidden]{display:none}
+.mail .ic{color:var(--brand);flex:none}
+.mail a{font-size:clamp(14px,4.3vw,16px);padding:10px 0;margin:-10px 0} /* zone tactile de 44 px sans espacer le texte */
+.mail a,.ftr__mail{color:var(--brand);font-weight:600;overflow-wrap:anywhere;text-decoration:underline;text-decoration-color:var(--line-2);text-underline-offset:4px}
+.mail a:hover,.ftr__mail:hover{text-decoration-color:currentColor}
+.ftr__mail{display:inline-flex;align-items:center;min-height:44px}
+.ftr__mail[hidden]{display:none}
 .address{margin:0;font-family:var(--f-display);font-weight:600;font-size:24px;line-height:1.25;letter-spacing:-.02em}
 .hours{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
 .hours li{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:42px;padding:6px 12px;border-radius:12px;color:var(--ink)}
