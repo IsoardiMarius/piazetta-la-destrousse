@@ -35,13 +35,15 @@ Sur business.google.com, ou en cherchant « Piazzetta La Destrousse » sur Googl
 
 Le nombre d'avis, leur note et leur fraîcheur pèsent beaucoup dans le classement local.
 
-- [ ] Pour les flyers ou la vitrine, un QR code vers le site est aussi prêt : **[`qr-site.png`](qr-site.png)** ([`qr-site.svg`](qr-site.svg) pour un imprimeur).
+- [ ] Si vous imprimez quelque chose (affiche en vitrine, autocollant sur les cartons, cartes de visite…), un QR code qui ouvre le site est prêt : **[`qr-site.png`](qr-site.png)** ([`qr-site.svg`](qr-site.svg) pour un imprimeur).
 - [ ] Imprimer le QR code **[`qr-avis-google.png`](qr-avis-google.png)** (ou la version vectorielle [`qr-avis-google.svg`](qr-avis-google.svg) pour un imprimeur) : il ouvre directement la page « Laisser un avis ». À coller sur les cartons à pizza, au comptoir ou sur les flyers, avec une phrase comme « Vous avez aimé ? Laissez-nous un avis ».
 - [ ] Le bouton **« Votre avis »** du site (rubrique « Nous trouver ») ouvre la même page.
 - [ ] **Répondre à chaque avis**, positif comme négatif, poliment et rapidement.
 - [ ] Ne jamais acheter d'avis ni en écrire soi-même : Google les détecte et peut sanctionner la fiche.
 
 ## 3. Les mêmes informations partout
+
+Partout où un champ « site web » existe, mettre **l'adresse du site : `https://piazzetta-ladestrousse.com`**. L'adresse postale, elle, ne change pas.
 
 Nom, adresse et téléphone écrits **exactement** comme sur le site, à chaque endroit :
 
@@ -53,7 +55,9 @@ Nom, adresse et téléphone écrits **exactement** comme sur le site, à chaque 
 
 ## 4. Les outils de Google et Bing
 
-- [ ] **Google Search Console** (search.google.com/search-console) : choisir **« Domaine »** et saisir `piazzetta-ladestrousse.com`. Google donne un enregistrement TXT à ajouter dans Cloudflare (DNS › Records, « DNS only »). Une fois validé, déclarer le plan du site : `https://piazzetta-ladestrousse.com/sitemap.xml`. Search Console montre ensuite sur quelles recherches le site apparaît.
+- [x] **Google Search Console** : propriété « Domaine » `piazzetta-ladestrousse.com` créée et validée (enregistrement TXT dans Cloudflare).
+- [ ] **Plan du site** : dans Search Console, menu de gauche **Indexation › Sitemaps**, champ « Ajouter un sitemap », saisir l'adresse complète `https://piazzetta-ladestrousse.com/sitemap.xml` puis **Envoyer**. L'état passe à « Opération effectuée » en quelques heures ou jours (un « Impossible de récupérer » au début est courant : attendre).
+- [ ] **Accélérer la première indexation** : en haut de Search Console, coller `https://piazzetta-ladestrousse.com/` dans la barre « Inspecter n'importe quelle URL », puis **Demander l'indexation**. Refaire la même chose avec `https://piazzetta-ladestrousse.com/carte.html`.
 - [ ] **Bing Webmaster Tools** : importer le site depuis Search Console en un clic.
 
 ## 5. Dans `infos.js`
