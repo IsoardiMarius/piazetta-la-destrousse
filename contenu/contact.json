@@ -8,6 +8,8 @@
   "email": "piazzettadestrousse@gmail.com",
   "adresse": "842 avenue de la Doulia",
   "ville": "13112 La Destrousse",
+  "lienGoogle": "https://www.google.com/maps/search/?api=1&query=Piazzetta%20La%20Destrousse&query_place_id=ChIJn-yuT0iZyRIRGalZ9F80kp4",
+  "lienAvis": "",
   "emporter": true,
   "livraison": true,
   "zoneLivraison": "La Destrousse et alentours",
@@ -16,6 +18,5 @@
     "facebook": "https://www.facebook.com/p/PiazzettaDestrousse-Pizzeria-61593981164995/",
     "instagram": "",
     "uberEats": "https://www.ubereats.com/fr/store/piazzetta-destrousse/3hAM1KrBRzO7w2VnZtQnDQ"
-  },
-  "googlePlaceId": "ChIJn-yuT0iZyRIRGalZ9F80kp4"
+  }
 }

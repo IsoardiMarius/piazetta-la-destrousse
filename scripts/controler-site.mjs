@@ -162,6 +162,12 @@ const nomsVisibles = new Set(pizzas.map((p) => p.nom));
 const entete = contenuDe(carte, 'data-head') || '';
 tailles.forEach((t) => verifier(present(entete, t.taille || t.nom), `Carte : la taille « ${t.taille || t.nom} » n'est pas dans l'en-tête`));
 
+/* ---------- Liens Google (« Itinéraire », « Votre avis ») ---------- */
+const G = PZ.liensGoogle(D);
+for (const m of accueil.matchAll(/<a\b[^>]*\shref="([^"]*)"[^>]*\sdata-google="(\w+)"/g)) {
+  verifier(m[1] === html(G[m[2]] || G.fiche).replace(/"/g, '&quot;'), `Accueil : lien Google « ${m[2]} » incorrect`);
+}
+
 /* ---------- E-mail (accueil et carte) ---------- */
 const email = PZ.emailValide(D);
 for (const [nom, page, attendu] of [['Accueil', accueil, 2], ['Carte', carte, 2]]) {

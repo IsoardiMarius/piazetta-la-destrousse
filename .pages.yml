@@ -338,6 +338,20 @@ content:
         description: "Par exemple 13001 Marseille."
         type: string
         required: true
+      - name: lienGoogle
+        label: Lien de la fiche Google Maps
+        description: "Sur Google Maps, ouvre la fiche de l'établissement, touche « Partager » puis « Copier le lien », et colle-le ici. Sert aux boutons « Itinéraire » et « Votre avis ». Vide = recherche du nom et de l'adresse sur Google Maps."
+        type: string
+        pattern:
+          regex: '^$|^https?://\S+$'
+          message: "Le lien doit commencer par https://"
+      - name: lienAvis
+        label: Lien pour laisser un avis Google (facultatif)
+        description: "Dans Google Business Profile, « Demander des avis » donne un lien à copier ici. Vide = calculé à partir du lien de la fiche quand c'est possible, sinon le bouton « Votre avis » ouvre la fiche."
+        type: string
+        pattern:
+          regex: '^$|^https?://\S+$'
+          message: "Le lien doit commencer par https://"
       - name: emporter
         label: Vente à emporter
         description: "Cochée : « À emporter » et « Retrait des commandes sur place » apparaissent sur le site et la carte."
@@ -365,10 +379,6 @@ content:
           - { name: uberEats, label: Uber Eats, component: lien }
           - { name: facebook, label: Facebook, component: lien }
           - { name: instagram, label: Instagram, component: lien }
-      - name: googlePlaceId
-        label: Identifiant de la fiche Google
-        type: string
-        hidden: true
 
   # ---------- 7. Google et partage de liens (facultatif) ----------
   - name: referencement

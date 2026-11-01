@@ -60,6 +60,9 @@ Le badge « Ouvert / Fermé », le résumé des jours et des heures, la carte PD
 **Changer le logo**
 Établissement : nom, logo, contact › **Logo** › choisis une image carrée (au moins 720 px de côté) › Enregistrer. Elle est affichée dans un rond partout, y compris l'icône de l'onglet.
 
+**Changer le lien Google Maps (boutons « Itinéraire » et « Votre avis »)**
+Établissement › **Lien de la fiche Google Maps** : sur Google Maps, ouvre la fiche, touche « Partager » › « Copier le lien », colle-le › Enregistrer.
+
 **Afficher un message en haut du site**
 Horaires et fermetures › Bandeau d'annonce, par exemple « Nouveau : la pizza Burrata est arrivée ! ». Vide le champ pour l'enlever.
 

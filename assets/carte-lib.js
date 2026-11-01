@@ -318,6 +318,9 @@
     });
     if (!I.telephone) avert.push('Établissement : le téléphone est vide.');
     if (!String(I.ville || '').trim()) avert.push('Établissement : le code postal et la ville sont vides.');
+    ['lienGoogle', 'lienAvis'].forEach(function (k) {
+      if (I[k] && !lienHttp(I[k])) avert.push('Établissement : le lien « ' + I[k] + ' » doit commencer par https:// (ignoré).');
+    });
     if (I.email && !emailValide(I)) avert.push('Établissement : l’adresse e-mail « ' + I.email + ' » n’est pas valide (elle n’est pas affichée).');
     var h = I.horaires && typeof I.horaires === 'object' ? I.horaires : {};
     JOURS.forEach(function (j) {
@@ -365,16 +368,26 @@
   function communes(D) { return Array.isArray(D.communesLivrees) ? D.communesLivrees.filter(Boolean) : []; }
 
   /* Liens vers la fiche Google : fiche, itinéraire et page « laisser un avis » */
+  /* Identifiant de la fiche Google, s'il figure dans le lien collé (query_place_id=…, placeid=… ou « ChIJ… ») */
+  function idFicheGoogle(lien) {
+    lien = String(lien || '');
+    var m = lien.match(/(?:query_place_id|destination_place_id|placeid|place_id)=([\w-]{10,})/i) || lien.match(/(?:^|[^A-Za-z0-9_]|!19s)(ChIJ[\w-]{10,})/);
+    return m ? m[1] : '';
+  }
+  function lienHttp(x) { x = String(x || '').trim(); return /^https?:\/\//.test(x) ? x : ''; }
+
+  /* Liens Google des boutons « Itinéraire » et « Votre avis » (rubrique « Établissement » de Pages CMS) :
+     - fiche : le lien collé, sinon une recherche du nom et de l'adresse sur Google Maps ;
+     - itinéraire : vers le nom et l'adresse, précisé par l'identifiant de la fiche s'il est connu ;
+     - avis : le lien « Demander des avis » collé, sinon calculé depuis l'identifiant, sinon la fiche. */
   function liensGoogle(D) {
-    var id = D.googlePlaceId, q = encodeURIComponent(nomOfficiel(D));
-    if (!id) {
-      var f = D.lienGoogle || 'https://www.google.com/maps/search/?api=1&query=' + q;
-      return { fiche: f, itineraire: f, avis: f };
-    }
+    var lien = lienHttp(D.lienGoogle), id = idFicheGoogle(lien);
+    var q = encodeURIComponent([nomOfficiel(D), D.adresse, D.ville].filter(Boolean).join(', '));
+    var fiche = lien || 'https://www.google.com/maps/search/?api=1&query=' + q;
     return {
-      fiche: 'https://www.google.com/maps/search/?api=1&query=' + q + '&query_place_id=' + id,
-      itineraire: 'https://www.google.com/maps/dir/?api=1&destination=' + q + '&destination_place_id=' + id,
-      avis: 'https://search.google.com/local/writereview?placeid=' + id
+      fiche: fiche,
+      itineraire: 'https://www.google.com/maps/dir/?api=1&destination=' + q + (id ? '&destination_place_id=' + id : ''),
+      avis: lienHttp(D.lienAvis) || (id ? 'https://search.google.com/local/writereview?placeid=' + id : fiche)
     };
   }
 
