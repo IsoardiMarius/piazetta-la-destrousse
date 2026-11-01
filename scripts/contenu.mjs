@@ -38,16 +38,8 @@ function lireJson(nom, defaut) {
 /* Charge tout le contenu : { CARTE, INFOS, photos } */
 export function chargerContenu() {
   const carte = lireJson(FICHIERS.carte, {});
-  /* Compatibilité avec les anciens noms (pizzas / ingredients / masquee, boissons-desserts.json) */
-  if (!carte.produits && Array.isArray(carte.pizzas)) {
-    carte.produits = carte.pizzas.map((p) => {
-      const { ingredients, masquee, ...reste } = p || {};
-      return { ...reste, description: reste.description ?? ingredients, masque: reste.masque ?? masquee };
-    });
-    delete carte.pizzas;
-  }
   /* Page 2 de la carte, rangée avec la carte : window.CARTE.page2 */
-  const page2 = lireJson(FICHIERS.page2, null) || lireJson('boissons-desserts.json', null);
+  const page2 = lireJson(FICHIERS.page2, null);
   if (page2 && typeof page2 === 'object') carte.page2 = page2;
   const infos = Object.assign({}, lireJson(FICHIERS.horaires, {}), lireJson(FICHIERS.contact, {}), lireJson(FICHIERS.textes, {}));
   const photos = lireJson(FICHIERS.photos, []);

@@ -333,9 +333,6 @@
     });
     return { erreurs: erreurs, avertissements: avert };
   }
-  /* Compatibilité : liste de tous les messages */
-  function validerCarte(C) { return valider(C, { telephone: 'x' }).erreurs; }
-  function validerInfos(I) { var v = valider({ tailles: [{ nom: 'x' }], produits: [{ nom: 'x', prix: [0] }] }, I); return v.erreurs.concat(v.avertissements); }
 
   /* ---------- Textes et blocs HTML (partagés par le navigateur et la publication) ---------- */
 
@@ -691,7 +688,7 @@
     statut: statut, maintenantParis: maintenantParis,
     groupesHoraires: groupesHoraires, resumeJours: resumeJours, resumeHeures: resumeHeures, htmlResumeHeures: htmlResumeHeures, premiereOuverture: premiereOuverture,
     produitsVisibles: produitsVisibles, fourchettePrix: fourchettePrix,
-    valider: valider, validerCarte: validerCarte, validerInfos: validerInfos,
+    valider: valider,
     fr: fr, textes: textes, htmlHistoire: htmlHistoire, htmlHoraires: htmlHoraires, htmlGalerie: htmlGalerie, altPhoto: altPhoto,
     htmlEnteteTailles: htmlEnteteTailles, htmlLignesCarte: htmlLignesCarte, multiligne: multiligne,
     description: description, descriptionCarte: descriptionCarte, jsonLd: jsonLd,

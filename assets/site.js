@@ -32,7 +32,7 @@
   setupPhotos();
 
   if (!PZ || !window.CARTE || !window.INFOS) { setupUi(); return; }
-  var erreurs = PZ.validerCarte(window.CARTE).concat(PZ.validerInfos(window.INFOS));
+  var v = PZ.valider(window.CARTE, window.INFOS), erreurs = v.erreurs.concat(v.avertissements);
   if (erreurs.length && window.console) console.warn(erreurs.join('\n'));
 
   var D = PZ.donnees(window);

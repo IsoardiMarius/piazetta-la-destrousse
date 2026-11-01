@@ -8,7 +8,7 @@
 
   if (!PZ || !window.CARTE || !window.INFOS) { root.setAttribute('data-ready', 'error'); return; }
   var C = PZ.donnees(window);
-  var erreurs = PZ.validerCarte(window.CARTE).concat(PZ.validerInfos(window.INFOS));
+  var v = PZ.valider(window.CARTE, window.INFOS), erreurs = v.erreurs.concat(v.avertissements);
   if (erreurs.length) console.warn('[contenu] ' + erreurs.join('\n'));
 
   var sheet = $('[data-sheet="1"]'), sheet2 = $('[data-sheet="2"]');
