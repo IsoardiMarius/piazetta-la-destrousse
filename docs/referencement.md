@@ -35,8 +35,8 @@ Sur business.google.com, ou en cherchant « Piazzetta La Destrousse » sur Googl
 
 Le nombre d'avis, leur note et leur fraîcheur pèsent beaucoup dans le classement local.
 
-- [ ] Si vous imprimez quelque chose (affiche en vitrine, autocollant sur les cartons, cartes de visite…), un QR code qui ouvre le site est prêt : **[`qr-site.png`](qr-site.png)** ([`qr-site.svg`](qr-site.svg) pour un imprimeur).
-- [ ] Imprimer le QR code **[`qr-avis-google.png`](qr-avis-google.png)** (ou la version vectorielle [`qr-avis-google.svg`](qr-avis-google.svg) pour un imprimeur) : il ouvre directement la page « Laisser un avis ». À coller sur les cartons à pizza, au comptoir ou sur les flyers, avec une phrase comme « Vous avez aimé ? Laissez-nous un avis ».
+- [ ] Si vous imprimez quelque chose (affiche en vitrine, autocollant sur les cartons, cartes de visite…), un QR code qui ouvre le site est prêt : **[`qr-site.png`](../photos/QR/qr-site.png)** ([`qr-site.svg`](../photos/QR/qr-site.svg) pour un imprimeur).
+- [ ] Imprimer le QR code **[`qr-avis-google.png`](../photos/QR/qr-avis-google.png)** (ou la version vectorielle [`qr-avis-google.svg`](../photos/QR/qr-avis-google.svg) pour un imprimeur) : il ouvre directement la page « Laisser un avis ». À coller sur les cartons à pizza, au comptoir ou sur les flyers, avec une phrase comme « Vous avez aimé ? Laissez-nous un avis ».
 - [ ] Le bouton **« Votre avis »** du site (rubrique « Nous trouver ») ouvre la même page.
 - [ ] **Répondre à chaque avis**, positif comme négatif, poliment et rapidement.
 - [ ] Ne jamais acheter d'avis ni en écrire soi-même : Google les détecte et peut sanctionner la fiche.

@@ -5,6 +5,7 @@ Ce dossier contient les photos d'origine. **Les photos affichées sur la page d'
 - Une photo ajoutée depuis Pages CMS est enregistrée ici automatiquement, avec un nom sans espaces ni accents.
 - Une photo déposée ici directement sur GitHub n'est **pas** affichée tant qu'elle n'est pas ajoutée à la liste « Photos de l'accueil » (dans Pages CMS, ou dans `contenu/photos.json`).
 - Retirer une photo de la liste la retire du site ; le fichier peut rester ici sans gêner.
+- Le dossier `QR/` contient les QR codes à imprimer (laisser un avis Google, ouvrir le site), visibles dans Pages CMS (rubrique « Media ») ; ils ne s'affichent pas sur le site.
 
 ## Ce que fait le site à chaque publication
 
