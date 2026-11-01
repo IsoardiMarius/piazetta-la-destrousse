@@ -51,9 +51,9 @@ function remplirTout(page, attribut, contenu) {
   }
   return resultat + page.slice(curseur);
 }
-/* Nom du fichier PDF proposé au téléchargement : « Carte-Nom-De-L-Etablissement.pdf » */
+/* Nom des fichiers PDF proposés au téléchargement : « Carte-Nom-De-L-Etablissement.pdf », « Flyer-… » */
 function nommer(page) {
-  return page.replace(/download="Carte-[^"]*\.pdf"/g, `download="${attr(PZ.nomPdf(D))}"`);
+  return page.replace(/download="(Carte|Flyer)-[^"]*\.pdf"/g, (_, prefixe) => `download="${attr(PZ.nomPdf(D, prefixe))}"`);
 }
 /* Attributs reliés au contenu : data-bind-alt="clé" (texte alternatif d'une image), data-bind-aria="clé" (nom lu par les lecteurs d'écran) */
 function remplirAttributs(page) {
@@ -176,6 +176,21 @@ carte = meta(carte, {
   image: base && existe('assets/og-carte.jpg') ? base + 'assets/og-carte.jpg' + v : base && imageAccueil,
 });
 ecrire('carte.html', carte);
+
+/* ---------- Flyer à imprimer (non indexé par Google) : sa photo, son QR code et l'adresse du site ---------- */
+if (existe('flyer.html')) {
+  let flyer = colorer(nommer(lire('flyer.html')), 'page');
+  flyer = remplirTout(flyer, 'data-flyer', PZ.htmlFlyer(D, optionsFlyer()));
+  ecrire('flyer.html', flyer.replace(/<title>[^<]*<\/title>/, `<title>${html(PZ.titrePageFlyer(D))}</title>`));
+}
+/* Mêmes options pour le contrôle final (scripts/controler-site.mjs) */
+function optionsFlyer() {
+  return {
+    photo: existe('assets/flyer-photo.jpg') ? 'assets/flyer-photo.jpg' : '',
+    qr: existe('assets/qr-carte.svg') ? 'assets/qr-carte.svg' : '',
+    site: base.replace(/^https?:\/\//, '').replace(/\/$/, ''),
+  };
+}
 
 /* ---------- Page 404 : chemins absolus, elle peut s'afficher à n'importe quelle adresse ---------- */
 if (existe('404.html') && base) {

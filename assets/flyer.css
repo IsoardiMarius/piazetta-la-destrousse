@@ -1,0 +1,118 @@
+/* Flyer à imprimer — format A5 (148 × 210 mm), recto.
+   Toutes les mesures du flyer sont exprimées en millimètres du format réel (--u = 1 mm à taille réelle) :
+   il garde exactement ses proportions à l'écran, à l'impression et dans le PDF de l'imprimeur. */
+:root{
+  --brand:#6B1A14;--brand-dark:#521310;--bg:#F6F0E6;--ink:#241411;
+  --muted:#6B5853;--muted-2:#5E4C47;--cream:#F6EEE3;--chip:#EDE2D2;--page:#E9E0D2;
+  --f-display:'Bricolage Grotesque',ui-sans-serif,system-ui,sans-serif;
+  --f-body:'DM Sans',ui-sans-serif,system-ui,sans-serif;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--f-body);-webkit-font-smoothing:antialiased;min-height:100vh}
+.ic{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* ---------- Barre d'actions (écran uniquement, comme sur la page de la carte) ---------- */
+.bar{
+  position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px max(16px,env(safe-area-inset-left));
+  background:color-mix(in srgb,var(--page) 82%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border-bottom:1px solid color-mix(in srgb,var(--brand) 10%,transparent);
+}
+.bar__group{display:flex;gap:8px;min-width:0}
+.bar__btn{
+  flex:none;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:999px;
+  border:1.5px solid color-mix(in srgb,var(--brand) 25%,transparent);background:transparent;color:var(--brand);
+  font:600 15px/1 var(--f-body);text-decoration:none;cursor:pointer;white-space:nowrap;
+  transition:background-color .2s var(--ease),border-color .2s var(--ease),transform .2s var(--ease);
+  -webkit-tap-highlight-color:transparent;
+}
+.bar__btn:hover{background:color-mix(in srgb,var(--brand) 6%,transparent);border-color:var(--brand)}
+.bar__btn:active{transform:scale(.97)}
+.bar__btn--primary{background:var(--brand);border-color:var(--brand);color:var(--cream)}
+.bar__btn--primary:hover{background:var(--brand-dark);border-color:var(--brand-dark)}
+.bar__btn:focus-visible{outline:2.5px solid var(--brand);outline-offset:3px}
+@media (max-width:480px){
+  .bar__back span,.bar__plus{display:none}
+  .bar__back{width:44px;padding:0;justify-content:center}
+}
+
+/* ---------- Scène : le flyer à la largeur de l'écran (taille réelle au plus) ---------- */
+.scene{display:flex;flex-direction:column;align-items:center;gap:clamp(16px,3vw,28px);padding:clamp(16px,4vw,48px) 16px calc(clamp(32px,6vw,64px) + env(safe-area-inset-bottom))}
+.cadre{container-type:inline-size;width:min(148mm,100%);flex:none}
+.scene__note{max-width:148mm;margin:0;font-size:14px;line-height:1.55;color:var(--muted-2);text-align:center;text-wrap:pretty}
+
+/* ---------- Le flyer ---------- */
+.flyer{
+  --u:calc(100cqw / 148);
+  --k:1;  /* réduit un peu les textes si l'accroche est longue (assets/flyer.js) */
+  position:relative;display:flex;flex-direction:column;width:100%;height:calc(210 * var(--u));overflow:hidden;
+  background:var(--bg);color:var(--ink);font-family:var(--f-body);
+  border-radius:4px;box-shadow:0 1px 2px color-mix(in srgb,var(--ink) 8%,transparent),0 30px 70px -30px color-mix(in srgb,var(--ink) 45%,transparent);
+}
+.flyer img{display:block}
+
+/* Zone haute, sur un axe centré : identité, photo, accroche (espaces répartis à parts égales) */
+.fl-haut{
+  flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:calc(4 * var(--u));
+  padding:calc(11 * var(--u)) calc(12 * var(--u)) calc(10 * var(--u));text-align:center;
+}
+.fl-marque{display:flex;align-items:center;gap:calc(3.5 * var(--u));max-width:100%}
+.fl-marque img{width:calc(16 * var(--u));height:calc(16 * var(--u));border-radius:50%;flex:none;background:var(--brand)}
+.fl-marque div{min-width:0;text-align:left}
+.fl-marque b{display:block;font-family:var(--f-display);font-weight:700;font-size:calc(7.4 * var(--u));line-height:1;letter-spacing:-.03em;color:var(--brand)}
+.fl-marque span{display:block;margin-top:calc(1.3 * var(--u));font-size:calc(2.65 * var(--u));font-weight:600;line-height:1.3;letter-spacing:.17em;text-transform:uppercase;color:var(--muted)}
+/* Photo dans un rond, posée sur un disque plus clair ; elle rétrécit si le texte prend plus de place */
+.fl-visuel{position:relative;flex:0 1 calc(94 * var(--u));min-height:calc(56 * var(--u));aspect-ratio:1;border-radius:50%;background:var(--chip)}
+.fl-photo{
+  position:absolute;inset:6.9%;width:86.2%;height:86.2%;border-radius:50%;object-fit:cover;
+  box-shadow:0 calc(5 * var(--u)) calc(9 * var(--u)) calc(-4 * var(--u)) color-mix(in srgb,var(--brand-dark) 45%,transparent);
+}
+.fl-photo--logo{object-fit:contain;box-shadow:none}
+.fl-textes{max-width:calc(118 * var(--u))}
+.fl-textes h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:calc(7.4 * var(--u) * var(--k));line-height:1.08;letter-spacing:-.025em;text-wrap:balance}
+.fl-horaires{margin:calc(2.8 * var(--u)) 0 0;font-size:calc(3.2 * var(--u) * var(--k));line-height:1.4;color:var(--muted-2);text-wrap:balance}
+.fl-horaires span{white-space:nowrap}
+.fl-mention{
+  display:inline-block;margin:calc(3.4 * var(--u)) 0 0;padding:calc(1.5 * var(--u)) calc(4 * var(--u));
+  border:calc(.35 * var(--u)) solid var(--brand);border-radius:calc(10 * var(--u));
+  font-size:calc(3.3 * var(--u) * var(--k));font-weight:600;line-height:1.3;color:var(--brand);text-wrap:balance;
+}
+
+/* Bandeau du bas : commander (téléphone) et QR code vers la carte */
+.fl-bas{flex:none;background:var(--brand);color:var(--cream);padding:calc(8 * var(--u)) calc(12 * var(--u)) calc(4.5 * var(--u))}
+.fl-cols{display:flex;align-items:center;justify-content:space-between;gap:calc(8 * var(--u))}
+.fl-commande{min-width:0}
+.fl-lbl{font-size:calc(2.65 * var(--u));font-weight:600;letter-spacing:.17em;text-transform:uppercase;color:color-mix(in srgb,var(--cream) 72%,transparent)}
+.fl-tel{display:flex;align-items:center;gap:calc(2.6 * var(--u));margin-top:calc(1.6 * var(--u));font-family:var(--f-display);font-weight:700;font-size:calc(8.8 * var(--u));line-height:1;letter-spacing:-.015em;white-space:nowrap}
+.fl-tel svg{width:calc(7 * var(--u));height:calc(7 * var(--u));flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.fl-info{margin:calc(3 * var(--u)) 0 0;font-size:calc(3 * var(--u));line-height:1.45;color:color-mix(in srgb,var(--cream) 86%,transparent)}
+.fl-info b{font-weight:600;color:var(--cream)}
+.fl-qr{flex:none;width:calc(27 * var(--u));text-align:center}
+.fl-qr img{width:100%;aspect-ratio:1;background:#fff;border-radius:calc(1.5 * var(--u))}
+.fl-qr span{display:block;margin-top:calc(1.8 * var(--u));font-size:calc(2.47 * var(--u));font-weight:600;line-height:1.25;text-wrap:balance}
+.fl-pied{
+  display:flex;flex-wrap:wrap;justify-content:space-between;gap:calc(1 * var(--u)) calc(4 * var(--u));
+  margin-top:calc(5.5 * var(--u));padding-top:calc(2.6 * var(--u));border-top:calc(.25 * var(--u)) solid color-mix(in srgb,var(--cream) 22%,transparent);
+  font-size:calc(2.4 * var(--u));line-height:1.35;color:color-mix(in srgb,var(--cream) 72%,transparent);
+}
+.fl-pied b{font-weight:600;color:var(--cream)}
+
+/* ---------- Impression (bouton « Imprimer ») : le flyer seul, au format A5 ---------- */
+@page{size:A5;margin:0}
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  html,body{background:var(--bg)!important;min-height:0}
+  .bar,.scene__note{display:none!important}
+  .scene{display:block;padding:0}
+  .cadre{width:148mm}
+  .flyer{border-radius:0;box-shadow:none}
+}
+/* PDF pour l'imprimeur (?pdf) : 3 mm de fond perdu autour du format. Le fond et le bandeau débordent
+   du format fini ; la découpe les rogne, sans liseré blanc. */
+.is-pdf .cadre{width:148mm;margin:3mm}
+.is-pdf .flyer{overflow:visible;border-radius:0;box-shadow:none}
+/* (le bandeau déborde de 4 mm : la page est ensuite recadrée au millimètre près par scripts/cadrer-flyer.py) */
+.is-pdf .fl-bas{box-shadow:-4mm 0 0 var(--brand),4mm 0 0 var(--brand),0 4mm 0 var(--brand),-4mm 4mm 0 var(--brand),4mm 4mm 0 var(--brand)}

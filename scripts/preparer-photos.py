@@ -5,7 +5,9 @@
 - les redimensionne en plusieurs tailles WebP légères (le navigateur choisit la bonne) ;
 - crée un minuscule aperçu flou, affiché le temps du chargement ;
 - retire les métadonnées (dont la position GPS du téléphone) ;
-- écrit la liste dans assets/photos.json, utilisée à la publication.
+- écrit la liste dans assets/photos.json, utilisée à la publication ;
+- prépare la photo du flyer (assets/flyer-photo.jpg, en haute définition pour l'impression) :
+  celle choisie dans Pages CMS (contenu/flyer.json), sinon la 1re photo de l'accueil.
 
 Utilisation : python3 scripts/preparer-photos.py [dossier-de-sortie]
 (par défaut, la sortie est le dossier du projet ; en CI, c'est _site).
@@ -147,6 +149,39 @@ def main():
     (SORTIE / "assets").mkdir(parents=True, exist_ok=True)
     (SORTIE / "assets" / "photos.json").write_text(json.dumps(liste, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"✅ {len(liste)} photo(s) préparée(s).")
+    preparer_photo_flyer([f for f, _, _ in fichiers])
+
+
+COTE_FLYER = 1200  # photo affichée dans un rond de 81 mm : environ 375 points par pouce à l'impression
+
+
+def preparer_photo_flyer(photos_accueil):
+    """Photo du flyer : celle choisie dans Pages CMS, sinon la 1re photo de l'accueil.
+    Recadrée en carré centré (elle est affichée dans un rond), en JPEG de qualité impression."""
+    sortie = SORTIE / "assets" / "flyer-photo.jpg"
+    sortie.unlink(missing_ok=True)
+    fichier_flyer = RACINE / "contenu" / "flyer.json"
+    choix = str((json.loads(fichier_flyer.read_text(encoding="utf-8")) if fichier_flyer.exists() else {}).get("photo") or "").lstrip("/")
+    sources = ([RACINE / choix] if choix else []) + list(photos_accueil)
+    for source in sources:
+        try:
+            im = ImageOps.exif_transpose(Image.open(source)).convert("RGB")
+        except Exception as e:  # introuvable ou illisible : la suivante (la 1re photo de l'accueil)
+            print(f"⚠️  Photo du flyer « {source.name} » introuvable ou illisible ({e}) : la 1re photo de l'accueil est utilisée.")
+            continue
+        im = mettre_en_valeur(im)
+        cote = min(im.size)
+        gauche, haut = (im.width - cote) // 2, (im.height - cote) // 2
+        im = im.crop((gauche, haut, gauche + cote, haut + cote))
+        if cote > COTE_FLYER:
+            im = im.resize((COTE_FLYER, COTE_FLYER), Image.LANCZOS)
+        im = im.filter(ImageFilter.UnsharpMask(radius=1.2, percent=35, threshold=3))
+        im.save(sortie, "JPEG", quality=90, optimize=True)
+        if cote < 900:
+            print(f"⚠️  Photo du flyer petite ({cote} px) : elle risque d'être floue à l'impression.")
+        print(f"✅ Photo du flyer préparée à partir de « {source.name} ».")
+        return
+    print("Flyer : aucune photo, le logo est affiché à la place.")
 
 
 CREME = (246, 240, 230)

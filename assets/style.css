@@ -453,6 +453,8 @@ html.lb-open{overflow:hidden}
 .ftr__social[hidden]{display:none}
 .ftr__social a{display:inline-flex;align-items:center;min-height:44px;color:var(--brand);font-weight:600;text-decoration:underline;text-decoration-color:var(--line-2);text-underline-offset:4px}
 .ftr__social a:hover{text-decoration-color:currentColor}
+.ftr__flyer{display:inline-flex;align-items:center;min-height:44px;color:var(--muted);text-decoration:underline;text-decoration-color:var(--line-2);text-underline-offset:4px}
+.ftr__flyer:hover{color:var(--brand);text-decoration-color:currentColor}
 
 /* ---------- Barre d'appel mobile ---------- */
 

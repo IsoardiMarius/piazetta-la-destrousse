@@ -18,17 +18,20 @@ Ouvrir **https://app.pagescms.org**, se connecter (avec GitHub, ou avec le lien 
 | **Photos de l'accueil** | Ajouter, retirer, réordonner les photos ; légende facultative |
 | **Textes de l'accueil** | Tous les textes de la page d'accueil, dans l'ordre de la page (titre, introduction, point fort du bandeau, « La maison », photos, bloc carte, pied de page) et ceux de la page « adresse introuvable » |
 | **Établissement : nom, logo, couleurs, contact** | Nom, logo, couleurs (principale et fond : toutes les nuances du site, de la carte, du PDF et des aperçus en sont tirées), type d'établissement et nom des produits (utilisés par tous les textes automatiques), téléphone, e-mail, adresse, cases **Vente à emporter** / **Livraison** (tous les textes concernés s'adaptent), zone et communes livrées, Uber Eats, Facebook, Instagram |
+| **Flyer à imprimer** | Photo, accroche, phrase mise en avant (une offre…) et case pour afficher ou non les horaires sur le flyer ; le reste (nom, logo, couleurs, téléphone, livraison, QR code) est repris du site |
 | **Google et partage de liens** | Facultatif : titres des onglets et descriptions pour Google (sinon générés automatiquement), autres noms connus de l'établissement, type de cuisine |
 
 Tout ce qui est affiché est modifiable ici, et rien n'est propre à une pizzeria : le même site peut servir à un autre établissement en changeant le contenu (type d'établissement, produits, cuisine…). Les seuls textes calculés automatiquement (et donc toujours justes) sont le résumé des horaires, le badge « Ouvert / Fermé », le nombre de pizzas et la fourchette de prix.
 
-Cliquer sur **Enregistrer** : 1 à 2 minutes plus tard, tout est à jour et regénéré automatiquement (pages, carte, **PDF**, photos, aperçus de liens, données pour Google, badge « Ouvert / Fermé »).
+Cliquer sur **Enregistrer** : 1 à 2 minutes plus tard, tout est à jour et regénéré automatiquement (pages, carte, **PDF**, **flyer**, photos, aperçus de liens, données pour Google, badge « Ouvert / Fermé »).
+
+**Flyer à imprimer** : lien discret en bas du site (`/flyer.html`, non indexé par Google). Format A5 recto, avec un QR code vers la carte ; bouton **PDF pour l'imprimeur** (A5 avec 3 mm de fond perdu, format fini indiqué dans le PDF pour les outils de contrôle des imprimeurs) et bouton **Imprimer** pour quelques exemplaires à la maison.
 
 Le mode d'emploi pour le gérant est dans **[`docs/guide-modifier-le-site.md`](docs/guide-modifier-le-site.md)**.
 
 ### Directement sur GitHub (pour le développeur)
 
-Le contenu est dans le dossier **[`contenu/`](contenu/)** (fichiers JSON : `carte.json`, `carte-page2.json`, `horaires.json`, `photos.json`, `contact.json`, `textes.json`) et les photos dans **[`photos/`](photos/)**. L'interface ne fait que modifier ces fichiers ; on peut aussi les modifier à la main.
+Le contenu est dans le dossier **[`contenu/`](contenu/)** (fichiers JSON : `carte.json`, `carte-page2.json`, `horaires.json`, `photos.json`, `contact.json`, `textes.json`, `referencement.json`, `flyer.json`) et les photos dans **[`photos/`](photos/)**. L'interface ne fait que modifier ces fichiers ; on peut aussi les modifier à la main.
 
 ### Sécurités
 
@@ -67,8 +70,9 @@ Puis ouvrir http://localhost:8000 (`npm run serve` génère d'abord `donnees.js`
 | `index.html` | Page d'accueil |
 | `photos/` | **À remplir** : les photos de la page d'accueil |
 | `carte.html` | Aperçu de la carte A4 (page 1 : produits principaux, page 2 : autres produits) avec boutons Imprimer et PDF (source du PDF) |
+| `flyer.html` | Flyer A5 à imprimer, avec boutons Imprimer et PDF pour l'imprimeur (source de `flyer.pdf`) |
 | `assets/` | Styles, scripts, logo, polices auto-hébergées |
-| `scripts/` | Vérification, PDF, photos et pré-remplissage des pages à la publication |
+| `scripts/` | Vérification, PDF de la carte et du flyer, QR code, photos et pré-remplissage des pages à la publication |
 
 ## Être trouvé sur Google
 

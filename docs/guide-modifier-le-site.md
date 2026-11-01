@@ -18,6 +18,7 @@ Tu peux changer toi-même la carte, les prix, les horaires, les congés, les pho
 | **Photos de l'accueil** | ajouter, retirer ou réordonner les photos, ajouter une légende |
 | **Textes de l'accueil** | toutes les phrases de la page d'accueil, rangées dans l'ordre de la page |
 | **Établissement : nom, logo, couleurs, contact** | nom, logo, téléphone, e-mail, adresse, livraison ou à emporter, liens Uber Eats / Facebook / Instagram |
+| **Flyer à imprimer** | la photo et les phrases du flyer ; le reste est repris tout seul du site |
 | **Google et partage de liens** | rien à faire en temps normal : les titres et descriptions pour Google sont générés tout seuls |
 
 Sous chaque case, une petite aide dit où le texte apparaît. Si tu vides un texte par erreur, le texte d'origine revient tout seul.
@@ -64,7 +65,14 @@ Le badge « Ouvert / Fermé », le résumé des jours et des heures, la carte PD
 Établissement › **Lien de la fiche Google Maps** : sur Google Maps, ouvre la fiche, touche « Partager » › « Copier le lien », colle-le › Enregistrer.
 
 **Changer les couleurs**
-Établissement › **Couleur principale** et **Couleur de fond** : un code couleur comme `#6B1A14` (pour en trouver un, chercher « sélecteur de couleur » sur Google). Le site, la carte et le PDF suivent ; le logo, lui, garde ses couleurs. Vider les deux cases remet les couleurs d'origine.
+Établissement › **Couleur principale** et **Couleur de fond** : un code couleur comme `#6B1A14`. Pour en trouver un, tape « color picker » dans Google : un sélecteur s'affiche, choisis la teinte et copie le code HEX. Le site, la carte, le PDF et le flyer suivent ; le logo, lui, garde ses couleurs. Vider les deux cases remet les couleurs d'origine.
+
+**Imprimer des flyers**
+En bas du site, clique sur **Flyer à imprimer** (ou va sur piazzetta-ladestrousse.com/flyer.html). Le flyer (format A5) est toujours à jour : nom, logo, couleurs, téléphone, livraison et un QR code qui ouvre la carte.
+- Pour un imprimeur (en ligne ou en boutique) : bouton **PDF pour l'imprimeur**, puis envoie ce fichier tel quel. Commande un flyer **A5, recto seul**. Le PDF a 3 mm de marge en plus tout autour (le « fond perdu ») : c'est normal, l'imprimeur la coupe.
+- Pour quelques exemplaires à la maison : bouton **Imprimer**. Une imprimante de maison laisse une petite marge blanche au bord, c'est normal.
+- Pour changer la photo, l'accroche ou ajouter une offre (« −10 % sur votre première commande ») : rubrique **Flyer à imprimer** › Enregistrer, puis attends 1 à 2 minutes. Si le texte est trop long, il est un peu réduit ; s'il ne tient vraiment pas, ton cousin est prévenu.
+- Avant d'en commander beaucoup, scanne le QR code d'un exemplaire imprimé avec ton téléphone pour vérifier qu'il ouvre bien la carte.
 
 **Afficher un message en haut du site**
 Horaires et fermetures › Bandeau d'annonce, par exemple « Nouveau : la pizza Burrata est arrivée ! ». Vide le champ pour l'enlever.

@@ -38,7 +38,7 @@ Aucun mot de passe, aucune carte bancaire et aucun identifiant ne sont stockés 
 3. prépare les photos de la liste `contenu/photos.json`, dans l'ordre choisi (redressées, allégées en 4 tailles, légèrement mises en valeur, données GPS retirées) ;
 4. dessine les images d'aperçu des liens (SMS, WhatsApp, Facebook) ;
 5. récupère l'adresse officielle du site auprès de GitHub (`https://piazzetta-ladestrousse.com`) ;
-6. pré-remplit les pages et ajoute ce qu'il faut pour Google (titres, descriptions, adresse canonique, fiche « Restaurant », `sitemap.xml`, `robots.txt`) ;
+6. génère le QR code du flyer (vers la carte du site), pré-remplit les pages et ajoute ce qu'il faut pour Google (titres, descriptions, adresse canonique, fiche « Restaurant », `sitemap.xml`, `robots.txt`), puis produit le PDF du flyer pour l'imprimeur (`flyer.pdf` : A5 avec 3 mm de fond perdu, format fini indiqué dans le PDF) et signale un texte trop long pour tenir sur le flyer ;
 7. **contrôle** que les pages générées correspondent exactement au contenu (`scripts/controler-site.mjs`) : chaque prix de chaque taille, pizzas masquées absentes, horaires, téléphone, liens des réseaux, photos, fiche Google, aperçus de liens, plan du site ; au moindre écart, la publication s'arrête et l'ancien site reste en ligne ;
 8. change l'adresse des fichiers pour que personne ne garde une ancienne version en cache ;
 9. met le site en ligne ;
@@ -104,6 +104,7 @@ L'adresse du domaine n'est écrite nulle part en dur dans les scripts : si le do
 17. Plus aucun texte figé propre à l'établissement : titres d'onglet et descriptions générés (ou personnalisés dans la rubrique « Google et partage de liens »), textes des logos et du lien « retour en haut » générés, autres noms et cuisine dans le contenu.
 18. Lien de la fiche Google Maps modifiable dans Pages CMS (il remplace l'identifiant technique masqué) : boutons « Itinéraire » et « Votre avis » ; lien « Demander des avis » facultatif.
 19. Couleurs au choix dans Pages CMS (principale et fond) : toutes les couleurs du site, de la carte, du PDF et des aperçus de liens en sont tirées ; couleurs d'origine inchangées à l'identique (vérifié au pixel près).
+20. Flyer A5 à imprimer, généré à chaque publication à partir du contenu (page `flyer.html` non indexée, lien discret en bas du site) : PDF pour l'imprimeur avec 3 mm de fond perdu et format fini indiqué (TrimBox), bouton Imprimer pour la maison, QR code vers la carte ; rubrique Pages CMS « Flyer à imprimer » (photo, accroche, phrase mise en avant, horaires affichés ou non).
 
 ## 5. Entretien
 

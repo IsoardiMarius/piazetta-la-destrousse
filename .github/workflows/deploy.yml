@@ -39,7 +39,7 @@ jobs:
 
       - name: Préparer le logo (s'il a été changé dans Pages CMS)
         run: |
-          pip install --quiet pillow pillow-heif
+          pip install --quiet pillow pillow-heif qrcode pypdf
           python scripts/preparer-photos.py --logo .
 
       - name: Installer le navigateur pour le PDF
@@ -53,7 +53,7 @@ jobs:
       - name: Rassembler les fichiers du site
         run: |
           mkdir _site
-          cp -r index.html carte.html 404.html donnees.js carte.pdf assets _site/
+          cp -r index.html carte.html 404.html flyer.html donnees.js carte.pdf assets _site/
 
       - name: Préparer les photos (liste contenu/photos.json)
         run: python scripts/preparer-photos.py _site
@@ -64,8 +64,16 @@ jobs:
       - id: pages
         uses: actions/configure-pages@v5
 
-      - name: Pré-remplir les pages (référencement, aperçus de liens)
+      - name: Générer le QR code du flyer (vers la carte du site)
+        run: python scripts/generer-qr.py _site "${{ steps.pages.outputs.base_url }}"
+
+      - name: Pré-remplir les pages (référencement, aperçus de liens, flyer)
         run: node scripts/precalculer.mjs _site "${{ steps.pages.outputs.base_url }}"
+
+      - name: Générer le PDF du flyer (A5 avec fond perdu, pour l'imprimeur)
+        run: |
+          node scripts/generer-flyer.mjs _site
+          python scripts/cadrer-flyer.py _site/flyer.pdf
 
       - name: Contrôler que le site généré correspond au contenu
         run: node scripts/controler-site.mjs _site "${{ steps.pages.outputs.base_url }}"
@@ -74,7 +82,7 @@ jobs:
         run: |
           # Nouvelle adresse des fichiers à chaque publication : les visiteurs ne gardent jamais une ancienne version.
           V="${GITHUB_SHA::8}"
-          sed -i -E "s#(href|src)=\"((assets/[^\"?]+|donnees)\.(css|js))\"#\1=\"\2?v=$V\"#g; s#\"carte\.pdf\"#\"carte.pdf?v=$V\"#g; s#\"assets/apercu-carte\.jpg\"#\"assets/apercu-carte.jpg?v=$V\"#g; s#assets/(logo-[0-9]+\.webp|favicon-48\.png|apple-touch-icon\.png)#assets/\1?v=$V#g" _site/*.html
+          sed -i -E "s#(href|src)=\"((assets/[^\"?]+|donnees)\.(css|js))\"#\1=\"\2?v=$V\"#g; s#\"(carte|flyer)\.pdf\"#\"\1.pdf?v=$V\"#g; s#\"assets/apercu-carte\.jpg\"#\"assets/apercu-carte.jpg?v=$V\"#g; s#assets/(logo-[0-9]+\.webp|favicon-48\.png|apple-touch-icon\.png|qr-carte\.svg|flyer-photo\.jpg)#assets/\1?v=$V#g" _site/*.html
 
       - uses: actions/upload-pages-artifact@v4
         with:

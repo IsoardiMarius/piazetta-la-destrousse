@@ -363,10 +363,10 @@
     if (!v) return n;
     return n.replace(new RegExp('\\s*[-–—,]?\\s+' + v + '$', 'i'), '') || n;
   }
-  /* Nom de fichier du PDF : « Carte-Piazzetta-La-Destrousse.pdf » */
-  function nomPdf(D) {
+  /* Nom de fichier d'un PDF : « Carte-Piazzetta-La-Destrousse.pdf », « Flyer-Piazzetta-La-Destrousse.pdf » */
+  function nomPdf(D, prefixe) {
     var slug = nomOfficiel(D).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    return 'Carte-' + (slug || 'etablissement') + '.pdf';
+    return (prefixe || 'Carte') + '-' + (slug || 'etablissement') + '.pdf';
   }
   function communes(D) { return Array.isArray(D.communesLivrees) ? D.communesLivrees.filter(Boolean) : []; }
 
@@ -681,6 +681,7 @@
     return perso(D, 'seoTitreCarte') || 'Carte et prix — ' + nomCourt(D) + ', ' + activite(D).toLowerCase() + aVille(D);
   }
   function titrePage404(D) { return 'Page introuvable — ' + nomOfficiel(D); }
+  function titrePageFlyer(D) { return 'Flyer à imprimer — ' + nomCourt(D); }
   function descriptionAccueil(D) { return perso(D, 'seoDescriptionAccueil') || description(D); }
   function descriptionPageCarte(D) { return perso(D, 'seoDescriptionCarte') || descriptionCarte(D); }
   /* Autres noms sous lesquels l'établissement est connu (Google) : nom court + liste du contenu */
@@ -769,6 +770,61 @@
     };
   }
 
+  /* ---------- Flyer à imprimer (A5, recto) : contenu/flyer.json, rubrique « Flyer à imprimer » de Pages CMS ----------
+     Tout le reste (nom, logo, couleurs, téléphone, livraison, adresse) vient du contenu du site. */
+  function donneesFlyer(D) { return D.flyer && typeof D.flyer === 'object' ? D.flyer : {}; }
+  /* Jours et heures : [« Du mardi au samedi, de 18h à 22h30 »], ou un groupe par horaire si les heures
+     varient : [« Mardi – jeudi : 18h – 22h30 », « Vendredi – samedi : 18h – 1h »] */
+  function horairesFlyer(D) {
+    var g = horairesParHeures(D);
+    if (!g.length) return [];
+    return g.length > 1 ? resumeHeures(D).split(' · ') : [resumeJours(D) + ', ' + lower1(resumeHeures(D))];
+  }
+  var PLATEFORMES = ['uberEats'];  /* commande en ligne (les réseaux sociaux ne sont pas repris sur le flyer) */
+  function textesFlyer(D) {
+    var F = donneesFlyer(D), T = textes(D), S = service(D), cs = communes(D);
+    var zone = String(D.zoneLivraison || '').trim() || listeFr(cs) || villeSeule(D);
+    return {
+      nom: nomCourt(D),
+      lieu: T.lieu,
+      accroche: fr(String(F.accroche || '').trim() || T.titre),
+      mention: fr(String(F.mention || '').trim()),
+      horaires: F.afficherHoraires === true ? horairesFlyer(D) : [],
+      telephone: String(D.telephone || '').trim().replace(/\s+/g, NBSP),
+      service: S.livraison ? (zone ? 'Livraison à ' + zone : 'Livraison possible') : T.zoneService,
+      plateformes: reseaux(D).filter(function (x) { return PLATEFORMES.indexOf(x.cle) >= 0; }).map(function (x) { return x.nom; }),
+      qr: 'Scannez : la carte' + (horairesParHeures(D).length ? ' et les horaires' : ''),
+      adresse: [String(D.adresse || '').trim(), villeSeule(D)].filter(Boolean).join(', ')
+    };
+  }
+  var ICONE_TEL = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
+  /* Le flyer en HTML. o.photo : photo préparée (sinon le logo) ; o.qr : image du QR code ; o.site : adresse du site affichée */
+  function htmlFlyer(D, o) {
+    o = o || {};
+    var F = textesFlyer(D);
+    var plateformes = F.plateformes.length ? 'Aussi sur ' + listeFr(F.plateformes.map(function (n) { return '<b>' + esc(n) + '</b>'; })) : '';
+    return '<div class="fl-haut">' +
+        '<div class="fl-marque"><img src="assets/logo-360.webp" alt="' + esc(textes(D).logoAlt) + '"><div><b>' + esc(F.nom) + '</b><span>' + esc(F.lieu) + '</span></div></div>' +
+        '<div class="fl-visuel">' + (o.photo
+          ? '<img class="fl-photo" src="' + esc(o.photo) + '" alt="">'
+          : '<img class="fl-photo fl-photo--logo" src="assets/logo-720.webp" alt="">') + '</div>' +
+        '<div class="fl-textes"><h1>' + esc(F.accroche) + '</h1>' +
+          /* Un groupe de jours ne se coupe jamais en fin de ligne */
+          (F.horaires.length ? '<p class="fl-horaires">' + F.horaires.map(function (h) { return '<span>' + esc(h) + '</span>'; }).join(' · ') + '</p>' : '') +
+          (F.mention ? '<p class="fl-mention">' + esc(F.mention) + '</p>' : '') + '</div>' +
+      '</div>' +
+      '<div class="fl-bas">' +
+        '<div class="fl-cols">' +
+          '<div class="fl-commande">' +
+            (F.telephone ? '<div class="fl-lbl">Commandez au</div><div class="fl-tel">' + ICONE_TEL + esc(F.telephone) + '</div>' : '') +
+            '<p class="fl-info">' + esc(F.service) + (plateformes ? '<br>' + plateformes : '') + '</p>' +
+          '</div>' +
+          (o.qr ? '<div class="fl-qr"><img src="' + esc(o.qr) + '" alt="QR code vers la carte"><span>' + esc(F.qr) + '</span></div>' : '') +
+        '</div>' +
+        '<div class="fl-pied"><span>' + esc(F.adresse) + (o.site ? (F.adresse ? ' · ' : '') + '<b>' + esc(o.site) + '</b>' : '') + '</span><span>Ne pas jeter sur la voie publique</span></div>' +
+      '</div>';
+  }
+
   var api = {
     JOURS: JOURS, JS_DAY: JS_DAY, cap: cap, esc: esc, prix: prix, telLink: telLink, emailValide: emailValide, heure: heure,
     donnees: donnees, parseCreneaux: parseCreneaux, creneauxTexte: creneauxTexte,
@@ -781,7 +837,8 @@
     htmlEnteteTailles: htmlEnteteTailles, htmlLignesCarte: htmlLignesCarte, multiligne: multiligne,
     description: description, descriptionCarte: descriptionCarte, jsonLd: jsonLd,
     liensGoogle: liensGoogle, htmlReseaux: htmlReseaux, htmlLiensHero: htmlLiensHero, nomOfficiel: nomOfficiel, villeSeule: villeSeule, aVille: aVille,
-    titrePageAccueil: titrePageAccueil, titrePageCarte: titrePageCarte, titrePage404: titrePage404,
+    titrePageAccueil: titrePageAccueil, titrePageCarte: titrePageCarte, titrePage404: titrePage404, titrePageFlyer: titrePageFlyer,
+    textesFlyer: textesFlyer, htmlFlyer: htmlFlyer,
     descriptionAccueil: descriptionAccueil, descriptionPageCarte: descriptionPageCarte,
     nomCourt: nomCourt, nomPdf: nomPdf, rubriquesVisibles: rubriquesVisibles, htmlRubriques: htmlRubriques, titrePage2: titrePage2, SK_ICONE: SK_ICONE, service: service, couleurs: couleurs, cssCouleurs: cssCouleurs, hexCouleur: hexCouleur, activite: activite, nomProduits: nomProduits
   };

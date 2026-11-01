@@ -306,14 +306,14 @@ content:
         type: image
       - name: couleurPrincipale
         label: Couleur principale
-        description: "Code couleur, par exemple #6B1A14 (bordeaux) : boutons, titres, pied de la carte. Toutes les nuances du site, de la carte et du flyer en sont tirées. Vide = couleur d'origine."
+        description: "Code couleur, par exemple #6B1A14 (bordeaux) : boutons, titres, pied de la carte. Toutes les nuances du site, de la carte et du flyer en sont tirées. Pour trouver un code : taper « color picker » dans Google, choisir la teinte dans le sélecteur qui s'affiche, puis copier le code HEX. Vide = couleur d'origine."
         type: string
         pattern:
           regex: '^$|^#[0-9A-Fa-f]{6}$'
           message: "Un code couleur commence par # suivi de 6 chiffres ou lettres, par exemple #6B1A14"
       - name: couleurFond
         label: Couleur de fond
-        description: "Code couleur, par exemple #F6F0E6 (crème). Le texte s'adapte : foncé sur un fond clair, clair sur un fond foncé. Vide = couleur d'origine."
+        description: "Code couleur, par exemple #F6F0E6 (crème). Le texte s'adapte : foncé sur un fond clair, clair sur un fond foncé. Code à trouver comme pour la couleur principale (« color picker » dans Google). Vide = couleur d'origine."
         type: string
         pattern:
           regex: '^$|^#[0-9A-Fa-f]{6}$'
@@ -394,7 +394,32 @@ content:
           - { name: facebook, label: Facebook, component: lien }
           - { name: instagram, label: Instagram, component: lien }
 
-  # ---------- 7. Google et partage de liens (facultatif) ----------
+  # ---------- 7. Flyer à imprimer ----------
+  - name: flyer
+    label: Flyer à imprimer
+    type: file
+    path: contenu/flyer.json
+    format: json
+    fields:
+      - name: photo
+        label: Photo (facultatif)
+        description: "Le flyer (format A5) est sur le site : lien « Flyer à imprimer » en bas de page, avec le PDF à envoyer à l'imprimeur. Il reprend tout seul le nom, le logo, les couleurs, le téléphone et la livraison, et se met à jour 1 à 2 minutes après chaque enregistrement. Photo affichée dans un rond : sujet bien centré. Vide = la 1re photo de l'accueil."
+        type: image
+      - name: accroche
+        label: Accroche (facultatif)
+        description: "La phrase en gros sous la photo, en 2 lignes au plus de préférence. Vide = le titre de l'accueil."
+        type: string
+      - name: mention
+        label: Phrase mise en avant (facultatif)
+        description: "Courte, sous l'accroche, par exemple une offre : « −10 % sur votre première commande ». Vide = rien."
+        type: string
+      - name: afficherHoraires
+        label: Afficher les jours et horaires d'ouverture
+        description: "Décoché = rien d'affiché : le flyer reste valable si les horaires changent."
+        type: boolean
+        default: false
+
+  # ---------- 8. Google et partage de liens (facultatif) ----------
   - name: referencement
     label: Google et partage de liens
     type: file

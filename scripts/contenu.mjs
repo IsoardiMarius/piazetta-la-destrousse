@@ -8,6 +8,7 @@
 //   contenu/textes.json    Textes de la page d'accueil
 //   contenu/referencement.json  Google et partage de liens : titres et descriptions personnalisés (facultatifs), autres noms, cuisine
 //   contenu/photos.json    Photos de l'accueil (ordre et description)
+//   contenu/flyer.json     Flyer à imprimer : photo, accroche, phrase mise en avant, horaires affichés ou non
 //
 // Utilisation : node scripts/contenu.mjs [dossier-de-sortie]   (écrit donnees.js)
 import fs from 'node:fs';
@@ -25,6 +26,7 @@ const FICHIERS = {
   textes: 'textes.json',
   referencement: 'referencement.json',
   photos: 'photos.json',
+  flyer: 'flyer.json',
 };
 
 function lireJson(nom, defaut) {
@@ -44,6 +46,9 @@ export function chargerContenu() {
   const page2 = lireJson(FICHIERS.page2, null);
   if (page2 && typeof page2 === 'object') carte.page2 = page2;
   const infos = Object.assign({}, lireJson(FICHIERS.horaires, {}), lireJson(FICHIERS.contact, {}), lireJson(FICHIERS.textes, {}), lireJson(FICHIERS.referencement, {}));
+  /* Flyer, rangé à part : window.INFOS.flyer */
+  const flyer = lireJson(FICHIERS.flyer, null);
+  if (flyer && typeof flyer === 'object') infos.flyer = flyer;
   const photos = lireJson(FICHIERS.photos, []);
   return { CARTE: carte, INFOS: infos, photos: Array.isArray(photos) ? photos : [] };
 }

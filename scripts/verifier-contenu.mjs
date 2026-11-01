@@ -26,6 +26,10 @@ const { erreurs, avertissements } = PZ.valider(contenu.CARTE, contenu.INFOS);
   const logo = String((contenu.INFOS && contenu.INFOS.logo) || '').replace(/^\//, '');
   if (logo && !fs.existsSync(logo)) avertissements.push(`Logo : l’image « ${logo} » est introuvable (le logo d’origine est conservé).`);
 }
+{
+  const photo = String((contenu.INFOS && contenu.INFOS.flyer && contenu.INFOS.flyer.photo) || '').replace(/^\//, '');
+  if (photo && !fs.existsSync(photo)) avertissements.push(`Flyer : l’image « ${photo} » est introuvable (la 1re photo de l’accueil est utilisée).`);
+}
 rapporter(erreurs, avertissements);
 if (erreurs.length) process.exit(1);
 const D = PZ.donnees(contenu);

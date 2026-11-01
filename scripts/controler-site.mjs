@@ -44,10 +44,10 @@ function cache(page, attribut) {
 }
 
 /* ---------- Fichiers attendus ---------- */
-for (const f of ['index.html', 'carte.html', '404.html', 'donnees.js', 'carte.pdf', 'assets/apercu-carte.jpg', 'assets/og-accueil.jpg', 'assets/og-carte.jpg', 'assets/photos.json']) {
+for (const f of ['index.html', 'carte.html', '404.html', 'flyer.html', 'donnees.js', 'carte.pdf', 'flyer.pdf', 'assets/apercu-carte.jpg', 'assets/og-accueil.jpg', 'assets/og-carte.jpg', 'assets/photos.json']) {
   verifier(existe(f), `Fichier manquant : ${f}`);
 }
-if (base) for (const f of ['sitemap.xml', 'robots.txt']) verifier(existe(f), `Fichier manquant : ${f}`);
+if (base) for (const f of ['sitemap.xml', 'robots.txt', 'assets/qr-carte.svg']) verifier(existe(f), `Fichier manquant : ${f}`);
 if (problemes.length) terminer();
 
 /* ---------- donnees.js = contenu ---------- */
@@ -58,11 +58,12 @@ verifier(JSON.stringify(donnees.INFOS) === JSON.stringify(contenu.INFOS), 'donne
 
 const accueil = lire('index.html');
 const carte = lire('carte.html');
+const flyer = lire('flyer.html');
 const pizzas = PZ.produitsVisibles(D);
 const tailles = D.tailles || [];
 
 /* ---------- Valeurs impossibles ---------- */
-for (const [nom, page] of [['index.html', accueil], ['carte.html', carte], ['404.html', lire('404.html')]]) {
+for (const [nom, page] of [['index.html', accueil], ['carte.html', carte], ['404.html', lire('404.html')], ['flyer.html', flyer]]) {
   const sansScripts = page.replace(/<script[\s\S]*?<\/script>/g, '');
   for (const mot of ['undefined', 'NaN', '[object Object]']) verifier(!sansScripts.includes(mot), `${nom} contient « ${mot} »`);
 }
@@ -169,6 +170,41 @@ tailles.forEach((t) => verifier(present(entete, t.taille || t.nom), `Carte : la 
     const style = (page.match(/<style id="couleurs">([\s\S]*?)<\/style>/) || [])[1] || '';
     verifier(style === css, css ? `${nom} : les couleurs choisies ne sont pas appliquées` : `${nom} : une feuille de couleurs est présente alors que les couleurs sont celles d'origine`);
   }
+}
+
+/* ---------- Flyer à imprimer ---------- */
+{
+  const titre = (flyer.match(/<title>([^<]*)<\/title>/) || [])[1];
+  verifier(titre === html(PZ.titrePageFlyer(D)), `Flyer : titre de l'onglet « ${titre} » au lieu de « ${PZ.titrePageFlyer(D)} »`);
+  verifier(flyer.includes('<meta name="robots" content="noindex">'), 'Flyer : la page doit rester hors de Google (noindex)');
+  /* Même calcul que scripts/precalculer.mjs */
+  const options = {
+    photo: existe('assets/flyer-photo.jpg') ? 'assets/flyer-photo.jpg' : '',
+    qr: existe('assets/qr-carte.svg') ? 'assets/qr-carte.svg' : '',
+    site: base.replace(/^https?:\/\//, '').replace(/\/$/, ''),
+  };
+  verifier(contenuDe(flyer, 'data-flyer') === PZ.htmlFlyer(D, options), 'Flyer : le flyer ne correspond pas au contenu');
+  const F = PZ.textesFlyer(D);
+  for (const valeur of [F.nom, F.accroche, F.telephone]) verifier(present(contenuDe(flyer, 'data-flyer') || '', valeur), `Flyer : « ${valeur} » absent`);
+  const choix = String((D.flyer || {}).photo || '').replace(/^\//, '');
+  const photoAttendue = photos.length > 0 || (!!choix && fs.existsSync(choix));
+  verifier(!!options.photo === photoAttendue, photoAttendue ? 'Flyer : photo absente (le logo est affiché à la place)' : 'Flyer : photo présente alors qu’il n’y en a aucune');
+  const telechargement = (flyer.match(/download="([^"]*)"/) || [])[1];
+  verifier(telechargement === PZ.nomPdf(D, 'Flyer'), `Flyer : le PDF se télécharge sous le nom « ${telechargement} » au lieu de « ${PZ.nomPdf(D, 'Flyer')} »`);
+  const style = (flyer.match(/<style id="couleurs">([\s\S]*?)<\/style>/) || [])[1] || '';
+  verifier(style === PZ.cssCouleurs(D), 'Flyer : les couleurs choisies ne sont pas appliquées');
+  /* PDF pour l'imprimeur : une page de 154 × 216 mm (A5 + 3 mm de fond perdu), format fini A5 indiqué (TrimBox) */
+  const pdf = fs.readFileSync(path.join(dossier, 'flyer.pdf'), 'latin1');
+  const mm = (cadre) => {
+    const n = (pdf.match(new RegExp(`/${cadre}\\s*\\[\\s*([-\\d.]+)\\s+([-\\d.]+)\\s+([-\\d.]+)\\s+([-\\d.]+)\\s*\\]`)) || []).slice(1).map(Number);
+    return n.length === 4 ? [(n[2] - n[0]) * 25.4 / 72, (n[3] - n[1]) * 25.4 / 72] : [];
+  };
+  const proche = (t, l, h) => t.length === 2 && Math.abs(t[0] - l) < 0.05 && Math.abs(t[1] - h) < 0.05;
+  verifier(proche(mm('MediaBox'), 154, 216), `Flyer : le PDF ne fait pas 154 × 216 mm (${mm('MediaBox').map((x) => x.toFixed(2)).join(' × ')} mm)`);
+  verifier(proche(mm('TrimBox'), 148, 210), 'Flyer : le format fini A5 (TrimBox) n’est pas indiqué dans le PDF');
+  verifier((pdf.match(/\/Type\s*\/Page(?!s)/g) || []).length === 1, 'Flyer : le PDF doit avoir une seule page');
+  verifier(/<a class="ftr__flyer" href="flyer\.html">/.test(accueil), 'Accueil : le lien « Flyer à imprimer » est absent du pied de page');
+  if (base) verifier(!lire('sitemap.xml').includes('flyer'), 'Plan du site : le flyer ne doit pas y figurer');
 }
 
 /* ---------- Liens Google (« Itinéraire », « Votre avis ») ---------- */
