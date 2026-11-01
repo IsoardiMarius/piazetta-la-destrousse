@@ -253,6 +253,42 @@
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajusterEntete);
     }
 
+    /* Bouton flottant « Voir la carte » (mobile) : visible une fois les boutons du haut dépassés,
+       caché quand le bloc de la carte ou le pied de page est à l'écran */
+    var barre = $('[data-barre-carte]'), repere = $('[data-barre-repere]');
+    if (barre && repere && 'IntersectionObserver' in window) {
+      var vus = new Map();
+      var majBarre = function () {
+        var cache = false;
+        vus.forEach(function (v) { if (v) cache = true; });
+        barre.classList.toggle('is-visible', !cache);
+      };
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          /* Le repère du haut compte tant qu'il est visible ou encore plus bas que l'écran */
+          vus.set(e.target, e.target === repere ? (e.isIntersecting || e.boundingClientRect.top > 0) : e.isIntersecting);
+        });
+        majBarre();
+      });
+      [repere, $('#carte'), $('.ftr')].forEach(function (el) { if (el) io.observe(el); });
+    }
+    /* iPhone + Safari récent : la barre d'outils flotte par-dessus le bas de la page sans que
+       Safari le signale ; le bouton est remonté au-dessus (voir .safari-flottant dans le CSS) */
+    var ua = navigator.userAgent;
+    var safariIphone = /iPhone|iPod/.test(ua) && /Version\/(\d+)/.test(ua) && /Safari\//.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|GSA|DuckDuckGo/.test(ua);
+    if (safariIphone && +ua.match(/Version\/(\d+)/)[1] >= 26) doc.classList.add('safari-flottant');
+    /* Zone retirée de l'écran visible par le navigateur (barres, clavier…) : mesurée en continu */
+    var vv = window.visualViewport;
+    if (vv) {
+      var majSousBarre = function () {
+        var g = vv.scale > 1.01 ? 0 : Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
+        doc.style.setProperty('--sous-barre', g + 'px');
+      };
+      vv.addEventListener('resize', majSousBarre);
+      vv.addEventListener('scroll', majSousBarre);
+      majSousBarre();
+    }
+
     /* Lien actif dans la navigation */
     var links = $$('.navlink[href^="#"]');
     if (links.length && 'IntersectionObserver' in window) {
