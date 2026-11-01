@@ -85,6 +85,11 @@
   ready.then(function () {
     fitTout();
     root.setAttribute('data-ready', 'ok');
+    if (/[?&]aide\b/.test(location.search)) {
+      var aide = d.createElement('script');
+      aide.src = 'assets/aide.js';
+      d.body.appendChild(aide);
+    }
     if (root.classList.contains('is-print-auto')) setTimeout(function () { window.print(); }, 300);
   });
 })();

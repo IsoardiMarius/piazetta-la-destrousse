@@ -215,6 +215,13 @@
 
   setupUi();
 
+  /* Mode aide (« ?aide » à la fin de l'adresse) : montre où modifier chaque zone dans Pages CMS */
+  if (/[?&]aide\b/.test(location.search)) {
+    var aide = document.createElement('script');
+    aide.src = 'assets/aide.js';
+    document.body.appendChild(aide);
+  }
+
   function observeReveals(els) {
     if (!('IntersectionObserver' in window) || reduce) { els.forEach(function (el) { el.classList.add('is-in'); }); return; }
     if (!observeReveals.io) {

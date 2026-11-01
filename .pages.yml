@@ -44,7 +44,7 @@ content:
     fields:
       - name: produits
         label: Produits
-        description: "Glisser un produit pour changer son ordre : même ordre sur le site et le PDF."
+        description: "Glisser un produit pour changer son ordre : même ordre sur le site et le PDF. Astuce : ajoute « ?aide » à la fin de l'adresse du site pour voir ce que modifie chaque case."
         type: object
         list:
           min: 1
@@ -242,7 +242,7 @@ content:
     fields:
       - name: titre
         label: "Haut de page : grand titre"
-        description: "Une phrase courte."
+        description: "Une phrase courte. Astuce : ajoute « ?aide » à la fin de l'adresse du site pour voir ce que modifie chaque case."
         type: string
       - name: introduction
         label: "Haut de page : phrase d'introduction"
@@ -297,7 +297,7 @@ content:
     fields:
       - name: nom
         label: Nom de l'établissement
-        description: "À écrire exactement pareil partout (fiche Google, réseaux, plateformes de livraison…) : Google compare ces informations."
+        description: "À écrire exactement pareil partout (fiche Google, réseaux, plateformes de livraison…) : Google compare ces informations. Astuce : ajoute « ?aide » à la fin de l'adresse du site pour voir ce que modifie chaque case."
         type: string
         required: true
       - name: logo

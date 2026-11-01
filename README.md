@@ -24,6 +24,8 @@ Tout ce qui est affiché est modifiable ici, et rien n'est propre à une pizzeri
 
 Cliquer sur **Enregistrer** : 1 à 2 minutes plus tard, tout est à jour et regénéré automatiquement (pages, carte, **PDF**, photos, aperçus de liens, données pour Google, badge « Ouvert / Fermé »).
 
+**Mode aide** : ajouter `?aide` à l'adresse d'une page (`/?aide`, `/carte.html?aide`) encadre chaque zone modifiable avec la rubrique et la case de Pages CMS correspondantes (`assets/aide.js`, chargé seulement dans ce mode).
+
 Le mode d'emploi pour le gérant est dans **[`docs/guide-modifier-le-site.md`](docs/guide-modifier-le-site.md)**.
 
 ### Directement sur GitHub (pour le développeur)
