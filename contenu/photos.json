@@ -1,66 +1,66 @@
 [
   {
-    "image": "/photos/classique-fromage.webp",
+    "image": "/photos/Pizzas/classique-fromage.webp",
     "legende": "Classique (fromage)",
     "description": "Pizza Classique au fromage"
   },
   {
-    "image": "/photos/moitie-moitie-anchois-et-fromage.webp",
+    "image": "/photos/Pizzas/moitie-moitie-anchois-et-fromage.webp",
     "legende": "Moitié-moitié (anchois / fromage)",
     "description": "Pizza moitié anchois, moitié fromage"
   },
   {
-    "image": "/photos/reine.webp",
+    "image": "/photos/Pizzas/reine.webp",
     "legende": "Reine",
     "description": "Pizza Reine"
   },
   {
-    "image": "/photos/fermiere.webp",
+    "image": "/photos/Pizzas/fermiere.webp",
     "legende": "Fermière",
     "description": "Pizza Fermière"
   },
   {
-    "image": "/photos/cherie.webp",
+    "image": "/photos/Pizzas/cherie.webp",
     "legende": "Chérie",
     "description": "Pizza Chérie"
   },
   {
-    "image": "/photos/5-fromages.webp",
+    "image": "/photos/Pizzas/5-fromages.webp",
     "legende": "5 Fromages",
     "description": "Pizza 5 Fromages"
   },
   {
-    "image": "/photos/provencale.webp",
+    "image": "/photos/Pizzas/provencale.webp",
     "legende": "Provençale",
     "description": "Pizza Provençale"
   },
   {
-    "image": "/photos/atlantique.webp",
+    "image": "/photos/Pizzas/atlantique.webp",
     "legende": "Atlantique",
     "description": "Pizza Atlantique"
   },
   {
-    "image": "/photos/chef.webp",
+    "image": "/photos/Pizzas/chef.webp",
     "legende": "Chef",
     "description": "Pizza Chef"
   },
   {
-    "image": "/photos/orientale.webp",
+    "image": "/photos/Pizzas/orientale.webp",
     "legende": "Orientale",
     "description": "Pizza Orientale"
   },
   {
-    "image": "/photos/royale.webp",
+    "image": "/photos/Pizzas/royale.webp",
     "legende": "Royale",
     "description": "Pizza Royale"
   },
   {
-    "image": "/photos/grand-mere.webp",
+    "image": "/photos/Pizzas/grand-mere.webp",
     "legende": "Grand-Mère",
     "description": "Pizza Grand-Mère"
   },
   {
-    "image": "/photos/yeye.webp",
+    "image": "/photos/Pizzas/yeye.webp",
     "legende": "Yéyé",
     "description": "Pizza Yéyé"
   }
