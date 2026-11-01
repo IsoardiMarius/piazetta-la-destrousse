@@ -57,6 +57,8 @@ a:hover{color:var(--brand-dark)}
 .skip:focus{top:12px;color:var(--cream)}
 
 .ic{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+/* iPhone : numéros détectés automatiquement (lien d'appel) gardés dans le style du texte, sans bleu ni soulignement */
+a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important;font:inherit!important}
 
 /* ---------- Typo ---------- */
 .h-display{
