@@ -304,6 +304,20 @@ content:
         label: Logo (facultatif)
         description: "Image carrée, au moins 720 px de côté : elle est affichée dans un rond (site, carte, icône d'onglet). Vide = logo actuel."
         type: image
+      - name: couleurPrincipale
+        label: Couleur principale
+        description: "Code couleur, par exemple #6B1A14 (bordeaux) : boutons, titres, pied de la carte. Toutes les nuances du site, de la carte et du flyer en sont tirées. Vide = couleur d'origine."
+        type: string
+        pattern:
+          regex: '^$|^#[0-9A-Fa-f]{6}$'
+          message: "Un code couleur commence par # suivi de 6 chiffres ou lettres, par exemple #6B1A14"
+      - name: couleurFond
+        label: Couleur de fond
+        description: "Code couleur, par exemple #F6F0E6 (crème). Le texte s'adapte : foncé sur un fond clair, clair sur un fond foncé. Vide = couleur d'origine."
+        type: string
+        pattern:
+          regex: '^$|^#[0-9A-Fa-f]{6}$'
+          message: "Un code couleur commence par # suivi de 6 chiffres ou lettres, par exemple #F6F0E6"
       - name: activite
         label: Type d'établissement
         description: "Par exemple « Pizzeria », « Restaurant », « Boulangerie ». Affiché en haut de l'accueil (« … à [ville] ») et pour Google."

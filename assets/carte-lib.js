@@ -318,6 +318,9 @@
     });
     if (!I.telephone) avert.push('Établissement : le téléphone est vide.');
     if (!String(I.ville || '').trim()) avert.push('Établissement : le code postal et la ville sont vides.');
+    ['couleurPrincipale', 'couleurFond'].forEach(function (k) {
+      if (I[k] && !hexCouleur(I[k])) avert.push('Établissement : la couleur « ' + I[k] + ' » n’est pas un code couleur (#xxxxxx), la couleur d’origine est gardée.');
+    });
     ['lienGoogle', 'lienAvis'].forEach(function (k) {
       if (I[k] && !lienHttp(I[k])) avert.push('Établissement : le lien « ' + I[k] + ' » doit commencer par https:// (ignoré).');
     });
@@ -421,6 +424,50 @@
   function cuisine(D) {
     var c = (Array.isArray(D.cuisine) ? D.cuisine : []).map(function (x) { return String(x || '').trim(); }).filter(Boolean);
     return c.length ? c : undefined;
+  }
+
+  /* ---------- Couleurs (rubrique « Établissement » de Pages CMS) ----------
+     Deux couleurs au choix (principale et fond) ; toutes les nuances en sont tirées automatiquement.
+     Avec les couleurs d'origine, aucune surcharge : le site garde exactement ses réglages d'origine. */
+  var COULEURS_ORIGINE = {
+    brand: '#6B1A14', 'brand-dark': '#521310', bg: '#F6F0E6', ink: '#241411', 'ink-2': '#3B2A26',
+    muted: '#6B5853', 'muted-2': '#5E4C47', cream: '#F6EEE3', 'cream-muted': '#EAD9C8', 'cream-2': '#E7D3C2',
+    chip: '#EDE2D2', 'chip-2': '#E6D7C3', card: '#FFFCF7', line: '#E6DACB', 'line-2': '#D9C6B0',
+    page: '#E9E0D2', 'sk-pate': '#F1E6D6', 'sk-pate-2': '#E5D2BA', 'sk-pied': '#7A2A22'
+  };
+  function hexCouleur(x) { x = String(x || '').trim(); return /^#[0-9a-f]{6}$/i.test(x) ? x.toUpperCase() : ''; }
+  function rvb(h) { return [1, 3, 5].map(function (i) { return parseInt(h.substr(i, 2), 16); }); }
+  function hex(c) { return '#' + c.map(function (x) { return ('0' + Math.round(Math.max(0, Math.min(255, x))).toString(16)).slice(-2); }).join('').toUpperCase(); }
+  /* Mélange : t = part de la seconde couleur (0 à 1) */
+  function melange(a, b, t) { var A = rvb(a), B = rvb(b); return hex(A.map(function (x, i) { return x + (B[i] - x) * t; })); }
+  function luminance(h) {
+    return rvb(h).map(function (v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); })
+      .reduce(function (s, v, i) { return s + v * [0.2126, 0.7152, 0.0722][i]; }, 0);
+  }
+  /* Toutes les couleurs du site, de la carte et du flyer, à partir des deux couleurs choisies */
+  function couleurs(D) {
+    var p = hexCouleur(D.couleurPrincipale) || COULEURS_ORIGINE.brand, f = hexCouleur(D.couleurFond) || COULEURS_ORIGINE.bg;
+    if (p === COULEURS_ORIGINE.brand && f === COULEURS_ORIGINE.bg) return COULEURS_ORIGINE;
+    /* Texte : foncé (teinté de la couleur principale) sur fond clair, clair sur fond foncé */
+    var ink = luminance(f) > 0.25 ? melange(melange(p, '#000000', 0.72), '#1C1C1C', 0.3) : melange(f, '#FFFFFF', 0.92);
+    /* Texte posé sur la couleur principale (boutons, bloc carte, pied de la carte) : foncé si elle est claire, clair sinon */
+    var surP = luminance(p) > 0.4 ? melange(p, '#000000', 0.82) : melange('#FFFFFF', p, 0.05);
+    return {
+      brand: p, 'brand-dark': melange(p, '#000000', 0.23), bg: f, ink: ink, 'ink-2': melange(ink, f, 0.12),
+      muted: melange(ink, f, 0.38), 'muted-2': melange(ink, f, 0.3),
+      cream: surP, 'cream-muted': melange(surP, p, 0.18), 'cream-2': melange(surP, p, 0.22),
+      chip: melange(f, ink, 0.06), 'chip-2': melange(f, ink, 0.1), card: melange(f, '#FFFFFF', 0.6),
+      line: melange(f, ink, 0.09), 'line-2': melange(f, ink, 0.16),
+      page: melange(f, ink, 0.06), 'sk-pate': melange(f, ink, 0.03), 'sk-pate-2': melange(f, ink, 0.09), 'sk-pied': melange(p, '#FFFFFF', 0.1)
+    };
+  }
+  /* Feuille de style à ajouter aux pages : vide avec les couleurs d'origine */
+  function cssCouleurs(D) {
+    var c = couleurs(D);
+    if (c === COULEURS_ORIGINE) return '';
+    var dessin = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none' stroke='%23" + c.brand.slice(1) +
+      "' stroke-opacity='.28' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='24' cy='24' r='18'/%3E%3Cpath d='M24 6v36M8.4 15l31.2 18M8.4 33l31.2-18'/%3E%3C/svg%3E\")";
+    return ':root{' + Object.keys(c).map(function (k) { return '--' + k + ':' + c[k]; }).join(';') + ';--sk-pizza:' + dessin + '}';
   }
 
   /* Livraison et / ou vente à emporter (cases à cocher dans Pages CMS) : adapte tous les textes concernés */
@@ -736,7 +783,7 @@
     liensGoogle: liensGoogle, htmlReseaux: htmlReseaux, htmlLiensHero: htmlLiensHero, nomOfficiel: nomOfficiel, villeSeule: villeSeule, aVille: aVille,
     titrePageAccueil: titrePageAccueil, titrePageCarte: titrePageCarte, titrePage404: titrePage404,
     descriptionAccueil: descriptionAccueil, descriptionPageCarte: descriptionPageCarte,
-    nomCourt: nomCourt, nomPdf: nomPdf, rubriquesVisibles: rubriquesVisibles, htmlRubriques: htmlRubriques, titrePage2: titrePage2, SK_ICONE: SK_ICONE, service: service, activite: activite, nomProduits: nomProduits
+    nomCourt: nomCourt, nomPdf: nomPdf, rubriquesVisibles: rubriquesVisibles, htmlRubriques: htmlRubriques, titrePage2: titrePage2, SK_ICONE: SK_ICONE, service: service, couleurs: couleurs, cssCouleurs: cssCouleurs, hexCouleur: hexCouleur, activite: activite, nomProduits: nomProduits
   };
   root.PZ = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

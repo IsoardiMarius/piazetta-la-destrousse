@@ -162,6 +162,15 @@ const nomsVisibles = new Set(pizzas.map((p) => p.nom));
 const entete = contenuDe(carte, 'data-head') || '';
 tailles.forEach((t) => verifier(present(entete, t.taille || t.nom), `Carte : la taille « ${t.taille || t.nom} » n'est pas dans l'en-tête`));
 
+/* ---------- Couleurs choisies dans Pages CMS ---------- */
+{
+  const css = PZ.cssCouleurs(D);
+  for (const [nom, page] of [['Accueil', accueil], ['Carte', carte]]) {
+    const style = (page.match(/<style id="couleurs">([\s\S]*?)<\/style>/) || [])[1] || '';
+    verifier(style === css, css ? `${nom} : les couleurs choisies ne sont pas appliquées` : `${nom} : une feuille de couleurs est présente alors que les couleurs sont celles d'origine`);
+  }
+}
+
 /* ---------- Liens Google (« Itinéraire », « Votre avis ») ---------- */
 const G = PZ.liensGoogle(D);
 for (const m of accueil.matchAll(/<a\b[^>]*\shref="([^"]*)"[^>]*\sdata-google="(\w+)"/g)) {

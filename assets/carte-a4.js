@@ -8,6 +8,14 @@
 
   if (!PZ || !window.CARTE || !window.INFOS) { root.setAttribute('data-ready', 'error'); return; }
   var C = PZ.donnees(window);
+
+  /* Couleurs choisies dans Pages CMS (déjà en place sur le site publié) */
+  (function () {
+    var css = PZ.cssCouleurs(C);
+    if (css && !document.getElementById('couleurs')) {
+      var st = document.createElement('style'); st.id = 'couleurs'; st.textContent = css; document.head.appendChild(st);
+    }
+  })();
   var v = PZ.valider(window.CARTE, window.INFOS), erreurs = v.erreurs.concat(v.avertissements);
   if (erreurs.length) console.warn('[contenu] ' + erreurs.join('\n'));
 

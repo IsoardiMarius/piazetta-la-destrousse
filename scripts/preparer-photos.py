@@ -175,11 +175,13 @@ def preparer_logo():
     for taille in (120, 360, 720):
         im.resize((taille, taille), Image.LANCZOS).save(dest / f"logo-{taille}.webp", "WEBP", quality=90, method=6)
     im.resize((48, 48), Image.LANCZOS).save(dest / "favicon-48.png")
-    fond = Image.new("RGB", (180, 180), CREME)
+    fond_hex = str(json.loads(contact.read_text(encoding="utf-8")).get("couleurFond") or "").strip()
+    couleur_fond = tuple(int(fond_hex[i:i + 2], 16) for i in (1, 3, 5)) if re.fullmatch(r"#[0-9A-Fa-f]{6}", fond_hex) else CREME
+    fond = Image.new("RGB", (180, 180), couleur_fond)
     petit = im.resize((180, 180), Image.LANCZOS)
     fond.paste(petit, (0, 0), petit)
     fond.save(dest / "apple-touch-icon.png")
-    apercu = Image.new("RGB", (1200, 630), CREME)
+    apercu = Image.new("RGB", (1200, 630), couleur_fond)
     grand = im.resize((480, 480), Image.LANCZOS)
     apercu.paste(grand, (360, 75), grand)
     apercu.save(dest / "og-image.jpg", "JPEG", quality=88)

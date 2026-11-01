@@ -63,6 +63,14 @@ function remplirAttributs(page) {
   }
   return page;
 }
+/* Couleurs choisies dans Pages CMS : petite feuille de style ajoutée à chaque page (aucune avec les couleurs
+   d'origine) et couleur de la barre du navigateur sur mobile */
+function colorer(page, barre) {
+  const css = PZ.cssCouleurs(D), c = PZ.couleurs(D);
+  page = page.replace(/\n?<style id="couleurs">[\s\S]*?<\/style>/g, '')
+    .replace(/<meta name="theme-color" content="[^"]*">/, `<meta name="theme-color" content="${c[barre]}">`);
+  return css ? page.replace('</head>', `<style id="couleurs">${css}</style>\n</head>`) : page;
+}
 function remplirBinds(page) {
   for (const [k, v] of Object.entries(T)) page = remplirTout(page, `data-bind="${reEsc(k)}"`, html(v));
   return remplirAttributs(page);
@@ -117,7 +125,7 @@ function meta(page, { titre, description, url, image }) {
 }
 
 /* ---------- Page d'accueil ---------- */
-let accueil = nommer(lire('index.html'));
+let accueil = colorer(nommer(lire('index.html')), 'bg');
 accueil = remplirBinds(accueil);
 accueil = remplirTout(accueil, 'data-histoire', PZ.htmlHistoire(D));
 accueil = remplirTout(accueil, 'data-hours', PZ.htmlHoraires(D, null, ''));
@@ -150,7 +158,7 @@ if (base) {
 ecrire('index.html', accueil);
 
 /* ---------- Carte ---------- */
-let carte = nommer(lire('carte.html'));
+let carte = colorer(nommer(lire('carte.html')), 'page');
 carte = remplirBinds(carte);
 carte = remplirTout(carte, 'data-head', PZ.htmlEnteteTailles(D));
 carte = remplirTout(carte, 'data-rows', PZ.htmlLignesCarte(D));
@@ -171,7 +179,7 @@ ecrire('carte.html', carte);
 
 /* ---------- Page 404 : chemins absolus, elle peut s'afficher à n'importe quelle adresse ---------- */
 if (existe('404.html') && base) {
-  ecrire('404.html', liens(remplirBinds(nommer(lire('404.html')))).replace(/<title>[^<]*<\/title>/, `<title>${html(PZ.titrePage404(D))}</title>`)
+  ecrire('404.html', liens(remplirBinds(colorer(nommer(lire('404.html')), 'bg'))).replace(/<title>[^<]*<\/title>/, `<title>${html(PZ.titrePage404(D))}</title>`)
     .replace(/\n?<base [^>]*>/g, '').replace('<head>', `<head>\n<base href="${attr(base)}">`));
 }
 

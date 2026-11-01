@@ -63,6 +63,9 @@ Le badge « Ouvert / Fermé », le résumé des jours et des heures, la carte PD
 **Changer le lien Google Maps (boutons « Itinéraire » et « Votre avis »)**
 Établissement › **Lien de la fiche Google Maps** : sur Google Maps, ouvre la fiche, touche « Partager » › « Copier le lien », colle-le › Enregistrer.
 
+**Changer les couleurs**
+Établissement › **Couleur principale** et **Couleur de fond** : un code couleur comme `#6B1A14` (pour en trouver un, chercher « sélecteur de couleur » sur Google). Le site, la carte et le PDF suivent ; le logo, lui, garde ses couleurs. Vider les deux cases remet les couleurs d'origine.
+
 **Afficher un message en haut du site**
 Horaires et fermetures › Bandeau d'annonce, par exemple « Nouveau : la pizza Burrata est arrivée ! ». Vide le champ pour l'enlever.
 

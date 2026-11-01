@@ -103,6 +103,7 @@ L'adresse du domaine n'est écrite nulle part en dur dans les scripts : si le do
 16. Pages CMS et contenu rendus génériques (aucun libellé ni texte automatique propre à une pizzeria : type d'établissement, produits et cuisine sont des réglages) ; données renommées (`produits`, `description`, `masque`, `carte-page2.json`) ; bouton flottant « Voir la carte » retiré.
 17. Plus aucun texte figé propre à l'établissement : titres d'onglet et descriptions générés (ou personnalisés dans la rubrique « Google et partage de liens »), textes des logos et du lien « retour en haut » générés, autres noms et cuisine dans le contenu.
 18. Lien de la fiche Google Maps modifiable dans Pages CMS (il remplace l'identifiant technique masqué) : boutons « Itinéraire » et « Votre avis » ; lien « Demander des avis » facultatif.
+19. Couleurs au choix dans Pages CMS (principale et fond) : toutes les couleurs du site, de la carte, du PDF et des aperçus de liens en sont tirées ; couleurs d'origine inchangées à l'identique (vérifié au pixel près).
 
 ## 5. Entretien
 

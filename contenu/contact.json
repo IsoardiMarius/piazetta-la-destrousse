@@ -1,6 +1,8 @@
 {
   "nom": "Piazzetta La Destrousse",
   "logo": "",
+  "couleurPrincipale": "#6B1A14",
+  "couleurFond": "#F6F0E6",
   "activite": "Pizzeria",
   "produitSingulier": "pizza artisanale",
   "produitPluriel": "pizzas artisanales",

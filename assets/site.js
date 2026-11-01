@@ -37,6 +37,14 @@
 
   var D = PZ.donnees(window);
 
+  /* Couleurs choisies dans Pages CMS (déjà en place sur le site publié) */
+  (function () {
+    var css = PZ.cssCouleurs(D);
+    if (css && !document.getElementById('couleurs')) {
+      var st = document.createElement('style'); st.id = 'couleurs'; st.textContent = css; document.head.appendChild(st);
+    }
+  })();
+
   /* ---------- Textes (déjà en place sur le site publié ; utile en local) ---------- */
   var T = PZ.textes(D);
   Object.keys(T).forEach(function (k) { bind(k, T[k]); });

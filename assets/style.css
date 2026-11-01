@@ -12,7 +12,9 @@
   --brand-dark:#521310;
   --cream:#F6EEE3;
   --cream-muted:#EAD9C8;
+  --cream-2:#E7D3C2;
   --chip:#EDE2D2;
+  --chip-2:#E6D7C3;
   --card:#FFFCF7;
   --line:#E6DACB;
   --line-2:#D9C6B0;
@@ -70,7 +72,7 @@ a:hover{color:var(--brand-dark)}
 .h-kicker{display:block;margin-bottom:.55em;font-family:var(--f-body);font-size:clamp(13px,1.2vw,14px);font-weight:600;letter-spacing:.14em;text-transform:uppercase;line-height:1.3;color:var(--brand)}
 .lead{margin:0;max-width:34em;font-size:clamp(17px,1.6vw,19px);line-height:1.55;color:var(--muted-2);text-wrap:pretty}
 .eyebrow{margin:0;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.eyebrow--light{color:#E7D3C2}
+.eyebrow--light{color:var(--cream-2)}
 .sub{margin:0;color:var(--muted-2);font-size:clamp(16px,1.5vw,18px);text-wrap:pretty}
 .muted{color:var(--muted);margin:0}
 
@@ -89,13 +91,13 @@ a:hover{color:var(--brand-dark)}
 .btn--sm{min-height:44px;padding:0 18px;font-size:15px}
 .btn--full{width:100%}
 .btn--primary{--b-bg:var(--brand);--b-fg:var(--cream);--b-bd:var(--brand)}
-.btn--primary:hover{--b-bg:var(--brand-dark);--b-bd:var(--brand-dark);box-shadow:0 12px 24px -14px rgba(82,19,16,.7)}
-.btn--secondary{--b-fg:var(--brand);--b-bd:rgba(107,26,20,.28)}
-.btn--secondary:hover{--b-bg:rgba(107,26,20,.06);--b-bd:var(--brand)}
+.btn--primary:hover{--b-bg:var(--brand-dark);--b-bd:var(--brand-dark);box-shadow:0 12px 24px -14px color-mix(in srgb,var(--brand-dark) 70%,transparent)}
+.btn--secondary{--b-fg:var(--brand);--b-bd:color-mix(in srgb,var(--brand) 28%,transparent)}
+.btn--secondary:hover{--b-bg:color-mix(in srgb,var(--brand) 6%,transparent);--b-bd:var(--brand)}
 .btn--light{--b-bg:var(--cream);--b-fg:var(--brand);--b-bd:var(--cream)}
 .btn--light:hover{--b-bg:#fff;--b-bd:#fff;--b-fg:var(--brand-dark);box-shadow:0 14px 28px -16px rgba(0,0,0,.5)}
-.btn--ghost{--b-fg:var(--cream);--b-bd:rgba(246,238,227,.45)}
-.btn--ghost:hover{--b-bg:rgba(246,238,227,.1);--b-bd:var(--cream)}
+.btn--ghost{--b-fg:var(--cream);--b-bd:color-mix(in srgb,var(--cream) 45%,transparent)}
+.btn--ghost:hover{--b-bg:color-mix(in srgb,var(--cream) 10%,transparent);--b-bd:var(--cream)}
 .btn--solid{--b-bg:var(--card)}
 .btn--solid:hover{--b-bg:#fff}
 .btn .arrow{transition:transform .25s var(--ease)}
@@ -112,12 +114,12 @@ a:hover{color:var(--brand-dark)}
    d'un élément flouté (sur iPhone, ce qui dépasse d'un tel élément est parfois mal redessiné) */
 .hdr::before{
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
-  background:rgba(246,240,230,.78);
+  background:color-mix(in srgb,var(--bg) 78%,transparent);
   -webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px);
   transition:background-color .3s var(--ease);
 }
-.hdr.is-scrolled{border-bottom-color:var(--line);box-shadow:0 10px 30px -24px rgba(36,20,17,.35)}
-.hdr.is-scrolled::before{background:rgba(246,240,230,.9)}
+.hdr.is-scrolled{border-bottom-color:var(--line);box-shadow:0 10px 30px -24px color-mix(in srgb,var(--ink) 35%,transparent)}
+.hdr.is-scrolled::before{background:color-mix(in srgb,var(--bg) 90%,transparent)}
 .hdr__in{height:var(--hdr-h);display:flex;align-items:center;justify-content:space-between;gap:16px}
 .brand{display:flex;align-items:center;gap:12px;min-width:0;text-decoration:none;color:var(--ink);min-height:44px;white-space:nowrap}
 .brand img{flex-shrink:0}
@@ -146,7 +148,7 @@ a:hover{color:var(--brand-dark)}
 .mnav{
   position:absolute;left:0;right:0;top:100%;
   background:var(--bg);
-  border-bottom:1px solid var(--line);box-shadow:0 30px 50px -30px rgba(36,20,17,.4);
+  border-bottom:1px solid var(--line);box-shadow:0 30px 50px -30px color-mix(in srgb,var(--ink) 40%,transparent);
   padding:8px 0 20px;
   /* Toujours opaque (pas de fondu : le logo derrière transparaissait) : le menu glisse depuis
      sous la barre du haut, placé derrière son fond flouté (z-index négatif dans l'en-tête) */
@@ -213,7 +215,7 @@ html.menu-ouvert .float,html.menu-ouvert .hero__logo::before{animation-play-stat
 .hero__logo{position:relative;width:100%;max-width:440px;justify-self:end}
 .hero__logo::before{
   content:"";position:absolute;inset:8%;border-radius:50%;
-  background:radial-gradient(closest-side,rgba(107,26,20,.28),transparent);
+  background:radial-gradient(closest-side,color-mix(in srgb,var(--brand) 28%,transparent),transparent);
   filter:blur(30px);transform:translateY(14%);z-index:-1;
   animation:shadow 7s ease-in-out 1.2s infinite;
 }
@@ -242,7 +244,7 @@ html.menu-ouvert .float,html.menu-ouvert .hero__logo::before{animation-play-stat
 .strip__item strong{font-weight:600}
 .strip__item span:not(.ic-badge){color:var(--muted);font-size:15px}
 .ic-badge{width:44px;height:44px;flex:none;border-radius:50%;background:var(--chip);color:var(--brand);display:flex;align-items:center;justify-content:center;transition:transform .5s var(--ease-spring),background-color .3s}
-.strip__item:hover .ic-badge{transform:rotate(-8deg) scale(1.08);background:#E6D7C3}
+.strip__item:hover .ic-badge{transform:rotate(-8deg) scale(1.08);background:var(--chip-2)}
 
 /* ---------- Sections ---------- */
 .section{padding-top:clamp(64px,8vw,104px)}
@@ -333,15 +335,15 @@ html.menu-ouvert .float,html.menu-ouvert .hero__logo::before{animation-play-stat
 }
 .js .ph__btn img[data-fade].is-loaded{filter:none;transform:none}
 .js .ph__btn:hover img[data-fade].is-loaded{transform:scale(1.05)}
-.ph__btn::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(36,20,17,.06);pointer-events:none}
+.ph__btn::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ink) 6%,transparent);pointer-events:none}
 /* Légende facultative : petite étiquette en bas à gauche de la photo */
 .ph__leg{
   position:absolute;left:12px;bottom:12px;max-width:calc(100% - 24px);padding:7px 13px;border-radius:999px;
-  background:rgba(36,20,17,.58);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--cream);
+  background:color-mix(in srgb,var(--ink) 58%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--cream);
   font:600 14px/1.25 var(--f-body);text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;
   transition:transform .5s var(--ease),background-color .3s;
 }
-.ph__btn:hover .ph__leg{transform:translateY(-2px);background:rgba(36,20,17,.7)}
+.ph__btn:hover .ph__leg{transform:translateY(-2px);background:color-mix(in srgb,var(--ink) 70%,transparent)}
 .lb-cap{margin:0;max-width:min(92vw,720px);color:var(--cream);font:500 16px/1.4 var(--f-body);text-align:center}
 .lb-cap[hidden]{display:none}
 .ph__btn:hover img{transform:scale(1.05)}
@@ -362,17 +364,17 @@ html.lb-open{overflow:hidden}
 .lb-in-l{animation:lb-left .45s var(--ease) both}
 .lb-btn{
   position:absolute;display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;
-  border:1px solid rgba(246,238,227,.25);background:rgba(246,238,227,.08);color:var(--cream);cursor:pointer;
+  border:1px solid color-mix(in srgb,var(--cream) 25%,transparent);background:color-mix(in srgb,var(--cream) 8%,transparent);color:var(--cream);cursor:pointer;
   transition:background-color .2s var(--ease),transform .2s var(--ease);
 }
-.lb-btn:hover{background:rgba(246,238,227,.18)}
+.lb-btn:hover{background:color-mix(in srgb,var(--cream) 18%,transparent)}
 .lb-btn:active{transform:scale(.94)}
 .lb-btn:focus-visible{outline:2.5px solid var(--cream);outline-offset:3px}
 .lb-close{top:max(16px,env(safe-area-inset-top));right:16px}
 .lb-prev{left:16px;top:50%;margin-top:-24px}
 .lb-next{right:16px;top:50%;margin-top:-24px}
 .lightbox.is-single .lb-prev,.lightbox.is-single .lb-next{display:none}
-.lb-count{position:absolute;left:0;right:0;bottom:max(16px,env(safe-area-inset-bottom));margin:0;text-align:center;font-size:14px;color:rgba(246,238,227,.7);font-variant-numeric:tabular-nums}
+.lb-count{position:absolute;left:0;right:0;bottom:max(16px,env(safe-area-inset-bottom));margin:0;text-align:center;font-size:14px;color:color-mix(in srgb,var(--cream) 70%,transparent);font-variant-numeric:tabular-nums}
 
 /* ---------- Panneau PDF ---------- */
 .panel{
@@ -415,7 +417,7 @@ html.lb-open{overflow:hidden}
   border-radius:24px;background:var(--card);border:1px solid var(--line);
   transition:border-color .3s var(--ease),box-shadow .4s var(--ease),transform .4s var(--ease);
 }
-.card:hover{border-color:var(--line-2);box-shadow:0 22px 44px -30px rgba(82,19,16,.45)}
+.card:hover{border-color:var(--line-2);box-shadow:0 22px 44px -30px color-mix(in srgb,var(--brand-dark) 45%,transparent)}
 .card h3{margin:0;font-family:var(--f-display);font-weight:700;font-size:22px;letter-spacing:-.02em}
 .card__body{display:flex;flex-direction:column;gap:8px}
 .card__actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:auto}
@@ -433,7 +435,7 @@ html.lb-open{overflow:hidden}
 .hours{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
 .hours li{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:42px;padding:6px 12px;border-radius:12px;color:var(--ink)}
 .hours li.is-closed{color:var(--muted)}
-.hours li.is-today{background:rgba(107,26,20,.07);color:var(--brand);font-weight:600}
+.hours li.is-today{background:color-mix(in srgb,var(--brand) 7%,transparent);color:var(--brand);font-weight:600}
 .hours .day{display:inline-flex;align-items:center;gap:10px}
 .hours .day{flex-shrink:0}
 .hours .time{display:flex;flex-wrap:wrap;justify-content:flex-end;column-gap:.7em;font-variant-numeric:tabular-nums;text-align:right}
@@ -474,7 +476,7 @@ html.lb-open{overflow:hidden}
 
 /* ---------- Squelettes de chargement : pâte farinée, reflet de braise, pizza qui se dessine ---------- */
 :root{
-  --sk-pate:#F1E6D6;--sk-pate-2:#E5D2BA;--sk-trait:rgba(107,26,20,.3);--sk-ligne:rgba(107,26,20,.11);
+  --sk-pate:#F1E6D6;--sk-pate-2:#E5D2BA;--sk-pied:#7A2A22;--sk-trait:color-mix(in srgb,var(--brand) 30%,transparent);--sk-ligne:color-mix(in srgb,var(--brand) 11%,transparent);
   --sk-farine:radial-gradient(rgba(255,255,255,.55) 1px,transparent 1.6px) 0 0/13px 13px,radial-gradient(rgba(255,255,255,.3) 1px,transparent 1.6px) 6px 7px/13px 13px;
   --sk-pizza:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none' stroke='%236B1A14' stroke-opacity='.28' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='24' cy='24' r='18'/%3E%3Cpath d='M24 6v36M8.4 15l31.2 18M8.4 33l31.2-18'/%3E%3C/svg%3E");
 }
@@ -510,9 +512,9 @@ html.lb-open{overflow:hidden}
     radial-gradient(circle closest-side,var(--sk-ligne) 95%,transparent 100%) 7.9% 4.2%/11.1% 7.8%,
     linear-gradient(var(--sk-ligne),var(--sk-ligne)) 29.9% 4.7%/30% 3.4%,
     linear-gradient(var(--sk-ligne),var(--sk-ligne)) 31.7% 8.8%/34% 1.5%,
-    repeating-linear-gradient(to bottom,var(--sk-ligne) 0 5px,transparent 5px 9px,rgba(107,26,20,.06) 9px 12px,transparent 12px 21px) 16.7% 48.4%/58% 68%,
+    repeating-linear-gradient(to bottom,var(--sk-ligne) 0 5px,transparent 5px 9px,color-mix(in srgb,var(--brand) 6%,transparent) 9px 12px,transparent 12px 21px) 16.7% 48.4%/58% 68%,
     repeating-linear-gradient(to bottom,var(--sk-ligne) 0 5px,transparent 5px 21px) 91.25% 48.4%/20% 68%,
-    linear-gradient(#7A2A22,#7A2A22) 0 100%/100% 11.5%,
+    linear-gradient(var(--sk-pied),var(--sk-pied)) 0 100%/100% 11.5%,
     var(--sk-farine),
     linear-gradient(160deg,var(--sk-pate),var(--sk-pate-2));
   background-repeat:no-repeat,no-repeat,no-repeat,no-repeat,no-repeat,no-repeat,repeat,repeat,no-repeat;
@@ -522,7 +524,7 @@ html.lb-open{overflow:hidden}
 
 /* Visionneuse : la pizza se dessine en grand pendant le chargement de la photo */
 .lb-sk{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .3s var(--ease)}
-.lb-sk .sk__icone{width:84px;--sk-trait:rgba(246,238,227,.55)}
+.lb-sk .sk__icone{width:84px;--sk-trait:color-mix(in srgb,var(--cream) 55%,transparent)}
 .lightbox.is-loading .lb-sk{opacity:1;visibility:visible;transition-delay:.15s}
 .lightbox.is-loading .lightbox__fig img{opacity:0}
 
