@@ -1,80 +1,34 @@
 {
   "rubriques": [
     {
-      "titre": "Boissons",
+      "titre": "Salade",
       "articles": [
         {
-          "nom": "Coca-Cola, Coca-Cola Zéro",
-          "detail": "Canette 33 cl",
-          "prix": 2,
-          "badge": "",
-          "masque": false
-        },
-        {
-          "nom": "Orangina, Fanta, Ice Tea",
-          "detail": "Canette 33 cl",
-          "prix": 2,
-          "badge": "",
-          "masque": false
-        },
-        {
-          "nom": "Coca-Cola",
-          "detail": "Bouteille 1,5 l",
+          "nom": "Salade vinaigrette à l’ail",
           "prix": 4,
-          "badge": "",
-          "masque": false
-        },
-        {
-          "nom": "Eau minérale",
-          "detail": "Bouteille 50 cl",
-          "prix": 1.5,
-          "badge": "",
-          "masque": false
-        },
-        {
-          "nom": "Eau pétillante",
-          "detail": "Bouteille 50 cl",
-          "prix": 2,
-          "badge": "",
           "masque": false
         }
       ]
     },
     {
-      "titre": "Desserts",
+      "titre": "Boissons",
       "articles": [
         {
-          "nom": "Tiramisu",
-          "detail": "Fait maison",
-          "prix": 4.5,
-          "badge": "",
-          "masque": false
-        },
-        {
-          "nom": "Panna cotta",
-          "detail": "Coulis de fruits rouges",
+          "nom": "Coca-Cola",
+          "detail": "Bouteille",
           "prix": 4,
-          "badge": "",
           "masque": false
         },
         {
-          "nom": "Fondant au chocolat",
-          "detail": "Cœur coulant",
+          "nom": "Fuze Tea",
+          "detail": "Bouteille 1,5 l",
           "prix": 4.5,
-          "badge": "",
-          "masque": false
-        },
-        {
-          "nom": "Pizza Nutella",
-          "detail": "Pâte à pizza, Nutella, sucre glace",
-          "prix": 9,
-          "badge": "",
           "masque": false
         }
       ]
     }
   ],
-  "titre": "Boissons & desserts",
+  "titre": "Salade & boissons",
   "sousTitre": "",
-  "mention": "Desserts et boissons à ajouter à votre commande, à emporter ou en livraison."
+  "mention": "À ajouter à votre commande de pizzas, à emporter ou en livraison."
 }
