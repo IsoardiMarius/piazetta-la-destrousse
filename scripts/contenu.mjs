@@ -1,8 +1,8 @@
 // Contenu du site : lit les fichiers du dossier contenu/ (modifiés depuis Pages CMS
 // ou directement sur GitHub) et produit donnees.js, lu par les pages.
 //
-//   contenu/carte.json     La carte : tailles, pizzas, phrase sous la carte
-//   contenu/boissons-desserts.json  Page 2 de la carte : rubriques (boissons, desserts…) et articles
+//   contenu/carte.json     Carte, page 1 : produits, tailles, textes
+//   contenu/carte-page2.json  Carte, page 2 : rubriques (boissons, desserts, salades…) et articles
 //   contenu/horaires.json  Horaires, fermeture exceptionnelle, bandeau d'annonce
 //   contenu/contact.json   Nom, téléphone, adresse, livraison, réseaux, fiche Google
 //   contenu/textes.json    Textes de la page d'accueil
@@ -18,7 +18,7 @@ const DOSSIER = path.join(RACINE, 'contenu');
 
 const FICHIERS = {
   carte: 'carte.json',
-  boissonsDesserts: 'boissons-desserts.json',
+  page2: 'carte-page2.json',
   horaires: 'horaires.json',
   contact: 'contact.json',
   textes: 'textes.json',
@@ -38,9 +38,17 @@ function lireJson(nom, defaut) {
 /* Charge tout le contenu : { CARTE, INFOS, photos } */
 export function chargerContenu() {
   const carte = lireJson(FICHIERS.carte, {});
-  /* Page 2 de la carte, rangée avec la carte : window.CARTE.boissonsDesserts */
-  const page2 = lireJson(FICHIERS.boissonsDesserts, null);
-  if (page2 && typeof page2 === 'object') carte.boissonsDesserts = page2;
+  /* Compatibilité avec les anciens noms (pizzas / ingredients / masquee, boissons-desserts.json) */
+  if (!carte.produits && Array.isArray(carte.pizzas)) {
+    carte.produits = carte.pizzas.map((p) => {
+      const { ingredients, masquee, ...reste } = p || {};
+      return { ...reste, description: reste.description ?? ingredients, masque: reste.masque ?? masquee };
+    });
+    delete carte.pizzas;
+  }
+  /* Page 2 de la carte, rangée avec la carte : window.CARTE.page2 */
+  const page2 = lireJson(FICHIERS.page2, null) || lireJson('boissons-desserts.json', null);
+  if (page2 && typeof page2 === 'object') carte.page2 = page2;
   const infos = Object.assign({}, lireJson(FICHIERS.horaires, {}), lireJson(FICHIERS.contact, {}), lireJson(FICHIERS.textes, {}));
   const photos = lireJson(FICHIERS.photos, []);
   return { CARTE: carte, INFOS: infos, photos: Array.isArray(photos) ? photos : [] };

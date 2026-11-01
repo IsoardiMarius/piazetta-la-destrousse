@@ -85,7 +85,7 @@ def photos_a_publier():
         (f for f in SOURCE.iterdir() if f.suffix.lower() in EXTENSIONS),
         key=lambda f: f.name.lower(),
     ) if SOURCE.is_dir() else []
-    return [(f, ("Pizza " + legende(f.name)) if legende(f.name) else "", "") for f in fichiers]
+    return [(f, legende(f.name), "") for f in fichiers]
 
 
 def main():

@@ -100,6 +100,7 @@ L'adresse du domaine n'est écrite nulle part en dur dans les scripts : si le do
 13. Contrôle final des pages générées avant chaque mise en ligne et signalement « Points à vérifier » ; site testé avec des contenus extrêmes (22 pizzas, 4 tailles, 12 photos, horaires avec coupure, congés, 3 réseaux, et à l'inverse 2 pizzas, 1 taille, 1 photo, aucun réseau ni texte) sur 14 tailles d'écran.
 14. Page 2 de la carte « Boissons & desserts » (rubrique Pages CMS du même nom) et animations de chargement (photos, vignette de la carte, visionneuse, page de la carte).
 15. Tout le contenu affiché devient modifiable dans Pages CMS (textes de l'accueil et de la carte, page « adresse introuvable », logo, cases Livraison / À emporter) ; rubriques réorganisées ; menu mobile sans transparence à l'ouverture.
+16. Pages CMS et contenu rendus génériques (aucun libellé ni texte automatique propre à une pizzeria : type d'établissement, produits et cuisine sont des réglages) ; données renommées (`produits`, `description`, `masque`, `carte-page2.json`) ; bouton flottant « Voir la carte » retiré.
 
 ## 5. Entretien
 
@@ -114,7 +115,7 @@ L'adresse du domaine n'est écrite nulle part en dur dans les scripts : si le do
 | Symptôme | Cause probable | Que faire |
 | --- | --- | --- |
 | Une modification n'apparaît pas | Publication en cours, en échec, ou cache du navigateur | Attendre 2 minutes et recharger. Sinon, onglet **Actions** : le résumé de la publication indique ce qui bloque. En cas d'échec, une alerte « La publication du site a échoué » est aussi ouverte (onglet **Issues**) et envoyée par e-mail. |
-| Une photo ou une pizza manque, la carte déborde | Élément ignoré à la publication | Onglet **Issues** › « Points à vérifier sur le site » : il dit quoi corriger (photo introuvable, prix manquant, carte trop longue → masquer quelques pizzas). |
+| Une photo ou un produit manque, la carte déborde | Élément ignoré à la publication | Onglet **Issues** › « Points à vérifier sur le site » : il dit quoi corriger (photo introuvable, prix manquant, carte trop longue → masquer quelques produits). |
 | « Le site généré ne correspond pas au contenu » | Contrôle final en échec (cas imprévu dans le contenu ou modification du code) | Le détail est dans le résumé de la publication ; l'ancien site reste en ligne. Corriger, puis relancer. |
 | Le site affiche une erreur de certificat | Certificat en cours de renouvellement ou DNS modifié | Vérifier que les enregistrements DNS sont toujours en « DNS only » et que le domaine personnalisé est toujours saisi dans Settings › Pages. |
 | Le site ne répond plus du tout | Domaine expiré ou DNS supprimé | Vérifier le domaine sur Cloudflare (Domain Registration) et les enregistrements DNS. |

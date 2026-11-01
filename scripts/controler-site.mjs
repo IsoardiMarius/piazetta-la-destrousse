@@ -58,7 +58,7 @@ verifier(JSON.stringify(donnees.INFOS) === JSON.stringify(contenu.INFOS), 'donne
 
 const accueil = lire('index.html');
 const carte = lire('carte.html');
-const pizzas = PZ.pizzasVisibles(D);
+const pizzas = PZ.produitsVisibles(D);
 const tailles = D.tailles || [];
 
 /* ---------- Valeurs impossibles ---------- */
@@ -67,7 +67,7 @@ for (const [nom, page] of [['index.html', accueil], ['carte.html', carte], ['404
   for (const mot of ['undefined', 'NaN', '[object Object]']) verifier(!sansScripts.includes(mot), `${nom} contient « ${mot} »`);
 }
 
-/* ---------- Nom de la pizzeria ---------- */
+/* ---------- Nom de l'établissement ---------- */
 for (const [nom, page] of [['index.html', accueil], ['carte.html', carte]]) {
   for (const m of page.matchAll(/download="([^"]*)"/g)) verifier(m[1] === PZ.nomPdf(D), `${nom} : le PDF se télécharge sous le nom « ${m[1]} » au lieu de « ${PZ.nomPdf(D)} »`);
   if (PZ.nomOfficiel(D) !== 'Piazzetta La Destrousse') verifier(!page.includes('Piazzetta La Destrousse'), `${nom} contient encore l'ancien nom « Piazzetta La Destrousse »`);
@@ -129,18 +129,18 @@ verifier(cache(accueil, 'data-photos') === (photos.length === 0), 'Accueil : la 
 
 /* ---------- Page carte (feuille A4, source du PDF) ---------- */
 const lignes = (contenuDe(carte, 'data-rows') || '').split('<div class="row">').slice(1);
-verifier(lignes.length === pizzas.length, `Carte : ${lignes.length} pizzas affichées pour ${pizzas.length} dans le contenu`);
+verifier(lignes.length === pizzas.length, `Carte : ${lignes.length} produits affichés pour ${pizzas.length} dans le contenu`);
 pizzas.forEach((p, i) => {
   const l = lignes[i] || '';
-  verifier(present(l, p.nom), `Carte : la pizza n°${i + 1} devrait être « ${p.nom} »`);
-  if (p.ingredients) verifier(l.includes(PZ.multiligne(p.ingredients)), `Carte : ingrédients de « ${p.nom} » absents`);
+  verifier(present(l, p.nom), `Carte : le produit n°${i + 1} devrait être « ${p.nom} »`);
+  if (p.description) verifier(l.includes(PZ.multiligne(p.description)), `Carte : description de « ${p.nom} » absente`);
   if (p.badge) verifier(present(l, p.badge), `Carte : badge de « ${p.nom} » absent`);
   const prixAffiches = (l.match(/<span class="row__price">([^<]*)<\/span>/g) || []).map((x) => x.replace(/<[^>]+>/g, ''));
   const prixAttendus = tailles.map((_, j) => PZ.prix((p.prix || [])[j]));
   verifier(JSON.stringify(prixAffiches) === JSON.stringify(prixAttendus), `Carte : prix de « ${p.nom} » : ${prixAffiches.join(' / ')} au lieu de ${prixAttendus.join(' / ')}`);
 });
 const nomsVisibles = new Set(pizzas.map((p) => p.nom));
-(D.pizzas || []).filter((p) => p && p.nom && p.masquee && !nomsVisibles.has(p.nom))
+(D.produits || []).filter((p) => p && p.nom && p.masque && !nomsVisibles.has(p.nom))
   .forEach((p) => verifier(!lignes.some((l) => l.includes(`<b>${PZ.esc(p.nom)}<`)), `Carte : « ${p.nom} » est masquée mais affichée`));
 const entete = contenuDe(carte, 'data-head') || '';
 tailles.forEach((t) => verifier(present(entete, t.taille || t.nom), `Carte : la taille « ${t.taille || t.nom} » n'est pas dans l'en-tête`));
@@ -173,7 +173,7 @@ rubriques.forEach((r) => r.articles.forEach((a) => {
   verifier(page2.includes(`<b>${PZ.esc(a.nom)}`) && page2.includes(`<span class="art__prix">${PZ.prix(a.prix)}</span>`), `Carte : « ${a.nom} » ou son prix est absent de la page 2`);
 }));
 const visibles2 = new Set(rubriques.flatMap((r) => r.articles.map((a) => a.nom)));
-((D.boissonsDesserts || {}).rubriques || []).forEach((r) => ((r && r.articles) || []).filter((a) => a && a.nom && a.masque && !visibles2.has(a.nom))
+((D.page2 || {}).rubriques || []).forEach((r) => ((r && r.articles) || []).filter((a) => a && a.nom && a.masque && !visibles2.has(a.nom))
   .forEach((a) => verifier(!page2.includes(`<b>${PZ.esc(a.nom)}`), `Carte : « ${a.nom} » est masqué mais affiché en page 2`)));
 
 /* ---------- Google : données structurées, descriptions, plan du site ---------- */
@@ -211,7 +211,7 @@ terminer();
 
 function terminer() {
   if (!problemes.length) {
-    console.log(`✅ Site cohérent avec le contenu : ${pizzas.length} pizza(s), ${tailles.length} taille(s), ${rubriques.reduce((n, r) => n + r.articles.length, 0)} boisson(s) et dessert(s), photos, horaires, liens et données Google vérifiés.`);
+    console.log(`✅ Site cohérent avec le contenu : ${pizzas.length} produit(s) en page 1, ${tailles.length} taille(s), ${rubriques.reduce((n, r) => n + r.articles.length, 0)} en page 2, photos, horaires, liens et données Google vérifiés.`);
     process.exit(0);
   }
   const texte = ['### ❌ Le site généré ne correspond pas au contenu (publication arrêtée)', ...problemes.map((p) => '- ' + p), ''].join('\n');

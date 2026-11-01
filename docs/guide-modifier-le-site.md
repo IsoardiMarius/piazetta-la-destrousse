@@ -12,12 +12,12 @@ Tu peux changer toi-même la carte, les prix, les horaires, les congés, les pho
 
 | Rubrique | Pour… |
 | --- | --- |
-| **La carte : pizzas** | ajouter, supprimer ou réordonner une pizza, changer un prix ou des ingrédients |
-| **La carte : boissons et desserts** | la page 2 de la carte : boissons, desserts, et d'autres rubriques si tu veux (glaces…) |
-| **Horaires et congés** | changer les horaires, prévenir d'une fermeture (vacances, jour férié), afficher un message en haut du site |
-| **Photos** | ajouter, retirer ou réordonner les photos, ajouter une légende |
+| **Carte (page 1)** | ajouter, supprimer ou réordonner une pizza, changer un prix ou des ingrédients (« Description ») |
+| **Carte (page 2)** | la page 2 de la carte : boissons, desserts, et d'autres rubriques si tu veux (glaces…) |
+| **Horaires et fermetures** | changer les horaires, prévenir d'une fermeture (vacances, jour férié), afficher un message en haut du site |
+| **Photos de l'accueil** | ajouter, retirer ou réordonner les photos, ajouter une légende |
 | **Textes de l'accueil** | toutes les phrases de la page d'accueil, rangées dans l'ordre de la page |
-| **La pizzeria : nom, logo, contact** | nom, logo, téléphone, e-mail, adresse, livraison ou à emporter, liens Uber Eats / Facebook / Instagram |
+| **Établissement : nom, logo, contact** | nom, logo, téléphone, e-mail, adresse, livraison ou à emporter, liens Uber Eats / Facebook / Instagram |
 
 Sous chaque case, une petite aide dit où le texte apparaît. Si tu vides un texte par erreur, le texte d'origine revient tout seul.
 
@@ -26,27 +26,27 @@ Après chaque changement : clique sur **Enregistrer** (« Save »). **1 à 2 min
 ## Les cas les plus courants
 
 **Changer un prix**
-La carte › clique sur la pizza › change le chiffre › Enregistrer.
+Carte (page 1) › clique sur la pizza › change le chiffre › Enregistrer.
 Les prix sont dans l'ordre des tailles (aujourd'hui : Petite, Big, Méga). Pour les centimes, mets un point : `12.5` s'affichera « 12,50 € ».
 
 **Ajouter une pizza**
-La carte › bouton **Ajouter** (« Add ») en bas de la liste des pizzas › nom, ingrédients, un prix par taille › Enregistrer.
+Carte (page 1) › bouton **Ajouter** (« Add ») en bas de la liste des produits › nom, description (les ingrédients), un prix par taille › Enregistrer.
 Pour la mettre en avant, écris `Nouveau` dans « Badge ». Tu peux la glisser vers le haut ou le bas pour choisir sa place.
 
 **Retirer une pizza pour un temps**
-Coche **Masquer cette pizza** : elle disparaît du site et du PDF, mais reste enregistrée pour plus tard.
+Coche **Masquer ce produit** : elle disparaît du site et du PDF, mais reste enregistrée pour plus tard.
 
 **Changer les tailles**
-La carte › Tailles, en bas de la page. Si tu ajoutes ou retires une taille, ajoute ou retire aussi le prix correspondant sur chaque pizza, au même rang.
+Carte (page 1) › Tailles ou formats, en bas de la page. Si tu ajoutes ou retires une taille, ajoute ou retire aussi le prix correspondant sur chaque pizza, au même rang.
 
 La carte tient sur une feuille A4 jusqu'à 24 pizzas environ. Au-delà, masque celles que tu fais moins souvent.
 
 **Boissons et desserts**
-Boissons et desserts › ouvre la rubrique (Boissons, Desserts…) › **Ajouter** un article : nom, précision (par exemple « Canette 33 cl » ou « Fait maison »), prix › Enregistrer.
+Carte (page 2) › ouvre la rubrique (Boissons, Desserts…) › **Ajouter** un article : nom, précision (par exemple « Canette 33 cl » ou « Fait maison »), prix › Enregistrer.
 Ils s'affichent en page 2 de la carte et du PDF, et la page 1 indique « Boissons & desserts en page 2 ». Tu peux aussi créer une nouvelle rubrique (par exemple « Glaces »), ou cocher **Masquer cet article**. S'il n'y a plus aucun article, la page 2 disparaît toute seule.
 
 **Partir en vacances**
-Horaires et congés › choisis les dates **du** et **au** dans le calendrier › Enregistrer.
+Horaires et fermetures › choisis les dates **du** et **au** dans le calendrier › Enregistrer.
 Pendant ces dates, le site affiche « Fermé » et un bandeau prévient les clients (dès 3 semaines avant). Pas besoin de les effacer après : les dates passées n'ont plus d'effet.
 
 **Changer un horaire**
@@ -54,13 +54,13 @@ Pendant ces dates, le site affiche « Fermé » et un bandeau prévient les clie
 Le badge « Ouvert / Fermé », le résumé des jours et des heures, la carte PDF et Google se mettent à jour tout seuls.
 
 **Arrêter (ou reprendre) la livraison**
-La pizzeria : nom, logo, contact › décoche **Livraison** › Enregistrer. Tout le site, la carte et Google passent en « à emporter » ; recoche pour revenir.
+Établissement : nom, logo, contact › décoche **Livraison** › Enregistrer. Tout le site, la carte et Google passent en « à emporter » ; recoche pour revenir.
 
 **Changer le logo**
-La pizzeria : nom, logo, contact › **Logo** › choisis une image carrée (au moins 720 px de côté) › Enregistrer. Elle est affichée dans un rond partout, y compris l'icône de l'onglet.
+Établissement : nom, logo, contact › **Logo** › choisis une image carrée (au moins 720 px de côté) › Enregistrer. Elle est affichée dans un rond partout, y compris l'icône de l'onglet.
 
 **Afficher un message en haut du site**
-Horaires et congés › Bandeau d'annonce, par exemple « Nouveau : la pizza Burrata est arrivée ! ». Vide le champ pour l'enlever.
+Horaires et fermetures › Bandeau d'annonce, par exemple « Nouveau : la pizza Burrata est arrivée ! ». Vide le champ pour l'enlever.
 
 **Ajouter une photo**
 Photos › **Ajouter** (« Add ») › choisis la photo dans ton téléphone › écris ce qu'on voit (par exemple « Pizza Reine ») › Enregistrer.

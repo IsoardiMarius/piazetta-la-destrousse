@@ -1,6 +1,13 @@
 {
   "nom": "Piazzetta La Destrousse",
   "logo": "",
+  "activite": "Pizzeria",
+  "produitSingulier": "pizza artisanale",
+  "produitPluriel": "pizzas artisanales",
+  "cuisine": [
+    "Pizza",
+    "Italienne"
+  ],
   "telephone": "06 40 92 51 76",
   "email": "piazzettadestrousse@gmail.com",
   "adresse": "842 avenue de la Doulia",

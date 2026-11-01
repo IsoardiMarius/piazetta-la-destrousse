@@ -51,7 +51,7 @@ function remplirTout(page, attribut, contenu) {
   }
   return resultat + page.slice(curseur);
 }
-/* Nom de la pizzeria écrit dans le modèle des pages (textes alternatifs, nom du PDF…) :
+/* Nom de l'établissement écrit dans le modèle des pages (textes alternatifs, nom du PDF…) :
    remplacé par celui du contenu s'il a été changé dans Pages CMS. */
 const NOM_MODELE = 'Piazzetta La Destrousse';
 function nommer(page) {
@@ -132,7 +132,7 @@ const version = (process.env.GITHUB_SHA || '').slice(0, 8);
 const v = version ? '?v=' + version : '';
 const imageAccueil = base + (existe('assets/og-accueil.jpg') ? 'assets/og-accueil.jpg' : 'assets/og-image.jpg') + v;
 accueil = meta(accueil, {
-  titre: `${PZ.nomCourt(D)} — Pizzeria à ${PZ.villeSeule(D)}, ${PZ.service(D).titre.toLowerCase()}`,
+  titre: `${PZ.nomCourt(D)} — ${PZ.activite(D)} à ${PZ.villeSeule(D)}, ${PZ.service(D).titre.toLowerCase()}`,
   description: PZ.description(D),
   url: base,
   image: base && imageAccueil,
@@ -157,7 +157,7 @@ if (PZ.rubriquesVisibles(D).length) {
 }
 carte = liens(carte);
 carte = meta(carte, {
-  titre: `Carte et prix des pizzas — ${PZ.nomCourt(D)}, pizzeria à ${PZ.villeSeule(D)}`,
+  titre: `Carte et prix — ${PZ.nomCourt(D)}, ${PZ.activite(D).toLowerCase()} à ${PZ.villeSeule(D)}`,
   description: PZ.descriptionCarte(D),
   url: base && base + 'carte.html',
   image: base && existe('assets/og-carte.jpg') ? base + 'assets/og-carte.jpg' + v : base && imageAccueil,

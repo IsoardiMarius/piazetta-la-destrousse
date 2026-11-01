@@ -21,14 +21,14 @@ async function ouvrir(browser, options = {}) {
 
 const browser = await chromium.launch();
 try {
-  // 1. Le PDF (une page A4 pour les pizzas, une deuxième pour les boissons et desserts s'il y en a)
+  // 1. Le PDF (page 1 : produits principaux ; page 2 : autres produits, s'il y en a)
   const page = await ouvrir(browser);
   const trop = await page.getAttribute('html', 'data-trop-long');
   if (trop !== null) {
     const pages = trop.split(',');
     const msg = '### ⚠️ La carte est trop longue pour tenir sur une page A4\n' +
-      (pages.includes('1') ? '- Page 1 (pizzas) : le bas est coupé. Masquer quelques pizzas ou raccourcir des ingrédients dans Pages CMS (rubrique « La carte »).\n' : '') +
-      (pages.includes('2') ? '- Page 2 (boissons et desserts) : le bas est coupé. Masquer quelques articles dans Pages CMS (rubrique « Boissons et desserts »).\n' : '');
+      (pages.includes('1') ? '- Page 1 : le bas est coupé. Masquer quelques produits ou raccourcir des descriptions dans Pages CMS (rubrique « Carte (page 1) »).\n' : '') +
+      (pages.includes('2') ? '- Page 2 : le bas est coupé. Masquer quelques articles dans Pages CMS (rubrique « Carte (page 2) »).\n' : '');
     console.warn(msg);
     fs.appendFileSync('rapport-contenu.md', msg);
     if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, msg);

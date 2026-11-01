@@ -274,13 +274,13 @@
 
   /* ---------- Carte ---------- */
 
-  function pizzasVisibles(D) {
-    return (D.pizzas || []).filter(function (p) { return p && p.nom && !p.masquee; });
+  function produitsVisibles(D) {
+    return (D.produits || []).filter(function (p) { return p && p.nom && !p.masque; });
   }
 
   function fourchettePrix(D) {
     var all = [];
-    pizzasVisibles(D).forEach(function (p) { (p.prix || []).forEach(function (x) { if (typeof x === 'number') all.push(x); }); });
+    produitsVisibles(D).forEach(function (p) { (p.prix || []).forEach(function (x) { if (typeof x === 'number') all.push(x); }); });
     if (!all.length) return null;
     return { min: Math.min.apply(null, all), max: Math.max.apply(null, all) };
   }
@@ -296,10 +296,10 @@
     var tailles = Array.isArray(C.tailles) ? C.tailles : [];
     if (!tailles.length) erreurs.push('La carte : il faut au moins une taille.');
     tailles.forEach(function (t, i) { if (!t || !t.nom) avert.push('La carte : la taille n°' + (i + 1) + ' n’a pas de nom.'); });
-    var pizzas = Array.isArray(C.pizzas) ? C.pizzas : [];
-    if (!pizzas.filter(function (p) { return p && p.nom && !p.masquee; }).length) erreurs.push('La carte : il faut au moins une pizza affichée.');
-    pizzas.forEach(function (p, i) {
-      var label = 'La carte : pizza n°' + (i + 1) + (p && p.nom ? ' (' + p.nom + ')' : '');
+    var liste = Array.isArray(C.produits) ? C.produits : [];
+    if (!liste.filter(function (p) { return p && p.nom && !p.masque; }).length) erreurs.push('Carte (page 1) : il faut au moins un produit affiché.');
+    liste.forEach(function (p, i) {
+      var label = 'Carte (page 1) : produit n°' + (i + 1) + (p && p.nom ? ' (' + p.nom + ')' : '');
       if (!p || !p.nom) { avert.push(label + ' n’a pas de nom.'); return; }
       var prixListe = Array.isArray(p.prix) ? p.prix : [];
       if (prixListe.length !== tailles.length) avert.push(label + ' : ' + prixListe.length + ' prix pour ' + tailles.length + ' tailles (les prix manquants s’affichent « – »).');
@@ -307,9 +307,9 @@
         if (typeof x !== 'number' || !isFinite(x) || x < 0) avert.push(label + ' : le prix « ' + x + ' » n’est pas un nombre.');
       });
     });
-    var P2 = C.boissonsDesserts && typeof C.boissonsDesserts === 'object' ? C.boissonsDesserts : {};
+    var P2 = C.page2 && typeof C.page2 === 'object' ? C.page2 : {};
     (Array.isArray(P2.rubriques) ? P2.rubriques : []).forEach(function (r, i) {
-      var nomR = 'Boissons et desserts : rubrique n°' + (i + 1) + (r && r.titre ? ' (' + r.titre + ')' : '');
+      var nomR = 'Carte (page 2) : rubrique n°' + (i + 1) + (r && r.titre ? ' (' + r.titre + ')' : '');
       (r && Array.isArray(r.articles) ? r.articles : []).forEach(function (a, j) {
         var label = nomR + ', article n°' + (j + 1) + (a && a.nom ? ' (' + a.nom + ')' : '');
         if (!a || !a.nom) { avert.push(label + ' n’a pas de nom (ignoré).'); return; }
@@ -335,7 +335,7 @@
   }
   /* Compatibilité : liste de tous les messages */
   function validerCarte(C) { return valider(C, { telephone: 'x' }).erreurs; }
-  function validerInfos(I) { var v = valider({ tailles: [{ nom: 'x' }], pizzas: [{ nom: 'x', prix: [0] }] }, I); return v.erreurs.concat(v.avertissements); }
+  function validerInfos(I) { var v = valider({ tailles: [{ nom: 'x' }], produits: [{ nom: 'x', prix: [0] }] }, I); return v.erreurs.concat(v.avertissements); }
 
   /* ---------- Textes et blocs HTML (partagés par le navigateur et la publication) ---------- */
 
@@ -359,7 +359,7 @@
   /* Nom de fichier du PDF : « Carte-Piazzetta-La-Destrousse.pdf » */
   function nomPdf(D) {
     var slug = nomOfficiel(D).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    return 'Carte-' + (slug || 'pizzeria') + '.pdf';
+    return 'Carte-' + (slug || 'etablissement') + '.pdf';
   }
   function communes(D) { return Array.isArray(D.communesLivrees) ? D.communesLivrees.filter(Boolean) : []; }
 
@@ -396,6 +396,19 @@
   }
 
   /* Valeur de chaque élément data-bind="..." des pages */
+  /* Activité de l'établissement (rubrique « Établissement » de Pages CMS) : rien de propre à une
+     pizzeria n'est écrit dans le code */
+  function activite(D) { return String(D.activite || '').trim() || 'Restaurant'; }
+  /* Nom des produits de la page 1, accordé : nomProduits(D, 1) = « pizza artisanale », nomProduits(D, 13) = « pizzas artisanales » */
+  function nomProduits(D, n) {
+    var un = String(D.produitSingulier || '').trim() || 'produit', plusieurs = String(D.produitPluriel || '').trim() || un + 's';
+    return n > 1 ? plusieurs : un;
+  }
+  function cuisine(D) {
+    var c = (Array.isArray(D.cuisine) ? D.cuisine : []).map(function (x) { return String(x || '').trim(); }).filter(Boolean);
+    return c.length ? c : undefined;
+  }
+
   /* Livraison et / ou vente à emporter (cases à cocher dans Pages CMS) : adapte tous les textes concernés */
   function service(D) {
     var l = D.livraison !== false, e = D.emporter !== false;
@@ -411,13 +424,12 @@
   /* Textes modifiables dans Pages CMS : un champ vidé par erreur reprend le texte d'origine */
   var TEXTES_DEFAUT = {
     pointFortTitre: 'Recette artisanale',
-    pointFortTexte: 'Produits frais, huile d’olive',
-    carteTexte: 'Toute la carte, avec les ingrédients de chaque pizza, est aussi disponible en PDF.',
-    piedDePage: 'Pizzeria artisanale',
+    pointFortTexte: 'Produits frais, fait maison',
+    carteTexte: 'Toute la carte, avec le détail de chaque produit, est aussi disponible en PDF.',
+    piedDePage: '',
     introuvableTitre: 'Cette page s’est égarée.',
     introuvableTexte: 'L’adresse demandée n’existe pas ou plus. La carte, elle, est toujours là.',
-    enTeteTitre: 'La carte',
-    titreListe: 'Nos pizzas'
+    enTeteTitre: 'La carte'
   };
 
   function textes(D) {
@@ -425,20 +437,21 @@
     var rempli = function (k) { return typeof D[k] === 'string' && D[k].trim() !== ''; };
     var S = service(D);
     var defauts = {
-      titre: 'Pizzas artisanales, ' + S.livrees + '.',
-      introduction: 'Une pâte légère travaillée avec soin, des produits frais et de l’huile d’olive.',
+      titre: cap(nomProduits(D, 2)) + ', ' + S.livrees + '.',
+      introduction: 'Des produits frais, préparés avec soin.',
       histoireTitre: 'Le goût des choses simples.',
-      photosTitre: 'Tout juste sorties du four.'
+      photosTitre: 'En images.'
     };
     Object.keys(defauts).forEach(function (k) { T[k] = fr(rempli(k) ? D[k] : defauts[k]); });
     ['histoireSignature', 'adresse', 'ville', 'zoneLivraison', 'mention', 'telephone'].forEach(function (k) { if (typeof D[k] === 'string') T[k] = D[k]; });
     Object.keys(TEXTES_DEFAUT).forEach(function (k) { T[k] = fr(rempli(k) ? D[k].trim() : TEXTES_DEFAUT[k]); });
     T.service = S.titre;
-    T.enTeteSousTitre = rempli('enTeteSousTitre') ? D.enTeteSousTitre.trim() : 'Pizzas artisanales · ' + cap(S.phrase);
+    T.enTeteSousTitre = rempli('enTeteSousTitre') ? D.enTeteSousTitre.trim() : cap(nomProduits(D, 2)) + ' · ' + cap(S.phrase);
+    T.titreListe = rempli('titreListe') ? fr(D.titreListe.trim()) : 'Nos ' + nomProduits(D, 2);
     T.email = emailValide(D);
     T.nom = nomOfficiel(D);
     T.nomCourt = nomCourt(D);
-    T.nomPied = nomOfficiel(D) + (T.piedDePage ? ' · ' + T.piedDePage : '');
+    T.nomPied = nomOfficiel(D) + ' · ' + (T.piedDePage || activite(D));
     var jours = resumeJours(D), heures = resumeHeures(D), ouv = premiereOuverture(D);
     T.resumeJours = jours || 'Horaires : nous appeler';
     T.resumeJoursCourt = jours ? resumeJoursCourt(D) : 'Sur appel';
@@ -446,15 +459,15 @@
     T.statutDefaut = jours ? jours + (ouv ? ' dès ' + ouv : '') : 'Commandes par téléphone';
     var zone = (service(D).livraison && D.zoneLivraison) || villeSeule(D);
     T.accroche = jours ? 'À ' + zone + ', ' + lower1(jours) + (ouv ? ' dès ' + ouv : '') + '.' : 'À ' + zone + '.';
-    var tailles = D.tailles || [], n = pizzasVisibles(D).length;
-    T.titreCarte = n + ' pizza' + (n > 1 ? 's' : '') + ' artisanale' + (n > 1 ? 's' : '') + ', ' + tailles.length + ' taille' + (tailles.length > 1 ? 's' : '') + '.';
+    var tailles = D.tailles || [], n = produitsVisibles(D).length;
+    T.titreCarte = n + ' ' + nomProduits(D, n) + ', ' + tailles.length + ' taille' + (tailles.length > 1 ? 's' : '') + '.';
     var fp = fourchettePrix(D);
     var lt = tailles.map(function (t) { return t.nom + (t.taille ? ' ' + t.taille : ''); });
     var tl = lt.length > 1 ? lt.slice(0, -1).join(', ') + ' ou ' + lt[lt.length - 1] : (lt[0] || '');
     T.sousTitreCarte = tl + (fp ? (fp.min === fp.max ? ', ' + prix(fp.min) : ', de ' + prix(fp.min) + ' à ' + prix(fp.max)) : '') + '.';
     var ville = (D.ville || '').replace(/^\d{5}\s+/, '');
     if (ville) T.villeCourte = ville;
-    T.lieu = 'Pizzeria à ' + villeSeule(D);
+    T.lieu = activite(D) + ' à ' + villeSeule(D);
     var cs = communes(D);
     T.livraisonTexte = S.livraison ? 'Livraison à ' + (cs.length ? listeFr(cs) : (D.zoneLivraison || villeSeule(D))) + '.' : '';
     T.retraitTexte = S.emporter ? 'Retrait des commandes sur place.' : '';
@@ -463,9 +476,9 @@
     var rv = rubriquesVisibles(D);
     T.titrePage2 = titrePage2(D);
     T.suitePage2 = T.titrePage2 + ' en page 2';
-    var st2 = String(page2(D).sousTitre || '').trim();
+    var st2 = String(donneesPage2(D).sousTitre || '').trim();
     T.sousTitrePage2 = rv.length ? (st2 || rv.map(function (r) { return r.titre; }).filter(Boolean).concat([cap(S.phrase)]).join(' · ')) : '';
-    T.mentionPage2 = typeof page2(D).mention === 'string' ? page2(D).mention : '';
+    T.mentionPage2 = typeof donneesPage2(D).mention === 'string' ? donneesPage2(D).mention : '';
     return T;
   }
 
@@ -503,11 +516,11 @@
   /* Texte lu par Google et les lecteurs d'écran : « Pizza Atlantique, Piazzetta La Destrousse, pizzeria à La Destrousse » */
   function altPhoto(p, D) {
     D = D || {};
-    return (p.legende || 'Pizza artisanale') + ', ' + nomOfficiel(D) + ', pizzeria à ' + villeSeule(D);
+    return (p.legende || cap(nomProduits(D, 1))) + ', ' + nomOfficiel(D) + ', ' + activite(D).toLowerCase() + ' à ' + villeSeule(D);
   }
 
   /* Squelette de chargement : une pizza qui se dessine (croûte, parts, garniture) sur fond de pâte farinée */
-  var SK_PIZZA = '<svg class="sk__pizza" viewBox="0 0 48 48" aria-hidden="true">' +
+  var SK_ICONE = '<svg class="sk__icone" viewBox="0 0 48 48" aria-hidden="true">' +
     '<circle class="sk__croute" cx="24" cy="24" r="18" pathLength="100"/>' +
     '<path class="sk__parts" d="M24 6v36M8.4 15l31.2 18M8.4 33l31.2-18" pathLength="100"/>' +
     '<circle class="sk__garni" cx="34.5" cy="24" r="2.3"/><circle class="sk__garni" cx="18.8" cy="14.9" r="2.3"/><circle class="sk__garni" cx="18.8" cy="33.1" r="2.3"/>' +
@@ -522,7 +535,7 @@
         (p.lqip ? ' style="--lqip:url(\'' + p.lqip + '\')"' : '') + '>' +
         '<img src="' + esc(p.src) + '" srcset="' + esc(p.srcset) + '" sizes="' + sizes + '" width="' + p.largeur + '" height="' + p.hauteur + '" alt="' + esc(altPhoto(p, D)) + '" loading="lazy" decoding="async" data-fade>' +
         (p.texte ? '<span class="ph__leg">' + esc(p.texte) + '</span>' : '') +
-        '<span class="sk">' + SK_PIZZA + '</span>' +
+        '<span class="sk">' + SK_ICONE + '</span>' +
         '</button></li>';
     }).join('');
   }
@@ -538,27 +551,27 @@
 
   function htmlLignesCarte(D) {
     var tailles = D.tailles || [];
-    return pizzasVisibles(D).map(function (p) {
+    return produitsVisibles(D).map(function (p) {
       return '<div class="row">' +
         '<div class="row__name"><b>' + esc(p.nom) + (p.badge ? '<em>' + esc(p.badge) + '</em>' : '') + '</b>' +
-        (p.ingredients ? '<span>' + multiligne(p.ingredients) + '</span>' : '') + '</div>' +
+        (p.description ? '<span>' + multiligne(p.description) + '</span>' : '') + '</div>' +
         tailles.map(function (t, i) { return '<span class="row__price">' + prix((p.prix || [])[i]) + '</span>'; }).join('') +
         '</div>';
     }).join('');
   }
 
-  /* ---------- Page 2 de la carte : boissons, desserts… (contenu/boissons-desserts.json) ---------- */
+  /* ---------- Page 2 de la carte : boissons, desserts, salades… (contenu/carte-page2.json) ---------- */
 
-  function page2(D) { return D.boissonsDesserts && typeof D.boissonsDesserts === 'object' ? D.boissonsDesserts : {}; }
+  function donneesPage2(D) { return D.page2 && typeof D.page2 === 'object' ? D.page2 : {}; }
   /* Rubriques ayant au moins un article affiché ; la page 2 n'existe que s'il y en a une */
   function rubriquesVisibles(D) {
-    var R = Array.isArray(page2(D).rubriques) ? page2(D).rubriques : [];
+    var R = Array.isArray(donneesPage2(D).rubriques) ? donneesPage2(D).rubriques : [];
     return R.filter(function (r) { return r && typeof r === 'object'; }).map(function (r) {
       var articles = (Array.isArray(r.articles) ? r.articles : []).filter(function (a) { return a && a.nom && !a.masque; });
       return { titre: r.titre || '', articles: articles };
     }).filter(function (r) { return r.articles.length; });
   }
-  function titrePage2(D) { return String(page2(D).titre || '').trim() || 'Boissons & desserts'; }
+  function titrePage2(D) { return String(donneesPage2(D).titre || '').trim() || 'Boissons & desserts'; }
 
   function htmlRubriques(D) {
     var rv = rubriquesVisibles(D);
@@ -579,15 +592,15 @@
     var T = textes(D), fp = fourchettePrix(D);
     var cs = communes(D);
     var S = service(D);
-    return nomCourt(D) + ', pizzeria artisanale à ' + villeSeule(D) + ' : pizzas ' + S.livrees + (S.livraison && cs.length ? ' à ' + listeFr(cs) : '') + ', ' +
+    return nomCourt(D) + ', ' + activite(D).toLowerCase() + ' à ' + villeSeule(D) + ' : ' + nomProduits(D, 2) + ' ' + S.livrees + (S.livraison && cs.length ? ' à ' + listeFr(cs) : '') + ', ' +
       (T.resumeJours ? lower1(T.resumeJours) + (premiereOuverture(D) ? ' dès ' + premiereOuverture(D) : '') : '') + '. ' +
-      pizzasVisibles(D).length + ' pizza' + (pizzasVisibles(D).length > 1 ? 's' : '') + (fp ? ' de ' + prix(fp.min) + ' à ' + prix(fp.max) : '') + '. ' +
+      produitsVisibles(D).length + ' ' + nomProduits(D, produitsVisibles(D).length) + (fp ? ' de ' + prix(fp.min) + ' à ' + prix(fp.max) : '') + '. ' +
       'Tél. ' + (D.telephone || '') + '.';
   }
   /* Description de la page de la carte (environ 160 caractères, la longueur affichée par Google) */
   function descriptionCarte(D) {
-    var n = pizzasVisibles(D).length, tailles = (D.tailles || []).length, fp = fourchettePrix(D), rv = rubriquesVisibles(D);
-    var d = 'Carte ' + (/^piazzetta/i.test(nomCourt(D)) ? 'de la ' : 'de ') + nomCourt(D) + ', pizzeria à ' + villeSeule(D) + ' : ' + n + ' pizza' + (n > 1 ? 's' : '') + ' artisanale' + (n > 1 ? 's' : '') +
+    var n = produitsVisibles(D).length, tailles = (D.tailles || []).length, fp = fourchettePrix(D), rv = rubriquesVisibles(D);
+    var d = 'Carte ' + (/^piazzetta/i.test(nomCourt(D)) ? 'de la ' : 'de ') + nomCourt(D) + ', ' + activite(D).toLowerCase() + ' à ' + villeSeule(D) + ' : ' + n + ' ' + nomProduits(D, n) +
       (fp ? (fp.min === fp.max ? ' à ' + prix(fp.min) : ' de ' + prix(fp.min) + ' à ' + prix(fp.max)) : '') +
       (tailles > 1 ? ' en ' + tailles + ' tailles' : '') +
       (rv.length ? ', ' + listeFr(rv.map(function (r) { return r.titre.toLowerCase(); }).filter(Boolean)) : '') + '. ' + cap(service(D).phrase) + '.';
@@ -624,7 +637,7 @@
       email: emailValide(D) || undefined,
       image: images,
       logo: base + 'assets/logo-360.webp',
-      servesCuisine: ['Pizza', 'Italienne'],
+      servesCuisine: cuisine(D),
       priceRange: fp ? (Math.round(fp.min) + '–' + Math.round(fp.max) + ' €') : undefined,
       acceptsReservations: false,
       address: { '@type': 'PostalAddress', streetAddress: D.adresse, postalCode: cp ? cp[1] : undefined, addressLocality: cp ? cp[2] : D.ville, addressCountry: 'FR' },
@@ -640,12 +653,12 @@
         url: base + 'carte.html',
         hasMenuSection: [{
           '@type': 'MenuSection',
-          name: 'Pizzas',
-          hasMenuItem: pizzasVisibles(D).map(function (p) {
+          name: cap(nomProduits(D, 2)),
+          hasMenuItem: produitsVisibles(D).map(function (p) {
             return {
               '@type': 'MenuItem',
               name: p.nom,
-              description: p.ingredients,
+              description: p.description,
               offers: tailles.map(function (t, i) {
                 return { '@type': 'Offer', name: t.nom + (t.taille ? ' ' + t.taille : ''), price: (p.prix || [])[i], priceCurrency: 'EUR' };
               })
@@ -677,13 +690,13 @@
     parseDate: parseDate, dateTexte: dateTexte, fermeture: fermeture, estFerme: estFerme, messageFermeture: messageFermeture,
     statut: statut, maintenantParis: maintenantParis,
     groupesHoraires: groupesHoraires, resumeJours: resumeJours, resumeHeures: resumeHeures, htmlResumeHeures: htmlResumeHeures, premiereOuverture: premiereOuverture,
-    pizzasVisibles: pizzasVisibles, fourchettePrix: fourchettePrix,
+    produitsVisibles: produitsVisibles, fourchettePrix: fourchettePrix,
     valider: valider, validerCarte: validerCarte, validerInfos: validerInfos,
     fr: fr, textes: textes, htmlHistoire: htmlHistoire, htmlHoraires: htmlHoraires, htmlGalerie: htmlGalerie, altPhoto: altPhoto,
     htmlEnteteTailles: htmlEnteteTailles, htmlLignesCarte: htmlLignesCarte, multiligne: multiligne,
     description: description, descriptionCarte: descriptionCarte, jsonLd: jsonLd,
     liensGoogle: liensGoogle, htmlReseaux: htmlReseaux, htmlLiensHero: htmlLiensHero, nomOfficiel: nomOfficiel, villeSeule: villeSeule,
-    nomCourt: nomCourt, nomPdf: nomPdf, rubriquesVisibles: rubriquesVisibles, htmlRubriques: htmlRubriques, titrePage2: titrePage2, SK_PIZZA: SK_PIZZA, service: service
+    nomCourt: nomCourt, nomPdf: nomPdf, rubriquesVisibles: rubriquesVisibles, htmlRubriques: htmlRubriques, titrePage2: titrePage2, SK_ICONE: SK_ICONE, service: service, activite: activite, nomProduits: nomProduits
   };
   root.PZ = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

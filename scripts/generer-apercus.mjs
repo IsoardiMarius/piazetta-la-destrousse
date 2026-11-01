@@ -1,7 +1,7 @@
 // Génère les images d'aperçu des liens partagés (SMS, WhatsApp, Facebook…),
 // dessinées comme une petite page aux couleurs du site, avec ses vraies polices.
-//   assets/og-accueil.jpg : logo, nom, « Pizzeria à … », téléphone + la première photo
-//   assets/og-carte.jpg   : « La carte », nombre de pizzas, prix + la vignette de la carte
+//   assets/og-accueil.jpg : logo, nom, « Pizzeria à … » (type d'établissement), téléphone + la première photo
+//   assets/og-carte.jpg   : « La carte », nombre de produits, prix + la vignette de la carte
 // Utilisation (lancé automatiquement à la publication) :
 //   node scripts/generer-apercus.mjs <dossier-du-site>
 import fs from 'node:fs';
@@ -52,18 +52,18 @@ const accueil = page(`
     <img class="logo" src="assets/logo-360.webp" alt="">
     <div class="kicker">${esc(T.lieu)}</div>
     <h1>${esc(PZ.nomCourt(D))}</h1>
-    <div class="sub">Pizzas artisanales ${esc(PZ.service(D).phrase)}</div>
+    <div class="sub">${esc(PZ.cap(PZ.nomProduits(D, 2)))} ${esc(PZ.service(D).phrase)}</div>
     <div class="tel">${tel}${esc(D.telephone || '')}</div>
   </div>
   ${photos.length ? `<img class="pizza" src="${esc(photos[0].grande)}" alt="">` : `<img class="pizza" src="assets/logo-720.webp" alt="" style="object-fit:contain;background:#F6F0E6">`}
 `);
 
-const n = PZ.pizzasVisibles(D).length, nt = (D.tailles || []).length;
+const n = PZ.produitsVisibles(D).length, nt = (D.tailles || []).length;
 const carte = page(`
   <div class="txt">
     <img class="logo" src="assets/logo-360.webp" alt="">
     <div class="kicker">La carte · ${esc(PZ.nomCourt(D))}</div>
-    <h1>${n} pizza${n > 1 ? 's' : ''}</h1>
+    <h1>${n} ${esc(PZ.nomProduits(D, n).split(' ')[0])}</h1>
     <div class="sub">${nt} taille${nt > 1 ? 's' : ''}${fp ? `, de ${esc(PZ.prix(fp.min))} à ${esc(PZ.prix(fp.max))}` : ''}.<br>${esc(PZ.cap(PZ.service(D).phrase))}.</div>
     <div class="tel">${tel}${esc(D.telephone || '')}</div>
   </div>
