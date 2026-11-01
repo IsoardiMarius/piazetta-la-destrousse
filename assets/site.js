@@ -127,6 +127,32 @@
     $$('[data-photos-link]').forEach(function (el) { el.hidden = false; });
     fadeImages(ul);
     setupLightbox(ul);
+    setupDefilement(ul);
+  }
+
+  /* Carrousel des photos : flèches (ordinateur) affichées seulement s'il y a de quoi faire défiler ;
+     chaque clic avance d'une « page » de photos */
+  function setupDefilement(ul) {
+    var nav = $('[data-gal-nav]');
+    if (!nav) return;
+    var prev = $('[data-gal-prev]', nav), next = $('[data-gal-next]', nav);
+    var maj = function () {
+      var defile = ul.scrollWidth > ul.clientWidth + 4;
+      nav.hidden = !defile;
+      prev.disabled = ul.scrollLeft <= 4;
+      next.disabled = ul.scrollLeft + ul.clientWidth >= ul.scrollWidth - 4;
+    };
+    var avancer = function (sens) {
+      var tuile = $('.ph', ul);
+      var largeur = tuile ? tuile.getBoundingClientRect().width + (parseFloat(getComputedStyle(ul).columnGap) || 0) : ul.clientWidth;
+      var parPage = Math.max(1, Math.floor((ul.clientWidth + 1) / largeur));
+      ul.scrollBy({ left: sens * parPage * largeur, behavior: reduce ? 'auto' : 'smooth' });
+    };
+    prev.addEventListener('click', function () { avancer(-1); });
+    next.addEventListener('click', function () { avancer(1); });
+    ul.addEventListener('scroll', maj, { passive: true });
+    window.addEventListener('resize', maj);
+    maj();
   }
 
   function setupLightbox(ul) {

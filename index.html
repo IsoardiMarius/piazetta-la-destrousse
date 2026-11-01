@@ -166,9 +166,20 @@
 </section>
 
 <section class="section wrap photos" id="photos" aria-labelledby="photos-titre" data-photos hidden>
-  <div class="photos__head reveal">
-    <p class="eyebrow">En images</p>
-    <h2 class="h-section" id="photos-titre" data-bind="photosTitre">Tout juste sorties du four.</h2>
+  <div class="photos__top">
+    <div class="photos__head reveal">
+      <p class="eyebrow">En images</p>
+      <h2 class="h-section" id="photos-titre" data-bind="photosTitre">Tout juste sorties du four.</h2>
+    </div>
+    <!-- Flèches du carrousel (ordinateur, à partir de 6 photos) -->
+    <div class="gal-nav" data-gal-nav hidden>
+      <button class="gal-nav__btn gal-nav__btn--prev" type="button" data-gal-prev aria-label="Photos précédentes">
+        <svg class="ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><use href="#i-arrow"></use></svg>
+      </button>
+      <button class="gal-nav__btn" type="button" data-gal-next aria-label="Photos suivantes">
+        <svg class="ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><use href="#i-arrow"></use></svg>
+      </button>
+    </div>
   </div>
   <ul class="gallery" data-gallery></ul>
 </section>
