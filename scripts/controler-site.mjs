@@ -220,7 +220,7 @@ for (const [nom, page, attendu] of [['Accueil', accueil, 2], ['Carte', carte, 2]
   verifier(liensMail.length === attendu, `${nom} : ${liensMail.length} lien(s) e-mail au lieu de ${attendu}`);
   const blocs = [...page.matchAll(/<[^>]*\sdata-email-bloc(?=[\s>])[^>]*>/g)].map((m) => m[0]);
   verifier(blocs.every((b) => /\shidden(?=[\s>])/.test(b) === !email), email ? `${nom} : l'e-mail est renseigné mais masqué` : `${nom} : un e-mail est affiché alors qu'il est vide`);
-  if (email) verifier(liensMail.every((l) => l.includes(`href="mailto:${html(email)}"`)), `${nom} : lien e-mail incorrect`);
+  verifier(liensMail.every((l) => l.includes(`href="mailto:${html(email)}"`)), email ? `${nom} : lien e-mail incorrect` : `${nom} : une ancienne adresse e-mail reste dans la page`);
 }
 
 /* ---------- Résumé des heures (accueil et pied de page de la carte) ---------- */

@@ -85,7 +85,7 @@ Le site fait sa part (voir ci-dessous). Le reste se joue sur la fiche Google, le
 - **Pages pré-remplies** : textes, horaires, carte et photos sont déjà dans les pages publiées. Google et les aperçus de liens les lisent sans attendre JavaScript.
 - **Google** : titres et descriptions de pages pensés pour « pizzeria La Destrousse », adresse officielle (canonique), plan du site (`sitemap.xml`), `robots.txt`, fiche « Restaurant » (adresse, horaires, communes livrées, carte et prix de chaque pizza, lien vers la fiche Google et les réseaux) et nom du site pour les résultats de recherche.
 - **Aperçus de liens** (SMS, WhatsApp, Facebook, Messenger…) : une image est dessinée pour chaque page aux couleurs du site. Pour l'accueil : logo, nom, « Pizzeria à La Destrousse », téléphone et la première photo en rond. Pour la carte : nombre de pizzas, prix et la carte en vignette. Elle se met à jour toute seule (photos, prix, téléphone).
-- **Images** : chaque photo existe en 4 tailles, le navigateur télécharge la plus adaptée à l'écran. Un aperçu flou s'affiche pendant le chargement.
+- **Images** : chaque photo existe en 5 tailles, le navigateur télécharge la plus adaptée à l'écran. Un aperçu flou s'affiche pendant le chargement.
 - **Cache** : chaque publication change l'adresse des fichiers, pour que personne ne voie une ancienne version.
 - **Page 404** aux couleurs du site.
 

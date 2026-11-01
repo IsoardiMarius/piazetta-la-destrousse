@@ -39,7 +39,7 @@ MODE_LOGO = len(sys.argv) > 1 and sys.argv[1] == "--logo"
 _args = sys.argv[2:] if MODE_LOGO else sys.argv[1:]
 SORTIE = Path(_args[0]).resolve() if _args else RACINE
 EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".heic", ".heif"}
-LARGEURS = (480, 800, 1200, 1600)
+LARGEURS = (480, 640, 800, 1200, 1600)  # 640 : galerie sur téléphone (80 % de l'écran, écran haute définition)
 MAX_PHOTOS = 16  # même limite que scripts/controler-site.mjs
 
 

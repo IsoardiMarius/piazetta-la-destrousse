@@ -82,11 +82,10 @@ function liens(page) {
   const tel = PZ.telLink(D.telephone);
   page = page.replace(/href="tel:[^"]*"/g, `href="${attr(tel)}"`)
     .replace(/aria-label="Appeler le [^"]*"/g, `aria-label="${attr('Appeler le ' + D.telephone)}"`);
+  /* E-mail : affiché s'il est renseigné ; sinon les blocs restent masqués, sans aucune ancienne adresse dans la page */
   const email = PZ.emailValide(D);
-  if (email) {
-    page = page.replace(/(<a\b[^>]*?)\shref="[^"]*"([^>]*\sdata-email(?=[\s>]))/g, `$1 href="${attr('mailto:' + email)}"$2`);
-    page = afficher(page, 'data-email-bloc');
-  }
+  page = page.replace(/(<a\b[^>]*?)\shref="[^"]*"([^>]*\sdata-email(?=[\s>]))/g, `$1 href="${attr('mailto:' + email)}"$2`);
+  if (email) page = afficher(page, 'data-email-bloc');
   const G = PZ.liensGoogle(D);
   page = page.replace(/<a\b([^>]*?)\shref="[^"]*"([^>]*\sdata-google="(\w+)"[^>]*)>/g, (_, avant, apres, type) => `<a${avant} href="${attr(G[type] || G.fiche)}"${apres}>`);
   const R = D.reseaux || {};

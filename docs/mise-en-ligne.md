@@ -35,7 +35,7 @@ Aucun mot de passe, aucune carte bancaire et aucun identifiant ne sont stockés 
 
 1. vérifie le contenu du dossier `contenu/` : une erreur grave (fichier abîmé, carte vide) arrête la publication et l'ancien site reste en ligne ; une erreur mineure (prix manquant, photo introuvable…) est ignorée et signalée (voir l'étape 10) ;
 2. prépare le logo s'il a été changé dans Pages CMS (toutes ses tailles, icônes d'onglet et d'iPhone), génère `donnees.js` (le contenu lu par les pages), puis le PDF de la carte (page 1 : pizzas ; page 2 : boissons et desserts, s'il y en a) et sa vignette, et signale une page trop longue pour tenir sur une feuille A4 ;
-3. prépare les photos de la liste `contenu/photos.json`, dans l'ordre choisi (redressées, allégées en 4 tailles, légèrement mises en valeur, données GPS retirées) ;
+3. prépare les photos de la liste `contenu/photos.json`, dans l'ordre choisi (redressées, allégées en 5 tailles, légèrement mises en valeur, données GPS retirées) ;
 4. dessine les images d'aperçu des liens (SMS, WhatsApp, Facebook) ;
 5. récupère l'adresse officielle du site auprès de GitHub (`https://piazzetta-ladestrousse.com`) ;
 6. génère le QR code du flyer (vers la carte du site), pré-remplit les pages et ajoute ce qu'il faut pour Google (titres, descriptions, adresse canonique, fiche « Restaurant », `sitemap.xml`, `robots.txt`), puis produit le PDF du flyer pour l'imprimeur (`flyer.pdf` : A5 avec 3 mm de fond perdu, format fini indiqué dans le PDF) et signale un texte trop long pour tenir sur le flyer ;
