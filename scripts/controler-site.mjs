@@ -70,14 +70,31 @@ for (const [nom, page] of [['index.html', accueil], ['carte.html', carte], ['404
 /* ---------- Nom de l'établissement ---------- */
 for (const [nom, page] of [['index.html', accueil], ['carte.html', carte]]) {
   for (const m of page.matchAll(/download="([^"]*)"/g)) verifier(m[1] === PZ.nomPdf(D), `${nom} : le PDF se télécharge sous le nom « ${m[1]} » au lieu de « ${PZ.nomPdf(D)} »`);
-  if (PZ.nomOfficiel(D) !== 'Piazzetta La Destrousse') verifier(!page.includes('Piazzetta La Destrousse'), `${nom} contient encore l'ancien nom « Piazzetta La Destrousse »`);
-  verifier(/<title>[^<]+<\/title>/.test(page) && page.match(/<title>([^<]*)<\/title>/)[1].includes(html(PZ.nomCourt(D))), `${nom} : le titre de l'onglet ne contient pas le nom de la pizzeria`);
+
 }
 
 /* ---------- Page d'accueil ---------- */
-/* Chaque texte relié au contenu (data-bind), sur chaque page, doit afficher exactement le contenu */
+/* Titres des onglets : ceux du contenu (personnalisés ou générés) */
 const page404 = lire('404.html');
-for (const [nom, page] of [['Accueil', accueil], ['Carte', carte], ['Page introuvable', page404]]) {
+for (const [nom, page, attendu] of [['Accueil', accueil, PZ.titrePageAccueil(D)], ['Carte', carte, PZ.titrePageCarte(D)], ['Page introuvable', page404, PZ.titrePage404(D)]]) {
+  const titre = (page.match(/<title>([^<]*)<\/title>/) || [])[1];
+  if (nom !== 'Page introuvable' || base) verifier(titre === html(attendu), `${nom} : titre de l'onglet « ${titre} » au lieu de « ${attendu} »`);
+}
+
+/* Attributs reliés au contenu : texte des images (data-bind-alt), nom lu par les lecteurs d'écran (data-bind-aria) */
+/* (la page introuvable n'est pré-remplie que pour la publication, avec l'adresse du site) */
+const pagesReliees = [['Accueil', accueil], ['Carte', carte]].concat(base ? [['Page introuvable', page404]] : []);
+for (const [nom, page] of pagesReliees) {
+  for (const [marque, attribut] of [['data-bind-alt', 'alt'], ['data-bind-aria', 'aria-label']]) {
+    for (const m of page.matchAll(new RegExp(`<[^>]*\\s${marque}="([^"]+)"[^>]*>`, 'g'))) {
+      const valeur = (m[0].match(new RegExp(`\\s${attribut}="([^"]*)"`)) || [])[1];
+      verifier(T[m[1]] !== undefined && valeur === html(T[m[1]]).replace(/"/g, '&quot;'), `${nom} : ${attribut} « ${valeur} » au lieu de « ${T[m[1]]} »`);
+    }
+  }
+}
+
+/* Chaque texte relié au contenu (data-bind), sur chaque page, doit afficher exactement le contenu */
+for (const [nom, page] of pagesReliees) {
   const cles = new Set([...page.matchAll(/\sdata-bind="([^"]+)"/g)].map((m) => m[1]));
   for (const k of cles) {
     if (T[k] === undefined) { verifier(false, `${nom} : le texte « ${k} » n'existe pas dans le contenu`); continue; }
@@ -194,8 +211,8 @@ if (base) {
     verifier(ld.openingHoursSpecification.length === creneaux, 'Google : les horaires transmis ne correspondent pas au contenu');
   }
   const attr = (v) => html(v).replace(/"/g, '&quot;');
-  verifier(accueil.includes(`<meta name="description" content="${attr(PZ.description(D))}">`), 'Accueil : description pour Google périmée');
-  verifier(carte.includes(`<meta name="description" content="${attr(PZ.descriptionCarte(D))}">`), 'Carte : description pour Google périmée');
+  verifier(accueil.includes(`<meta name="description" content="${attr(PZ.descriptionAccueil(D))}">`), 'Accueil : description pour Google périmée');
+  verifier(carte.includes(`<meta name="description" content="${attr(PZ.descriptionPageCarte(D))}">`), 'Carte : description pour Google périmée');
   verifier(accueil.includes(`<link rel="canonical" href="${base}">`), 'Accueil : adresse canonique incorrecte');
   verifier(carte.includes(`<link rel="canonical" href="${base}carte.html">`), 'Carte : adresse canonique incorrecte');
   for (const [nom, page] of [['Accueil', accueil], ['Carte', carte]]) {

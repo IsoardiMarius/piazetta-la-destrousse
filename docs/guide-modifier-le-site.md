@@ -8,7 +8,7 @@ Tu peux changer toi-même la carte, les prix, les horaires, les congés, les pho
 2. Connecte-toi avec ton adresse e-mail : tu reçois un lien de connexion par e-mail, clique dessus.
 3. Choisis le site **piazetta-la-destrousse**.
 
-À gauche (ou dans le menu ☰ sur téléphone), tu as 6 rubriques, de la plus utilisée à la moins utilisée :
+À gauche (ou dans le menu ☰ sur téléphone), tu as 7 rubriques, de la plus utilisée à la moins utilisée :
 
 | Rubrique | Pour… |
 | --- | --- |
@@ -18,6 +18,7 @@ Tu peux changer toi-même la carte, les prix, les horaires, les congés, les pho
 | **Photos de l'accueil** | ajouter, retirer ou réordonner les photos, ajouter une légende |
 | **Textes de l'accueil** | toutes les phrases de la page d'accueil, rangées dans l'ordre de la page |
 | **Établissement : nom, logo, contact** | nom, logo, téléphone, e-mail, adresse, livraison ou à emporter, liens Uber Eats / Facebook / Instagram |
+| **Google et partage de liens** | rien à faire en temps normal : les titres et descriptions pour Google sont générés tout seuls |
 
 Sous chaque case, une petite aide dit où le texte apparaît. Si tu vides un texte par erreur, le texte d'origine revient tout seul.
 

@@ -40,6 +40,9 @@
   /* ---------- Textes (déjà en place sur le site publié ; utile en local) ---------- */
   var T = PZ.textes(D);
   Object.keys(T).forEach(function (k) { bind(k, T[k]); });
+  /* Attributs reliés au contenu (texte d'une image, nom lu par les lecteurs d'écran) */
+  $$('[data-bind-alt]').forEach(function (el) { var v = T[el.getAttribute('data-bind-alt')]; if (v !== undefined) el.alt = v; });
+  $$('[data-bind-aria]').forEach(function (el) { var v = T[el.getAttribute('data-bind-aria')]; if (v !== undefined) el.setAttribute('aria-label', v); });
   /* Résumé des heures (petit tableau quand les horaires varient d'un jour à l'autre) */
   var hResume = PZ.htmlResumeHeures(D);
   $$('[data-resume-heures]').forEach(function (el) { if (el.innerHTML !== hResume) el.innerHTML = hResume; });

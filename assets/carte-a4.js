@@ -21,6 +21,9 @@
   if (rows.innerHTML !== hRows) rows.innerHTML = hRows;
   var T = PZ.textes(C);
   Object.keys(T).forEach(function (k) { bind(k, T[k]); });
+  /* Attributs reliés au contenu (texte d'une image, nom lu par les lecteurs d'écran) */
+  $$('[data-bind-alt]').forEach(function (el) { var v = T[el.getAttribute('data-bind-alt')]; if (v !== undefined) el.alt = v; });
+  $$('[data-bind-aria]').forEach(function (el) { var v = T[el.getAttribute('data-bind-aria')]; if (v !== undefined) el.setAttribute('aria-label', v); });
   var email = PZ.emailValide(C);
   $$('[data-email]').forEach(function (a) { a.href = 'mailto:' + email; });
   $$('[data-email-bloc]').forEach(function (el) { el.hidden = !email; });

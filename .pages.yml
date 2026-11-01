@@ -317,11 +317,6 @@ content:
         label: "Vos produits, au pluriel"
         description: "Par exemple « pizzas artisanales » ou « burgers maison » : sert aux textes automatiques (« 13 … »), aux titres pour Google et aux aperçus de liens."
         type: string
-      - name: cuisine
-        label: Type de cuisine, une par ligne (pour Google, facultatif)
-        description: "Par exemple « Italienne », « Pizza »."
-        type: string
-        list: true
       - name: telephone
         label: Téléphone
         description: "Écrit comme il doit s'afficher, par exemple 04 12 34 56 78. Sert aussi aux boutons « Appeler »."
@@ -342,6 +337,7 @@ content:
         label: Code postal et ville
         description: "Par exemple 13001 Marseille."
         type: string
+        required: true
       - name: emporter
         label: Vente à emporter
         description: "Cochée : « À emporter » et « Retrait des commandes sur place » apparaissent sur le site et la carte."
@@ -373,3 +369,37 @@ content:
         label: Identifiant de la fiche Google
         type: string
         hidden: true
+
+  # ---------- 7. Google et partage de liens (facultatif) ----------
+  - name: referencement
+    label: Google et partage de liens
+    type: file
+    path: contenu/referencement.json
+    format: json
+    fields:
+      - name: seoTitreAccueil
+        label: "Accueil : titre de l'onglet et de Google (facultatif)"
+        description: "Vide = généré automatiquement à partir du nom, du type d'établissement, de la ville et du mode de vente (recommandé). Environ 60 caractères au plus."
+        type: string
+      - name: seoDescriptionAccueil
+        label: "Accueil : description pour Google et le partage de liens (facultatif)"
+        description: "Vide = générée automatiquement (produits, horaires, prix, téléphone). Environ 155 caractères au plus."
+        type: text
+      - name: seoTitreCarte
+        label: "Carte : titre de l'onglet et de Google (facultatif)"
+        description: "Vide = « Carte et prix — nom, type d'établissement et ville »."
+        type: string
+      - name: seoDescriptionCarte
+        label: "Carte : description pour Google et le partage de liens (facultatif)"
+        description: "Vide = générée automatiquement (nombre de produits, prix, tailles, page 2)."
+        type: text
+      - name: autresNoms
+        label: Autres noms connus, un par ligne (facultatif)
+        description: "Noms sous lesquels les clients cherchent l'établissement (sur Uber Eats, Facebook…). Aide Google à faire le lien."
+        type: string
+        list: true
+      - name: cuisine
+        label: Type de cuisine, un par ligne (facultatif)
+        description: "Par exemple « Italienne ». Indiqué à Google."
+        type: string
+        list: true

@@ -6,6 +6,7 @@
 //   contenu/horaires.json  Horaires, fermeture exceptionnelle, bandeau d'annonce
 //   contenu/contact.json   Nom, téléphone, adresse, livraison, réseaux, fiche Google
 //   contenu/textes.json    Textes de la page d'accueil
+//   contenu/referencement.json  Google et partage de liens : titres et descriptions personnalisés (facultatifs), autres noms, cuisine
 //   contenu/photos.json    Photos de l'accueil (ordre et description)
 //
 // Utilisation : node scripts/contenu.mjs [dossier-de-sortie]   (écrit donnees.js)
@@ -22,6 +23,7 @@ const FICHIERS = {
   horaires: 'horaires.json',
   contact: 'contact.json',
   textes: 'textes.json',
+  referencement: 'referencement.json',
   photos: 'photos.json',
 };
 
@@ -41,7 +43,7 @@ export function chargerContenu() {
   /* Page 2 de la carte, rangée avec la carte : window.CARTE.page2 */
   const page2 = lireJson(FICHIERS.page2, null);
   if (page2 && typeof page2 === 'object') carte.page2 = page2;
-  const infos = Object.assign({}, lireJson(FICHIERS.horaires, {}), lireJson(FICHIERS.contact, {}), lireJson(FICHIERS.textes, {}));
+  const infos = Object.assign({}, lireJson(FICHIERS.horaires, {}), lireJson(FICHIERS.contact, {}), lireJson(FICHIERS.textes, {}), lireJson(FICHIERS.referencement, {}));
   const photos = lireJson(FICHIERS.photos, []);
   return { CARTE: carte, INFOS: infos, photos: Array.isArray(photos) ? photos : [] };
 }

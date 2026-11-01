@@ -101,6 +101,7 @@ L'adresse du domaine n'est écrite nulle part en dur dans les scripts : si le do
 14. Page 2 de la carte « Boissons & desserts » (rubrique Pages CMS du même nom) et animations de chargement (photos, vignette de la carte, visionneuse, page de la carte).
 15. Tout le contenu affiché devient modifiable dans Pages CMS (textes de l'accueil et de la carte, page « adresse introuvable », logo, cases Livraison / À emporter) ; rubriques réorganisées ; menu mobile sans transparence à l'ouverture.
 16. Pages CMS et contenu rendus génériques (aucun libellé ni texte automatique propre à une pizzeria : type d'établissement, produits et cuisine sont des réglages) ; données renommées (`produits`, `description`, `masque`, `carte-page2.json`) ; bouton flottant « Voir la carte » retiré.
+17. Plus aucun texte figé propre à l'établissement : titres d'onglet et descriptions générés (ou personnalisés dans la rubrique « Google et partage de liens »), textes des logos et du lien « retour en haut » générés, autres noms et cuisine dans le contenu.
 
 ## 5. Entretien
 

@@ -51,16 +51,21 @@ function remplirTout(page, attribut, contenu) {
   }
   return resultat + page.slice(curseur);
 }
-/* Nom de l'établissement écrit dans le modèle des pages (textes alternatifs, nom du PDF…) :
-   remplacé par celui du contenu s'il a été changé dans Pages CMS. */
-const NOM_MODELE = 'Piazzetta La Destrousse';
+/* Nom du fichier PDF proposé au téléchargement : « Carte-Nom-De-L-Etablissement.pdf » */
 function nommer(page) {
-  page = page.replace(/download="Carte-[^"]*\.pdf"/g, `download="${attr(PZ.nomPdf(D))}"`);
-  return PZ.nomOfficiel(D) === NOM_MODELE ? page : page.split(NOM_MODELE).join(attr(PZ.nomOfficiel(D)));
+  return page.replace(/download="Carte-[^"]*\.pdf"/g, `download="${attr(PZ.nomPdf(D))}"`);
+}
+/* Attributs reliés au contenu : data-bind-alt="clé" (texte alternatif d'une image), data-bind-aria="clé" (nom lu par les lecteurs d'écran) */
+function remplirAttributs(page) {
+  for (const [marque, attribut] of [['data-bind-alt', 'alt'], ['data-bind-aria', 'aria-label']]) {
+    page = page.replace(new RegExp(`<[^>]*\\s${marque}="([^"]+)"[^>]*>`, 'g'), (balise, cle) =>
+      T[cle] === undefined ? balise : balise.replace(new RegExp(`\\s${attribut}="[^"]*"`), ` ${attribut}="${attr(T[cle])}"`));
+  }
+  return page;
 }
 function remplirBinds(page) {
   for (const [k, v] of Object.entries(T)) page = remplirTout(page, `data-bind="${reEsc(k)}"`, html(v));
-  return page;
+  return remplirAttributs(page);
 }
 function afficher(page, attribut) {
   return page.replace(new RegExp(`(<[^>]*\\s${attribut}(?=[\\s>])[^>]*?)\\s+hidden(?=[\\s>])`, 'g'), '$1');
@@ -132,8 +137,8 @@ const version = (process.env.GITHUB_SHA || '').slice(0, 8);
 const v = version ? '?v=' + version : '';
 const imageAccueil = base + (existe('assets/og-accueil.jpg') ? 'assets/og-accueil.jpg' : 'assets/og-image.jpg') + v;
 accueil = meta(accueil, {
-  titre: `${PZ.nomCourt(D)} — ${PZ.activite(D)} à ${PZ.villeSeule(D)}, ${PZ.service(D).titre.toLowerCase()}`,
-  description: PZ.description(D),
+  titre: PZ.titrePageAccueil(D),
+  description: PZ.descriptionAccueil(D),
   url: base,
   image: base && imageAccueil,
 });
@@ -157,8 +162,8 @@ if (PZ.rubriquesVisibles(D).length) {
 }
 carte = liens(carte);
 carte = meta(carte, {
-  titre: `Carte et prix — ${PZ.nomCourt(D)}, ${PZ.activite(D).toLowerCase()} à ${PZ.villeSeule(D)}`,
-  description: PZ.descriptionCarte(D),
+  titre: PZ.titrePageCarte(D),
+  description: PZ.descriptionPageCarte(D),
   url: base && base + 'carte.html',
   image: base && existe('assets/og-carte.jpg') ? base + 'assets/og-carte.jpg' + v : base && imageAccueil,
 });
@@ -166,7 +171,8 @@ ecrire('carte.html', carte);
 
 /* ---------- Page 404 : chemins absolus, elle peut s'afficher à n'importe quelle adresse ---------- */
 if (existe('404.html') && base) {
-  ecrire('404.html', liens(remplirBinds(nommer(lire('404.html')))).replace(/\n?<base [^>]*>/g, '').replace('<head>', `<head>\n<base href="${attr(base)}">`));
+  ecrire('404.html', liens(remplirBinds(nommer(lire('404.html')))).replace(/<title>[^<]*<\/title>/, `<title>${html(PZ.titrePage404(D))}</title>`)
+    .replace(/\n?<base [^>]*>/g, '').replace('<head>', `<head>\n<base href="${attr(base)}">`));
 }
 
 /* ---------- Plan du site et robots.txt pour les moteurs de recherche ---------- */

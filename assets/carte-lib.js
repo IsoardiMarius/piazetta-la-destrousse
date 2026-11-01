@@ -316,8 +316,9 @@
         if (!a.masque && (typeof a.prix !== 'number' || !isFinite(a.prix) || a.prix < 0)) avert.push(label + ' : le prix est manquant ou n’est pas un nombre (affiché « – »).');
       });
     });
-    if (!I.telephone) avert.push('Contact : le téléphone est vide.');
-    if (I.email && !emailValide(I)) avert.push('Contact : l’adresse e-mail « ' + I.email + ' » n’est pas valide (elle n’est pas affichée).');
+    if (!I.telephone) avert.push('Établissement : le téléphone est vide.');
+    if (!String(I.ville || '').trim()) avert.push('Établissement : le code postal et la ville sont vides.');
+    if (I.email && !emailValide(I)) avert.push('Établissement : l’adresse e-mail « ' + I.email + ' » n’est pas valide (elle n’est pas affichée).');
     var h = I.horaires && typeof I.horaires === 'object' ? I.horaires : {};
     JOURS.forEach(function (j) {
       parseCreneaux(h[j]).forEach(function (r) {
@@ -329,7 +330,7 @@
     });
     var r = I.reseaux && typeof I.reseaux === 'object' ? I.reseaux : {};
     Object.keys(r).forEach(function (k) {
-      if (r[k] && !/^https?:\/\//.test(r[k])) avert.push('Contact : l’adresse « ' + k + ' » doit commencer par https:// (lien ignoré).');
+      if (r[k] && !/^https?:\/\//.test(r[k])) avert.push('Établissement : l’adresse « ' + k + ' » doit commencer par https:// (lien ignoré).');
     });
     return { erreurs: erreurs, avertissements: avert };
   }
@@ -346,11 +347,14 @@
   function lower1(s) { return s ? s.charAt(0).toLowerCase() + s.slice(1) : s; }
 
   function listeFr(a) { return a.length > 1 ? a.slice(0, -1).join(', ') + ' et ' + a[a.length - 1] : (a[0] || ''); }
-  function nomOfficiel(D) { return D.nom || 'Piazzetta La Destrousse'; }
-  function villeSeule(D) { return (D.ville || '').replace(/^\d{5}\s+/, '') || 'La Destrousse'; }
+  function nomOfficiel(D) { return String(D.nom || '').trim(); }
+  function villeSeule(D) { return String(D.ville || '').replace(/^\d{5}\s+/, '').trim(); }
+  /* « à La Destrousse », ou rien si la ville n'est pas renseignée */
+  function aVille(D) { var v = villeSeule(D); return v ? ' à ' + v : ''; }
   /* Nom sans la ville, pour le logo de la barre et les titres : « Piazzetta La Destrousse » → « Piazzetta » */
   function nomCourt(D) {
     var n = nomOfficiel(D), v = villeSeule(D).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    if (!v) return n;
     return n.replace(new RegExp('\\s*[-–—,]?\\s+' + v + '$', 'i'), '') || n;
   }
   /* Nom de fichier du PDF : « Carte-Piazzetta-La-Destrousse.pdf » */
@@ -455,20 +459,23 @@
     T.resumeHeures = heures || (D.telephone ? 'Au ' + D.telephone : '');
     T.statutDefaut = jours ? jours + (ouv ? ' dès ' + ouv : '') : 'Commandes par téléphone';
     var zone = (service(D).livraison && D.zoneLivraison) || villeSeule(D);
-    T.accroche = jours ? 'À ' + zone + ', ' + lower1(jours) + (ouv ? ' dès ' + ouv : '') + '.' : 'À ' + zone + '.';
+    var quand = jours ? lower1(jours) + (ouv ? ' dès ' + ouv : '') : '';
+    T.accroche = zone ? 'À ' + zone + (quand ? ', ' + quand : '') + '.' : (quand ? cap(quand) + '.' : '');
     var tailles = D.tailles || [], n = produitsVisibles(D).length;
     T.titreCarte = n + ' ' + nomProduits(D, n) + ', ' + tailles.length + ' taille' + (tailles.length > 1 ? 's' : '') + '.';
     var fp = fourchettePrix(D);
     var lt = tailles.map(function (t) { return t.nom + (t.taille ? ' ' + t.taille : ''); });
     var tl = lt.length > 1 ? lt.slice(0, -1).join(', ') + ' ou ' + lt[lt.length - 1] : (lt[0] || '');
     T.sousTitreCarte = tl + (fp ? (fp.min === fp.max ? ', ' + prix(fp.min) : ', de ' + prix(fp.min) + ' à ' + prix(fp.max)) : '') + '.';
-    var ville = (D.ville || '').replace(/^\d{5}\s+/, '');
-    if (ville) T.villeCourte = ville;
-    T.lieu = activite(D) + ' à ' + villeSeule(D);
+    T.villeCourte = villeSeule(D);
+    T.lieu = activite(D) + aVille(D);
+    T.logoAlt = 'Logo ' + nomOfficiel(D);
+    T.retourHaut = nomOfficiel(D) + ', retour en haut';
     var cs = communes(D);
-    T.livraisonTexte = S.livraison ? 'Livraison à ' + (cs.length ? listeFr(cs) : (D.zoneLivraison || villeSeule(D))) + '.' : '';
+    var zoneLiv = cs.length ? listeFr(cs) : (D.zoneLivraison || villeSeule(D));
+    T.livraisonTexte = S.livraison ? (zoneLiv ? 'Livraison à ' + zoneLiv + '.' : 'Livraison possible.') : '';
     T.retraitTexte = S.emporter ? 'Retrait des commandes sur place.' : '';
-    T.zoneService = S.livraison ? (D.zoneLivraison || villeSeule(D)) : 'Retrait sur place à ' + villeSeule(D);
+    T.zoneService = S.livraison ? (D.zoneLivraison || villeSeule(D) || 'Livraison possible') : 'Retrait sur place' + aVille(D);
     if (D.adresse) T.adresseCourte = D.adresse.replace(/\bavenue\b/i, 'av.') + (S.livraison ? ' · et alentours' : '');
     var rv = rubriquesVisibles(D);
     T.titrePage2 = titrePage2(D);
@@ -510,10 +517,10 @@
     }).join('') + (note ? '<li class="hours__note">' + esc(note) + '</li>' : '');
   }
 
-  /* Texte lu par Google et les lecteurs d'écran : « Pizza Atlantique, Piazzetta La Destrousse, pizzeria à La Destrousse » */
+  /* Texte lu par Google et les lecteurs d'écran : « Reine, Piazzetta La Destrousse, pizzeria à La Destrousse » */
   function altPhoto(p, D) {
     D = D || {};
-    return (p.legende || cap(nomProduits(D, 1))) + ', ' + nomOfficiel(D) + ', ' + activite(D).toLowerCase() + ' à ' + villeSeule(D);
+    return (p.legende || cap(nomProduits(D, 1))) + ', ' + nomOfficiel(D) + ', ' + activite(D).toLowerCase() + aVille(D);
   }
 
   /* Squelette de chargement : une pizza qui se dessine (croûte, parts, garniture) sur fond de pâte farinée */
@@ -589,19 +596,40 @@
     var T = textes(D), fp = fourchettePrix(D);
     var cs = communes(D);
     var S = service(D);
-    return nomCourt(D) + ', ' + activite(D).toLowerCase() + ' à ' + villeSeule(D) + ' : ' + nomProduits(D, 2) + ' ' + S.livrees + (S.livraison && cs.length ? ' à ' + listeFr(cs) : '') + ', ' +
+    return nomCourt(D) + ', ' + activite(D).toLowerCase() + aVille(D) + ' : ' + nomProduits(D, 2) + ' ' + S.livrees + (S.livraison && cs.length ? ' à ' + listeFr(cs) : '') + ', ' +
       (T.resumeJours ? lower1(T.resumeJours) + (premiereOuverture(D) ? ' dès ' + premiereOuverture(D) : '') : '') + '. ' +
-      produitsVisibles(D).length + ' ' + nomProduits(D, produitsVisibles(D).length) + (fp ? ' de ' + prix(fp.min) + ' à ' + prix(fp.max) : '') + '. ' +
+      produitsVisibles(D).length + ' au choix' + (fp ? ', de ' + prix(fp.min) + ' à ' + prix(fp.max) : '') + '. ' +
       'Tél. ' + (D.telephone || '') + '.';
   }
   /* Description de la page de la carte (environ 160 caractères, la longueur affichée par Google) */
   function descriptionCarte(D) {
     var n = produitsVisibles(D).length, tailles = (D.tailles || []).length, fp = fourchettePrix(D), rv = rubriquesVisibles(D);
-    var d = 'Carte ' + (/^piazzetta/i.test(nomCourt(D)) ? 'de la ' : 'de ') + nomCourt(D) + ', ' + activite(D).toLowerCase() + ' à ' + villeSeule(D) + ' : ' + n + ' ' + nomProduits(D, n) +
+    var d = nomCourt(D) + ', ' + activite(D).toLowerCase() + aVille(D) + ' : la carte, ' + n + ' ' + nomProduits(D, n) +
       (fp ? (fp.min === fp.max ? ' à ' + prix(fp.min) : ' de ' + prix(fp.min) + ' à ' + prix(fp.max)) : '') +
       (tailles > 1 ? ' en ' + tailles + ' tailles' : '') +
       (rv.length ? ', ' + listeFr(rv.map(function (r) { return r.titre.toLowerCase(); }).filter(Boolean)) : '') + '. ' + cap(service(D).phrase) + '.';
     return d.replace(/\u00a0/g, ' ');
+  }
+
+  /* Titres d'onglet (et de Google) et descriptions : générés à partir du contenu, sauf s'ils sont
+     personnalisés dans la rubrique « Google et partage de liens » de Pages CMS */
+  function perso(D, k) { return String(D[k] || '').trim(); }
+  function titrePageAccueil(D) {
+    return perso(D, 'seoTitreAccueil') || nomCourt(D) + ' — ' + activite(D) + aVille(D) + ', ' + service(D).titre.toLowerCase();
+  }
+  function titrePageCarte(D) {
+    return perso(D, 'seoTitreCarte') || 'Carte et prix — ' + nomCourt(D) + ', ' + activite(D).toLowerCase() + aVille(D);
+  }
+  function titrePage404(D) { return 'Page introuvable — ' + nomOfficiel(D); }
+  function descriptionAccueil(D) { return perso(D, 'seoDescriptionAccueil') || description(D); }
+  function descriptionPageCarte(D) { return perso(D, 'seoDescriptionCarte') || descriptionCarte(D); }
+  /* Autres noms sous lesquels l'établissement est connu (Google) : nom court + liste du contenu */
+  function autresNoms(D) {
+    var vus = {}, liste = [nomCourt(D)].concat(Array.isArray(D.autresNoms) ? D.autresNoms : []);
+    return liste.map(function (x) { return String(x || '').trim(); }).filter(function (x) {
+      if (!x || x === nomOfficiel(D) || vus[x.toLowerCase()]) return false;
+      vus[x.toLowerCase()] = true; return true;
+    });
   }
 
   /* Fiche « Restaurant » pour Google (données structurées schema.org) */
@@ -627,7 +655,7 @@
       '@type': 'Restaurant',
       '@id': base + '#restaurant',
       name: nomOfficiel(D),
-      alternateName: nomOfficiel(D) === 'Piazzetta La Destrousse' ? ['Piazzetta', 'Pizzeria Piazzetta', 'Piazzetta Destrousse'] : [nomCourt(D)],
+      alternateName: autresNoms(D),
       description: description(D),
       url: base,
       telephone: telLink(D.telephone).replace('tel:', ''),
@@ -638,7 +666,7 @@
       priceRange: fp ? (Math.round(fp.min) + '–' + Math.round(fp.max) + ' €') : undefined,
       acceptsReservations: false,
       address: { '@type': 'PostalAddress', streetAddress: D.adresse, postalCode: cp ? cp[1] : undefined, addressLocality: cp ? cp[2] : D.ville, addressCountry: 'FR' },
-      areaServed: !service(D).livraison ? undefined : cs.length ? cs.map(function (c) { return { '@type': 'City', name: c }; }) : { '@type': 'City', name: villeSeule(D) },
+      areaServed: !service(D).livraison ? undefined : cs.length ? cs.map(function (c) { return { '@type': 'City', name: c }; }) : (villeSeule(D) ? { '@type': 'City', name: villeSeule(D) } : undefined),
       hasMap: G.fiche,
       sameAs: [G.fiche].concat(reseaux(D).map(function (x) { return x.url; })),
       menu: base + 'carte.html',
@@ -692,7 +720,9 @@
     fr: fr, textes: textes, htmlHistoire: htmlHistoire, htmlHoraires: htmlHoraires, htmlGalerie: htmlGalerie, altPhoto: altPhoto,
     htmlEnteteTailles: htmlEnteteTailles, htmlLignesCarte: htmlLignesCarte, multiligne: multiligne,
     description: description, descriptionCarte: descriptionCarte, jsonLd: jsonLd,
-    liensGoogle: liensGoogle, htmlReseaux: htmlReseaux, htmlLiensHero: htmlLiensHero, nomOfficiel: nomOfficiel, villeSeule: villeSeule,
+    liensGoogle: liensGoogle, htmlReseaux: htmlReseaux, htmlLiensHero: htmlLiensHero, nomOfficiel: nomOfficiel, villeSeule: villeSeule, aVille: aVille,
+    titrePageAccueil: titrePageAccueil, titrePageCarte: titrePageCarte, titrePage404: titrePage404,
+    descriptionAccueil: descriptionAccueil, descriptionPageCarte: descriptionPageCarte,
     nomCourt: nomCourt, nomPdf: nomPdf, rubriquesVisibles: rubriquesVisibles, htmlRubriques: htmlRubriques, titrePage2: titrePage2, SK_ICONE: SK_ICONE, service: service, activite: activite, nomProduits: nomProduits
   };
   root.PZ = api;
