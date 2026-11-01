@@ -54,13 +54,10 @@
   /* Résumé des heures (petit tableau quand les horaires varient d'un jour à l'autre) */
   var hResume = PZ.htmlResumeHeures(D);
   $$('[data-resume-heures]').forEach(function (el) { if (el.innerHTML !== hResume) el.innerHTML = hResume; });
-  var histoire = $('[data-histoire]');
-  if (histoire && D.histoire) {
-    var h = PZ.htmlHistoire(D);
-    if (histoire.innerHTML !== h) histoire.innerHTML = h;
-  }
-  var story = $('#maison');
-  if (story && !D.histoire && !D.histoireTitre) story.hidden = true;
+  /* « La maison » : masquée (avec ses liens du menu) s'il n'y a aucun paragraphe */
+  var histoire = $('[data-histoire]'), hHistoire = PZ.htmlHistoire(D);
+  if (histoire && histoire.innerHTML !== hHistoire) histoire.innerHTML = hHistoire;
+  $$('[data-maison], [data-maison-link]').forEach(function (el) { el.hidden = !hHistoire; });
 
   $$('[data-tel]').forEach(function (a) {
     a.href = PZ.telLink(D.telephone);
@@ -84,9 +81,11 @@
   var res = $('[data-reseaux]');
   if (res) { var hr = PZ.htmlReseaux(D); if (res.innerHTML !== hr) res.innerHTML = hr; res.hidden = !hr; }
 
-  /* ---------- Bandeau d'annonce (calculé chaque jour : congés à venir…) ---------- */
+  /* ---------- Bandeau d'annonce (calculé chaque jour) : la fermeture exceptionnelle à venir passe
+     toujours en premier, suivie de l'annonce saisie dans Pages CMS s'il y en a une ---------- */
   var annonce = $('[data-annonce]');
-  var msg = (D.annonce && String(D.annonce).trim()) || PZ.messageFermeture(D);
+  var msgFermeture = PZ.messageFermeture(D);
+  var msg = [msgFermeture, (D.annonce && String(D.annonce).trim()) || ''].filter(Boolean).join(' ');
   if (annonce) {
     if (msg) $('[data-annonce-text]', annonce).textContent = msg;
     annonce.hidden = !msg;
@@ -94,7 +93,7 @@
 
   /* ---------- Horaires (jour en cours) et statut en direct ---------- */
   var hoursEl = $('[data-hours]');
-  var note = PZ.fermeture(D) && msg && !D.annonce ? msg : '';
+  var note = msgFermeture;
   function renderHours() { if (hoursEl) hoursEl.innerHTML = PZ.htmlHoraires(D, PZ.maintenantParis(), note); }
   var pill = $('[data-status]');
   function renderStatus() {

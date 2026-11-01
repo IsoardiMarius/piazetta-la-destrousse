@@ -6,7 +6,7 @@ Le site est optimisé : titres, descriptions, fiche « Restaurant » pour Google
 
 | Où | Ce qu'on trouve | À faire |
 | --- | --- | --- |
-| [Site](https://piazzetta-ladestrousse.com) | **Piazzetta La Destrousse**, 842 avenue de la Doulia, 13112 La Destrousse, 06 40 92 51 76, du mardi au samedi 18h–22h | Référence : c'est ce qu'il faut recopier partout |
+| [Site](https://piazzetta-ladestrousse.com) | **Piazzetta La Destrousse**, 842 avenue de la Doulia, 13112 La Destrousse, 06 40 92 51 76, du mardi au jeudi 18h–22h30, vendredi et samedi 18h–1h | Référence : c'est ce qu'il faut recopier partout |
 | [Uber Eats](https://www.ubereats.com/fr/store/piazzetta-destrousse/3hAM1KrBRzO7w2VnZtQnDQ) | **« Piazzetta Destrousse »**, 842 avenue de la Doulia, ouverture à 18h | Renommer en **« Piazzetta La Destrousse »** dans Uber Eats Manager |
 | [Facebook](https://www.facebook.com/p/PiazzettaDestrousse-Pizzeria-61593981164995/) | Page **« PiazzettaDestrousse - Pizzeria »** | Renommer en **« Piazzetta La Destrousse »** et vérifier adresse, téléphone, horaires et lien vers le site |
 | Fiche Google | Existe (identifiant `ChIJn-yuT0iZyRIRGalZ9F80kp4`), contenu non vérifiable d'ici | Vérifier les points ci-dessous |
@@ -27,7 +27,7 @@ Sur business.google.com, ou en cherchant « Piazzetta La Destrousse » sur Googl
 - [ ] **Lien vers le menu** : `https://piazzetta-ladestrousse.com/carte.html`
 - [ ] **Zone desservie** : les communes de livraison (les mêmes que « Communes livrées » dans Pages CMS, rubrique « Établissement : nom, logo, couleurs, contact »).
 - [ ] **Description** : 2 ou 3 phrases naturelles, par exemple « Pizzeria artisanale à La Destrousse : pâte légère, produits frais, huile d'olive. Pizzas à emporter ou livrées du mardi au samedi dès 18h. »
-- [ ] **Photos** : les 5 photos du site et quelques autres (devanture, four, équipe). En ajouter une ou deux par mois.
+- [ ] **Photos** : les photos du site et quelques autres (devanture, four, équipe). En ajouter une ou deux par mois.
 - [ ] **Attributs** : « À emporter », « Livraison », moyens de paiement acceptés.
 - [ ] **Posts** : une publication de temps en temps (nouvelle pizza, congés).
 
@@ -71,5 +71,5 @@ Google fait davantage confiance à un site cité par d'autres sites de la régio
 
 ## 6. Dans Pages CMS (rubrique « Établissement : nom, logo, couleurs, contact »)
 
-- [x] **Communes livrées** : laissé vide, le site affiche « La Destrousse et alentours ». Si un jour vous voulez ressortir sur « pizzeria Peypin », etc., lister les communes livrées (ex. `["La Destrousse", "Peypin"]`).
+- [x] **Communes livrées** : laissé vide, le site affiche « La Destrousse et alentours ». Si un jour vous voulez ressortir sur « pizzeria Peypin », etc., lister les communes livrées, une par case (par exemple « La Destrousse », puis « Peypin »).
 - [x] **Réseaux** : Facebook et Uber Eats renseignés. Ajouter Instagram s'il est créé.

@@ -34,7 +34,7 @@ Aucun mot de passe, aucune carte bancaire et aucun identifiant ne sont stockés 
 **Ce que fait la publication**, à chaque modification (2 minutes environ, suivi dans l'onglet **Actions**) :
 
 1. vérifie le contenu du dossier `contenu/` : une erreur grave (fichier abîmé, carte vide) arrête la publication et l'ancien site reste en ligne ; une erreur mineure (prix manquant, photo introuvable…) est ignorée et signalée (voir l'étape 10) ;
-2. prépare le logo s'il a été changé dans Pages CMS (toutes ses tailles, icônes d'onglet et d'iPhone), génère `donnees.js` (le contenu lu par les pages), puis le PDF de la carte (page 1 : pizzas ; page 2 : boissons et desserts, s'il y en a) et sa vignette, et signale une page trop longue pour tenir sur une feuille A4 ;
+2. génère `donnees.js` (le contenu lu par les pages), prépare le logo s'il a été changé dans Pages CMS (toutes ses tailles, icônes d'onglet et d'iPhone), puis le PDF de la carte (page 1 : pizzas ; page 2 : boissons et desserts, s'il y en a) et sa vignette, et signale une page trop longue pour tenir sur une feuille A4 ;
 3. prépare les photos de la liste `contenu/photos.json`, dans l'ordre choisi (redressées, allégées en 5 tailles, légèrement mises en valeur, données GPS retirées) ;
 4. dessine les images d'aperçu des liens (SMS, WhatsApp, Facebook) ;
 5. récupère l'adresse officielle du site auprès de GitHub (`https://piazzetta-ladestrousse.com`) ;
@@ -51,7 +51,14 @@ L'adresse du domaine n'est écrite nulle part en dur dans les scripts : si le do
 
 [Pages CMS](https://pagescms.org) (gratuit, open source) affiche des formulaires pour modifier le contenu sans toucher au code. Chaque enregistrement modifie un fichier du dossier `contenu/` (ou ajoute une photo dans `photos/`) et déclenche la publication automatique.
 
-- **Configuration des formulaires** : fichier [`.pages.yml`](../.pages.yml) à la racine du dépôt (rubriques, libellés, aides, vérification du format des horaires et des liens).
+- **Configuration des formulaires** : fichier [`.pages.yml`](../.pages.yml) à la racine du dépôt (rubriques, libellés, aides, vérification du format des horaires, des liens, des couleurs et du code postal).
+- **Points connus de Pages CMS**, pris en compte dans la configuration et le code :
+  - une case vide est retirée du fichier à l'enregistrement : le site traite une donnée absente comme vide (texte par défaut, ou rien pour une case facultative) ;
+  - dans une liste de prix, une case vide est supprimée et décale les suivantes : l'aide le signale ;
+  - les champs nombre ont un pas de 0,01 (`step`), sinon un prix à centimes (12.5) bloque l'enregistrement ;
+  - `merge: false` : le fichier est écrit tel que le formulaire, sinon un groupe de cases entièrement vidé (réseaux, horaires) garderait ses anciennes valeurs ; toutes les données des fichiers sont déclarées dans `.pages.yml`, rien n'est perdu ;
+  - une liste écrite sous forme d'objet (`min`, `max`) doit avoir `collapsible` ; la liste de photos (au niveau de la rubrique) n'accepte que `list: true` ;
+  - une description au niveau d'une rubrique n'est pas affichée : les explications sont sous les cases.
 - **Mise en place** (une seule fois, par le développeur) : se connecter sur https://app.pagescms.org avec le compte GitHub, installer l'application Pages CMS sur le dépôt `piazetta-la-destrousse` (accès à ce seul dépôt), ouvrir le projet, puis **Settings › Collaborators** › inviter le gérant par son adresse e-mail.
 - **Le gérant** se connecte avec le lien reçu par e-mail, **sans compte GitHub**. Il peut modifier le contenu et les photos, mais pas la configuration ni les accès.
 - **Les modifications** sont enregistrées dans l'historique du dépôt avec le message « Modification : … (via Pages CMS) ».
@@ -105,6 +112,7 @@ L'adresse du domaine n'est écrite nulle part en dur dans les scripts : si le do
 18. Lien de la fiche Google Maps modifiable dans Pages CMS (il remplace l'identifiant technique masqué) : boutons « Itinéraire » et « Votre avis » ; lien « Demander des avis » facultatif.
 19. Couleurs au choix dans Pages CMS (principale et fond) : toutes les couleurs du site, de la carte, du PDF et des aperçus de liens en sont tirées ; couleurs d'origine inchangées à l'identique (vérifié au pixel près).
 20. Flyer A5 à imprimer, généré à chaque publication à partir du contenu (page `flyer.html` non indexée, lien discret en bas du site) : PDF pour l'imprimeur avec 3 mm de fond perdu et format fini indiqué (TrimBox), bouton Imprimer pour la maison, QR code vers la carte ; rubrique Pages CMS « Flyer à imprimer » (photo, accroche, phrase mise en avant, horaires affichés ou non).
+21. Audit complet (responsive sur 20 tailles d'écran, accessibilité, 10 contenus types dont un contenu entièrement vidé dans Pages CMS) : prix à centimes de nouveau enregistrables dans Pages CMS, cases vidées qui n'arrêtent plus la publication, aides de Pages CMS revues (texte par défaut indiqué partout, tutoiement, rubrique « Établissement » regroupée), fermeture exceptionnelle toujours annoncée même avec un bandeau d'annonce, section « La maison » masquée si elle est vide, photos petites ou illisibles signalées dans « Points à vérifier », photos plus légères sur téléphone.
 
 ## 5. Entretien
 

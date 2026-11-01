@@ -20,6 +20,7 @@ Sans logo choisi, rien n'est modifié : le logo d'origine reste en place.
 import base64
 import io
 import json
+import os
 import re
 import sys
 import unicodedata
@@ -41,6 +42,22 @@ SORTIE = Path(_args[0]).resolve() if _args else RACINE
 EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".heic", ".heif"}
 LARGEURS = (480, 640, 800, 1200, 1600)  # 640 : galerie sur téléphone (80 % de l'écran, écran haute définition)
 MAX_PHOTOS = 16  # même limite que scripts/controler-site.mjs
+
+
+_signales = []
+
+
+def signaler(message):
+    """Avertissement affiché dans le journal et repris dans le signalement « Points à vérifier »
+    (fichier rapport-contenu.md, comme les autres étapes de la publication)."""
+    print("⚠️  " + message)
+    texte = ("### ⚠️ Photos à vérifier\n" if not _signales else "") + "- " + message + "\n"
+    _signales.append(message)
+    with open("rapport-contenu.md", "a", encoding="utf-8") as f:
+        f.write(texte)
+    if os.environ.get("GITHUB_STEP_SUMMARY"):
+        with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
+            f.write(texte)
 
 
 def slug(texte):
@@ -105,7 +122,7 @@ def main():
             im = Image.open(f)
             im = ImageOps.exif_transpose(im).convert("RGB")
         except Exception as e:  # fichier illisible : on le signale sans bloquer le site
-            print(f"⚠️  {f.name} ignorée (illisible : {e})")
+            signaler(f"Photos : « {f.name} » est illisible, elle est ignorée ({e}).")
             continue
         im = mettre_en_valeur(im)
         nom = slug(f.stem)
@@ -144,7 +161,7 @@ def main():
             "texte": texte,                     # légende affichée sur la photo (facultative)
         })
         if im.width < 1000:
-            print(f"⚠️  {f.name} est petite ({im.width} px de large) : elle risque d'être floue. Préférez la photo d'origine.")
+            signaler(f"Photos : « {f.name} » est petite ({im.width} px de large), elle risque d'être floue. Mieux vaut envoyer la photo d'origine.")
 
     (SORTIE / "assets").mkdir(parents=True, exist_ok=True)
     (SORTIE / "assets" / "photos.json").write_text(json.dumps(liste, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -167,7 +184,8 @@ def preparer_photo_flyer(photos_accueil):
         try:
             im = ImageOps.exif_transpose(Image.open(source)).convert("RGB")
         except Exception as e:  # introuvable ou illisible : la suivante (la 1re photo de l'accueil)
-            print(f"⚠️  Photo du flyer « {source.name} » introuvable ou illisible ({e}) : la 1re photo de l'accueil est utilisée.")
+            if source.is_file():  # (une image introuvable est déjà signalée par la vérification du contenu)
+                signaler(f"Flyer : la photo « {source.name} » est illisible, la 1re photo de l'accueil est utilisée.")
             continue
         im = mettre_en_valeur(im)
         cote = min(im.size)
@@ -178,7 +196,7 @@ def preparer_photo_flyer(photos_accueil):
         im = im.filter(ImageFilter.UnsharpMask(radius=1.2, percent=35, threshold=3))
         im.save(sortie, "JPEG", quality=90, optimize=True)
         if cote < 900:
-            print(f"⚠️  Photo du flyer petite ({cote} px) : elle risque d'être floue à l'impression.")
+            signaler(f"Flyer : la photo « {source.name} » est petite ({cote} px), elle risque d'être floue à l'impression.")
         print(f"✅ Photo du flyer préparée à partir de « {source.name} ».")
         return
     print("Flyer : aucune photo, le logo est affiché à la place.")
@@ -198,13 +216,16 @@ def preparer_logo():
     try:
         im = ImageOps.exif_transpose(Image.open(fichier)).convert("RGBA")
     except Exception as e:  # logo introuvable ou illisible : on garde celui d'origine
-        print(f"⚠️  Logo « {chemin} » illisible ou introuvable ({e}) : le logo d'origine est conservé.")
+        if fichier.is_file():  # (un logo introuvable est déjà signalé par la vérification du contenu)
+            signaler(f"Logo : l'image « {chemin} » est illisible, le logo d'origine est conservé.")
+        else:
+            print(f"⚠️  Logo « {chemin} » introuvable : le logo d'origine est conservé.")
         return
     cote = min(im.size)  # carré centré : le logo est affiché dans un rond
     gauche, haut = (im.width - cote) // 2, (im.height - cote) // 2
     im = im.crop((gauche, haut, gauche + cote, haut + cote))
     if cote < 360:
-        print(f"⚠️  Logo petit ({cote} px) : il risque d'être flou. Préférez une image d'au moins 720 px de côté.")
+        signaler(f"Logo : l'image est petite ({cote} px), il risque d'être flou. Mieux vaut une image d'au moins 720 px de côté.")
     dest = SORTIE / "assets"
     dest.mkdir(parents=True, exist_ok=True)
     for taille in (120, 360, 720):

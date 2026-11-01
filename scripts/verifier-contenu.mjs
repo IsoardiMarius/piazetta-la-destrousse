@@ -17,6 +17,8 @@ try {
   process.exit(1);
 }
 const { erreurs, avertissements } = PZ.valider(contenu.CARTE, contenu.INFOS);
+const MAX_PHOTOS = 16;  /* même limite que scripts/preparer-photos.py */
+if ((contenu.photos || []).length > MAX_PHOTOS) avertissements.push(`Photos : ${contenu.photos.length} photos dans la liste, seules les ${MAX_PHOTOS} premières sont affichées.`);
 (contenu.photos || []).forEach((p, i) => {
   const chemin = String((p && p.image) || '').replace(/^\//, '');
   if (!chemin) avertissements.push(`Photos : la photo n°${i + 1} n’a pas d’image (ignorée).`);

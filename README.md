@@ -21,7 +21,7 @@ Ouvrir **https://app.pagescms.org**, se connecter (avec GitHub, ou avec le lien 
 | **Flyer à imprimer** | Photo, accroche, phrase mise en avant (une offre…) et case pour afficher ou non les horaires sur le flyer ; le reste (nom, logo, couleurs, téléphone, livraison, QR code) est repris du site |
 | **Google et partage de liens** | Facultatif : titres des onglets et descriptions pour Google (sinon générés automatiquement), autres noms connus de l'établissement, type de cuisine |
 
-Tout ce qui est affiché est modifiable ici, et rien n'est propre à une pizzeria : le même site peut servir à un autre établissement en changeant le contenu (type d'établissement, produits, cuisine…). Les seuls textes calculés automatiquement (et donc toujours justes) sont le résumé des horaires, le badge « Ouvert / Fermé », le nombre de pizzas et la fourchette de prix.
+Tout ce qui est affiché est modifiable ici, et aucun texte propre à une pizzeria n'est écrit dans le code : le même site peut servir à un autre établissement en changeant le contenu (type d'établissement, produits, cuisine…). Restent propres à la restauration : le dessin de pizza affiché pendant le chargement des images et le type « Restaurant » transmis à Google. Les textes calculés à partir du contenu (et donc toujours justes) : résumé des horaires, badge « Ouvert / Fermé », nombre de produits et fourchette de prix, titres d'onglet et descriptions pour Google (sauf s'ils sont personnalisés), textes par défaut des cases laissées vides (indiqués « Vide = … » dans Pages CMS).
 
 Cliquer sur **Enregistrer** : 1 à 2 minutes plus tard, tout est à jour et regénéré automatiquement (pages, carte, **PDF**, **flyer**, photos, aperçus de liens, données pour Google, badge « Ouvert / Fermé »).
 
@@ -40,8 +40,8 @@ Le contenu est dans le dossier **[`contenu/`](contenu/)** (fichiers JSON : `cart
 - **Erreur grave** (fichier abîmé, carte vide) : la publication s'arrête et **l'ancien site reste en ligne**.
 - **Contrôle final** : avant la mise en ligne, un script relit les pages générées et vérifie qu'elles correspondent exactement au contenu (chaque prix de chaque taille, pizzas masquées absentes, horaires, téléphone, liens, photos, fiche Google, aperçus de liens, plan du site). Au moindre écart, la publication s'arrête et l'ancien site reste en ligne.
 - **Alerte** : si une publication échoue, une alerte « La publication du site a échoué » est ouverte sur GitHub et le propriétaire du dépôt reçoit un e-mail. Elle se ferme toute seule à la publication réussie suivante.
-- La carte A4 (PDF) s'ajuste toute seule : page 1 pour les produits principaux (une vingtaine environ, selon la longueur des descriptions), page 2 pour les autres (boissons, desserts…). Une page qui déborde est signalée dans « Points à vérifier ».
-- Ce qui s'adapte tout seul au contenu : nombre de tailles (1 à 6) et de photos, horaires avec coupure le midi, réseaux renseignés ou non (les liens vides disparaissent), barre de navigation qui passe en menu si les liens ne tiennent plus, textes vides remplacés par un texte par défaut.
+- La carte A4 (PDF) s'ajuste toute seule : page 1 pour les produits principaux (une vingtaine environ, 22 avec les descriptions actuelles), page 2 pour les autres (boissons, desserts…). Une page qui déborde est signalée dans « Points à vérifier ».
+- Ce qui s'adapte tout seul au contenu : nombre de tailles (1 à 6) et de photos, horaires avec coupure le midi, réseaux renseignés ou non (les liens vides disparaissent), barre de navigation qui passe en menu si les liens ne tiennent plus, textes vides remplacés par un texte par défaut, ou masqués s'ils sont facultatifs. Un fichier enregistré par Pages CMS contient exactement le formulaire (`merge: false`) : une case ou un groupe de cases vidé l'est vraiment.
 
 ## Publication
 
@@ -65,10 +65,10 @@ Puis ouvrir http://localhost:8000 (`npm run serve` génère d'abord `donnees.js`
 
 | Fichier | Rôle |
 | --- | --- |
-| `contenu/` | **Le contenu** (carte, horaires, photos, contact, textes), modifié depuis Pages CMS |
+| `contenu/` | **Le contenu** (carte et page 2, horaires, photos, établissement, textes, flyer, référencement), modifié depuis Pages CMS |
 | `.pages.yml` | Configuration des formulaires de Pages CMS |
 | `index.html` | Page d'accueil |
-| `photos/` | **À remplir** : les photos de la page d'accueil |
+| `photos/` | Les photos d'origine (le sous-dossier `Pizzas/` pour celles des pizzas), choisies dans Pages CMS |
 | `carte.html` | Aperçu de la carte A4 (page 1 : produits principaux, page 2 : autres produits) avec boutons Imprimer et PDF (source du PDF) |
 | `flyer.html` | Flyer A5 à imprimer, avec boutons Imprimer et PDF pour l'imprimeur (source de `flyer.pdf`) |
 | `assets/` | Styles, scripts, logo, polices auto-hébergées |

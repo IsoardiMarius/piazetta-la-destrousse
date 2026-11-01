@@ -110,6 +110,9 @@ for (const [nom, page] of pagesReliees) {
   }
 }
 verifier(contenuDe(accueil, 'data-histoire') === PZ.htmlHistoire(D), 'Accueil : le texte « La maison » ne correspond pas au contenu');
+for (const m of accueil.matchAll(/<[^>]*\sdata-maison(?:-link)?(?=[\s>])[^>]*>/g)) {
+  verifier(/\shidden(?=[\s>])/.test(m[0]) === !PZ.htmlHistoire(D), 'Accueil : la section « La maison » est affichée ou masquée à tort');
+}
 verifier(contenuDe(accueil, 'data-hours') === PZ.htmlHoraires(D, null, ''), 'Accueil : les horaires affichés ne correspondent pas au contenu');
 const tel = PZ.telLink(D.telephone);
 const liensTel = accueil.match(/href="tel:[^"]*"/g) || [];

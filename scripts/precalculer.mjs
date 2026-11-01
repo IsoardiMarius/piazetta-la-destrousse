@@ -127,6 +127,11 @@ function meta(page, { titre, description, url, image }) {
 let accueil = colorer(nommer(lire('index.html')), 'bg');
 accueil = remplirBinds(accueil);
 accueil = remplirTout(accueil, 'data-histoire', PZ.htmlHistoire(D));
+/* Section « La maison » (et ses liens du menu) masquée s'il n'y a aucun paragraphe */
+for (const marque of ['data-maison', 'data-maison-link']) {
+  accueil = afficher(accueil, marque);
+  if (!PZ.htmlHistoire(D)) accueil = accueil.replace(new RegExp(`(\\s${marque})(?=[\\s>])`, 'g'), '$1 hidden');
+}
 accueil = remplirTout(accueil, 'data-hours', PZ.htmlHoraires(D, null, ''));
 accueil = remplirTout(accueil, 'data-resume-heures', PZ.htmlResumeHeures(D));
 if (photos.length) {

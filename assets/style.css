@@ -251,6 +251,7 @@ html.menu-ouvert .float,html.menu-ouvert .hero__logo::before{animation-play-stat
 /* ---------- Sections ---------- */
 .section{padding-top:clamp(64px,8vw,104px)}
 .section + .section{padding-top:clamp(40px,5vw,56px)}
+.section[hidden] + .section{padding-top:clamp(64px,8vw,104px)}  /* section masquée (« La maison » vide) : espace normal */
 
 /* ---------- La maison ---------- */
 .story{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:28px clamp(40px,7vw,96px);align-items:start}
@@ -266,9 +267,10 @@ html.menu-ouvert .float,html.menu-ouvert .hero__logo::before{animation-play-stat
 .story__sign .ic{transform-origin:bottom left;transition:transform .8s var(--ease-spring)}
 .story__body.is-in .story__sign .ic{animation:sway 4s ease-in-out 1s infinite}
 .story__sign::before{content:"";width:32px;height:1.5px;background:currentColor;opacity:.4;order:-1}
+.story__sign:has(> span:empty){display:none}  /* signature vidée dans Pages CMS */
 
 /* ---------- Photos ---------- */
-.photos[hidden]{display:none}
+.photos[hidden],.story[hidden]{display:none}
 .photos{display:flex;flex-direction:column;gap:clamp(24px,3vw,36px)}
 .photos__head{display:flex;flex-direction:column;gap:14px;max-width:640px}
 .gallery{

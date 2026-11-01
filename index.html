@@ -64,7 +64,7 @@
     </a>
     <div class="hdr__right">
       <ul class="hdr__links">
-        <li><a class="navlink" href="#maison">La maison</a></li>
+        <li data-maison-link><a class="navlink" href="#maison">La maison</a></li>
         <li><a class="navlink" href="#infos">Infos pratiques</a></li>
         <li data-reseau-item="uberEats" hidden><a class="navlink navlink--ext" href="#" data-reseau="uberEats" target="_blank" rel="noopener" aria-label="Commander sur Uber Eats (nouvel onglet)">Uber Eats<svg class="ic ext" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><use href="#i-ext"></use></svg></a></li>
         <li data-reseau-item="facebook" hidden><a class="navlink navlink--ext" href="#" data-reseau="facebook" target="_blank" rel="noopener" aria-label="Facebook (nouvel onglet)">Facebook<svg class="ic ext" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><use href="#i-ext"></use></svg></a></li>
@@ -88,7 +88,7 @@
   <div class="mnav" id="menu-mobile" data-menu hidden>
     <ul class="mnav__list wrap">
       <li><a href="carte.html"><span>La carte</span><svg class="ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><use href="#i-arrow"></use></svg></a></li>
-      <li><a href="#maison"><span>La maison</span><svg class="ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><use href="#i-arrow"></use></svg></a></li>
+      <li data-maison-link><a href="#maison"><span>La maison</span><svg class="ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><use href="#i-arrow"></use></svg></a></li>
       <li data-photos-link hidden><a href="#photos"><span>En images</span><svg class="ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><use href="#i-arrow"></use></svg></a></li>
       <li><a href="#infos"><span>Infos pratiques</span><svg class="ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><use href="#i-arrow"></use></svg></a></li>
       <li data-reseau-item="uberEats" hidden><a href="#" data-reseau="uberEats" target="_blank" rel="noopener"><span>Commander sur Uber Eats</span><svg class="ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><use href="#i-ext"></use></svg></a></li>
@@ -148,7 +148,7 @@
   </div>
 </section>
 
-<section class="story wrap section" id="maison" aria-labelledby="maison-titre">
+<section class="story wrap section" id="maison" aria-labelledby="maison-titre" data-maison>
   <div class="story__head reveal">
     <p class="eyebrow">La maison</p>
     <h2 class="h-section" id="maison-titre" data-bind="histoireTitre">Le goût des choses simples.</h2>

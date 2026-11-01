@@ -1,6 +1,6 @@
 # Modifier le site de la Piazzetta
 
-Tu peux changer toi-même la carte, les prix, les horaires, les congés, les photos et les infos de contact, depuis ton téléphone ou ton ordinateur. Pas besoin de rien installer.
+Tu peux changer toi-même la carte, les prix, les horaires, les congés, les photos, les infos de contact, les couleurs et le flyer, depuis ton téléphone ou ton ordinateur. Pas besoin de rien installer.
 
 ## Se connecter
 
@@ -8,7 +8,7 @@ Tu peux changer toi-même la carte, les prix, les horaires, les congés, les pho
 2. Connecte-toi avec ton adresse e-mail : tu reçois un lien de connexion par e-mail, clique dessus.
 3. Choisis le site **piazetta-la-destrousse**.
 
-À gauche (ou dans le menu ☰ sur téléphone), tu as 7 rubriques, de la plus utilisée à la moins utilisée :
+À gauche (ou dans le menu ☰ sur téléphone), tu as 8 rubriques, de la plus utilisée à la moins utilisée :
 
 | Rubrique | Pour… |
 | --- | --- |
@@ -17,11 +17,11 @@ Tu peux changer toi-même la carte, les prix, les horaires, les congés, les pho
 | **Horaires et fermetures** | changer les horaires, prévenir d'une fermeture (vacances, jour férié), afficher un message en haut du site |
 | **Photos de l'accueil** | ajouter, retirer ou réordonner les photos, ajouter une légende |
 | **Textes de l'accueil** | toutes les phrases de la page d'accueil, rangées dans l'ordre de la page |
-| **Établissement : nom, logo, couleurs, contact** | nom, logo, téléphone, e-mail, adresse, livraison ou à emporter, liens Uber Eats / Facebook / Instagram |
+| **Établissement : nom, logo, couleurs, contact** | nom, téléphone, e-mail, adresse, livraison ou à emporter, liens Google, Uber Eats, Facebook, Instagram, logo et couleurs |
 | **Flyer à imprimer** | la photo et les phrases du flyer ; le reste est repris tout seul du site |
 | **Google et partage de liens** | rien à faire en temps normal : les titres et descriptions pour Google sont générés tout seuls |
 
-Sous chaque case, une petite aide dit où le texte apparaît. Si tu vides un texte par erreur, le texte d'origine revient tout seul.
+Sous chaque case, une petite aide dit où le texte apparaît et, avec « Vide = … », ce qui s'affiche si tu la laisses vide. Les cases marquées « (facultatif) » peuvent rester vides : rien ne s'affiche à leur place.
 
 Après chaque changement : clique sur **Enregistrer** (« Save »). **1 à 2 minutes plus tard**, le site, la carte et le PDF sont à jour tout seuls. Si tu ne vois pas le changement tout de suite, attends un peu et recharge la page.
 
@@ -30,22 +30,23 @@ Après chaque changement : clique sur **Enregistrer** (« Save »). **1 à 2 min
 **Changer un prix**
 Carte (page 1) › clique sur la pizza › change le chiffre › Enregistrer.
 Les prix sont dans l'ordre des tailles (aujourd'hui : Petite, Big, Méga). Pour les centimes, mets un point : `12.5` s'affichera « 12,50 € ».
+Ne laisse jamais une case de prix vide : elle serait supprimée et les prix suivants glisseraient d'une taille.
 
 **Ajouter une pizza**
 Carte (page 1) › bouton **Ajouter** (« Add ») en bas de la liste des produits › nom, description (les ingrédients), un prix par taille › Enregistrer.
 Pour la mettre en avant, écris `Nouveau` dans « Badge ». Tu peux la glisser vers le haut ou le bas pour choisir sa place.
 
 **Retirer une pizza pour un temps**
-Coche **Masquer ce produit** : elle disparaît du site et du PDF, mais reste enregistrée pour plus tard.
+Coche **Masquer ce produit** : elle disparaît du site et du PDF, mais reste enregistrée pour plus tard. Au moins une pizza doit rester affichée.
 
 **Changer les tailles**
-Carte (page 1) › Tailles ou formats, en bas de la page. Si tu ajoutes ou retires une taille, ajoute ou retire aussi le prix correspondant sur chaque pizza, au même rang.
+Carte (page 1) › Tailles ou formats, juste sous la liste des produits. Si tu ajoutes ou retires une taille, ajoute ou retire aussi le prix correspondant sur chaque pizza, au même rang.
 
-La carte tient sur une feuille A4 jusqu'à 24 pizzas environ. Au-delà, masque celles que tu fais moins souvent.
+La carte tient sur une feuille A4 jusqu'à 22 pizzas environ (selon la longueur des descriptions). Au-delà, masque celles que tu fais moins souvent : si la carte déborde, ton cousin est prévenu.
 
 **Boissons et desserts**
 Carte (page 2) › ouvre la rubrique (Boissons, Desserts…) › **Ajouter** un article : nom, précision (par exemple « Canette 33 cl » ou « Fait maison »), prix › Enregistrer.
-Ils s'affichent en page 2 de la carte et du PDF, et la page 1 indique « Boissons & desserts en page 2 ». Tu peux aussi créer une nouvelle rubrique (par exemple « Glaces »), ou cocher **Masquer cet article**. S'il n'y a plus aucun article, la page 2 disparaît toute seule.
+Ils s'affichent en page 2 de la carte et du PDF, et le bas de la page 1 renvoie vers elle avec le titre de la page 2 (aujourd'hui « Salade & boissons en page 2 »). Tu peux aussi créer une nouvelle rubrique (par exemple « Glaces »), ou cocher **Masquer cet article**. S'il n'y a plus aucun article, la page 2 disparaît toute seule.
 
 **Partir en vacances**
 Horaires et fermetures › choisis les dates **du** et **au** dans le calendrier › Enregistrer.
@@ -75,19 +76,19 @@ En bas du site, clique sur **Flyer à imprimer** (ou va sur piazzetta-ladestrous
 - Avant d'en commander beaucoup, scanne le QR code d'un exemplaire imprimé avec ton téléphone pour vérifier qu'il ouvre bien la carte.
 
 **Afficher un message en haut du site**
-Horaires et fermetures › Bandeau d'annonce, par exemple « Nouveau : la pizza Burrata est arrivée ! ». Vide le champ pour l'enlever.
+Horaires et fermetures › Bandeau d'annonce, par exemple « Nouveau : la pizza Burrata est arrivée ! ». Vide le champ pour l'enlever. Pendant une fermeture exceptionnelle, ton message s'affiche après l'annonce de la fermeture.
 
 **Ajouter une photo**
 Photos › **Ajouter** (« Add ») › choisis la photo dans ton téléphone › écris ce qu'on voit (par exemple « Pizza Reine ») › Enregistrer.
 Si tu veux un petit texte sur la photo, remplis « Légende affichée » (quelques mots, par exemple « La Burrata ») ; sinon laisse vide.
-Envoie la photo d'origine (JPG ou photo d'iPhone) : le site s'occupe de l'alléger et de la mettre en valeur. Jusqu'à 16 photos : jusqu'à 5, elles forment une mosaïque ; à partir de 6, elles défilent sur le côté (avec des flèches sur ordinateur).
-La première photo est la plus grande, et c'est elle qu'on voit (en rond) quand on partage le lien du site : mets en premier une pizza ronde vue du dessus, bien centrée.
+Envoie la photo d'origine (JPG ou photo d'iPhone) : le site s'occupe de l'alléger et de la mettre en valeur. Jusqu'à 16 photos. Sur ordinateur, jusqu'à 5 elles forment une mosaïque (la première en grand), à partir de 6 elles défilent sur le côté avec des flèches ; sur téléphone, elles défilent toujours.
+La première photo est celle qu'on voit (en rond) quand on partage le lien du site, et celle du flyer si tu n'en as pas choisi une autre : mets en premier une pizza ronde vue du dessus, bien centrée.
 Conseils : lumière du jour, sans flash, pizza au centre de la photo avec un peu de marge autour. Évite les photos où l'on reconnaît des clients ou des employés sans leur accord.
 Si l'envoi d'une photo échoue (photo trop lourde), réessaie avec une version plus légère, par exemple en te l'envoyant par e-mail en taille « Grande » ou « Moyenne ».
 
 ## À savoir
 
 - Tu ne peux rien casser : si quelque chose ne va pas, le site garde sa version précédente, et ton cousin est prévenu par e-mail. Si un détail est ignoré (une photo qui ne passe pas, une carte trop longue), il est prévenu aussi.
-- Un champ de texte laissé vide n'abîme rien : le site met un texte par défaut, et un lien Uber Eats, Facebook ou Instagram vide disparaît simplement du site.
+- Une case laissée vide n'abîme rien : le site met le texte par défaut indiqué sous la case (« Vide = … »), ou n'affiche rien pour une case facultative ; un lien Uber Eats, Facebook ou Instagram vide disparaît simplement du site.
 - Quand tu changes le nom, le téléphone, l'adresse ou les horaires, change-les aussi sur ta **fiche Google**, **Uber Eats** et **Facebook**, exactement pareil : Google aime quand tout est identique.
 - Un doute, un souci ? Envoie un message à ton cousin.

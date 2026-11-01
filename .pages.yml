@@ -1,8 +1,9 @@
 # Interface d'édition du site (Pages CMS : https://app.pagescms.org)
-# Chaque rubrique modifie un fichier du dossier contenu/. À chaque enregistrement,
-# le site, la carte PDF, les photos et les aperçus de liens sont regénérés et publiés
-# automatiquement (1 à 2 minutes). Rubriques rangées de la plus utilisée à la moins utilisée.
-# Un texte vidé par erreur reprend le texte d'origine.
+# Chaque rubrique modifie un fichier du dossier contenu/. À chaque enregistrement, le site,
+# la carte PDF, le flyer, les photos et les aperçus de liens sont regénérés et publiés
+# automatiquement (1 à 2 minutes). Rubriques rangées dans l'ordre d'utilisation habituel.
+# Conventions des aides : tutoiement ; « Vide = … » indique ce qui s'affiche si la case est vide ;
+# « (facultatif) » signale une case qui peut rester vide sans rien remplacer.
 
 media:
   input: photos
@@ -12,7 +13,9 @@ media:
 
 settings:
   content:
-    merge: true
+    # Le fichier est écrit tel que le formulaire : un groupe de cases vidé (réseaux, horaires) est
+    # bien vidé. Toutes les données des fichiers sont déclarées ci-dessous, rien n'est perdu.
+    merge: false
   commit:
     templates:
       create: "Ajout : {filename} (via Pages CMS)"
@@ -23,13 +26,13 @@ settings:
 components:
   jour:
     type: string
-    description: "Exemple : 18h-22h. Avec une coupure : 11h30-14h, 18h-22h. Après minuit : 18h-1h. Vide = fermé ce jour-là."
+    description: "Par exemple 18h-22h. Avec une coupure : 11h30-14h, 18h-22h. Après minuit : 18h-1h. Vide = fermé ce jour-là."
     pattern:
       regex: '^$|^\s*\d{1,2}h(\d{2})?\s*[-–]\s*\d{1,2}h(\d{2})?(\s*,\s*\d{1,2}h(\d{2})?\s*[-–]\s*\d{1,2}h(\d{2})?)*\s*$'
-      message: "Écrire par exemple 18h-22h (ou 11h30-14h, 18h-22h), ou laisser vide si fermé."
+      message: "Écris par exemple 18h-22h (ou 11h30-14h, 18h-22h), ou laisse vide si c'est fermé."
   lien:
     type: string
-    description: "Adresse complète de la page, copiée depuis le navigateur (commence par https://). Laisser vide si l'établissement n'y est pas."
+    description: "Adresse complète de la page, copiée depuis le navigateur (elle commence par https://). Vide = pas de lien."
     pattern:
       regex: '^$|^https?://\S+$'
       message: "L'adresse doit commencer par https://"
@@ -44,7 +47,7 @@ content:
     fields:
       - name: produits
         label: Produits
-        description: "Glisser un produit pour changer son ordre : même ordre sur le site et le PDF."
+        description: "Glisse un produit pour changer sa place : même ordre sur le site, la carte PDF et pour Google."
         type: object
         list:
           min: 1
@@ -61,8 +64,8 @@ content:
             description: "Par exemple la composition : « Tomate, mozzarella, basilic ». Un retour à la ligne est gardé."
             type: text
           - name: prix
-            label: Prix en euros, un par taille, dans l'ordre des tailles
-            description: "Même ordre que la liste « Tailles » plus bas. Pour les centimes, un point : 12.5 s'affiche « 12,50 € »."
+            label: Prix en euros, un par taille
+            description: "Dans l'ordre des « Tailles ou formats » (juste en dessous des produits). Pour les centimes, un point : 12.5 s'affiche « 12,50 € ». Ne laisse aucune case vide : elle serait supprimée et les prix suivants glisseraient d'une taille."
             type: number
             list:
               min: 1
@@ -70,21 +73,18 @@ content:
               collapsible: false
             options:
               min: 0
+              step: 0.01
           - name: badge
             label: Badge (facultatif)
             description: "Petit mot à côté du nom, par exemple « Nouveau »."
             type: string
           - name: masque
             label: Masquer ce produit
-            description: "Coché, le produit n'apparaît plus nulle part, sans être supprimé."
+            description: "Coché : le produit n'apparaît plus nulle part, sans être supprimé. Au moins un produit doit rester affiché, sinon le site n'est pas mis à jour."
             type: boolean
-      - name: mention
-        label: Phrase sous la liste (facultatif)
-        description: "Petite ligne en bas de la liste, sur le site et le PDF."
-        type: text
       - name: tailles
         label: Tailles ou formats
-        description: "Les colonnes de prix. Si tu ajoutes, retires ou déplaces une taille, fais pareil avec les prix de chaque produit."
+        description: "Les colonnes de prix, de gauche à droite. Si tu ajoutes, retires ou déplaces une taille, fais pareil avec les prix de chaque produit."
         type: object
         list:
           min: 1
@@ -92,23 +92,29 @@ content:
           collapsible: false
         fields:
           - name: nom
-            label: Nom (ex. Petite)
+            label: Nom
+            description: "Par exemple « Petite »."
             type: string
             required: true
           - name: taille
-            label: Précision (ex. 30 cm, facultatif)
+            label: Précision (facultatif)
+            description: "Par exemple « 30 cm ». Sur la carte, elle s'affiche en gros en tête de colonne, avec le nom en petit dessous. Vide = le nom seul."
             type: string
+      - name: mention
+        label: Phrase sous la liste (facultatif)
+        description: "Petite ligne en bas de la liste des produits, sur le site et la carte PDF."
+        type: text
       - name: enTeteTitre
         label: "Haut de la carte : titre"
-        description: "Par exemple « La carte »."
+        description: "Vide = « La carte »."
         type: string
       - name: enTeteSousTitre
-        label: "Haut de la carte : sous-titre (facultatif)"
-        description: "Vide = vos produits et le mode de vente, réglés dans la rubrique « Établissement »."
+        label: "Haut de la carte : sous-titre"
+        description: "Vide = tes produits et le mode de vente, réglés dans la rubrique « Établissement » (par exemple « Pizzas artisanales · À emporter ou en livraison »)."
         type: string
       - name: titreListe
-        label: "Titre de la liste (facultatif)"
-        description: "Au-dessus de la liste, à gauche des tailles. Vide = « Nos » suivi de vos produits."
+        label: "Titre de la liste"
+        description: "Au-dessus de la liste, à gauche des tailles. Vide = « Nos » suivi de tes produits (par exemple « Nos pizzas artisanales »)."
         type: string
 
   # ---------- 2. Carte, page 2 : autres produits ----------
@@ -120,7 +126,7 @@ content:
     fields:
       - name: rubriques
         label: Rubriques
-        description: "Par exemple « Boissons », « Desserts », « Salades ». Glisser pour changer l'ordre. S'il n'y a aucun article, la page 2 disparaît."
+        description: "Par exemple « Boissons », « Desserts », « Salades ». Glisse une rubrique pour changer sa place. S'il n'y a aucun article affiché, la page 2 disparaît, ainsi que son renvoi en page 1."
         type: object
         list:
           collapsible:
@@ -133,7 +139,7 @@ content:
             required: true
           - name: articles
             label: Articles
-            description: "Glisser un article pour changer son ordre."
+            description: "Glisse un article pour changer sa place."
             type: object
             list:
               collapsible:
@@ -154,20 +160,21 @@ content:
                 type: number
                 options:
                   min: 0
+                  step: 0.01
               - name: badge
                 label: Badge (facultatif)
                 description: "Petit mot à côté du nom, par exemple « Nouveau »."
                 type: string
               - name: masque
                 label: Masquer cet article
-                description: "Coché, l'article n'apparaît plus, sans être supprimé."
+                description: "Coché : l'article n'apparaît plus, sans être supprimé."
                 type: boolean
       - name: titre
         label: "Haut de la page 2 : titre"
-        description: "Par exemple « Boissons & desserts ». Sert aussi au renvoi « … en page 2 » de la première page."
+        description: "Sert aussi au renvoi « … en page 2 » en bas de la page 1. Vide = « Boissons & desserts »."
         type: string
       - name: sousTitre
-        label: "Haut de la page 2 : sous-titre (facultatif)"
+        label: "Haut de la page 2 : sous-titre"
         description: "Vide = le nom des rubriques suivi du mode de vente."
         type: string
       - name: mention
@@ -183,7 +190,7 @@ content:
     fields:
       - name: horaires
         label: Horaires d'ouverture
-        description: "Mis à jour partout : site, badge « Ouvert / Fermé », carte PDF, Google. Pense à mettre les mêmes sur la fiche Google."
+        description: "Mis à jour partout : site, badge « Ouvert / Fermé », carte PDF, flyer (si les horaires y sont affichés) et Google. Pense à mettre les mêmes sur ta fiche Google."
         type: object
         fields:
           - { name: lundi, label: Lundi, component: jour }
@@ -195,20 +202,21 @@ content:
           - { name: dimanche, label: Dimanche, component: jour }
       - name: fermetureDu
         label: "Fermeture exceptionnelle (vacances, jour férié…) : du"
-        description: "Pendant ces dates, le site affiche « Fermé » et un bandeau prévient les clients (dès 3 semaines avant). Les dates passées n'ont plus d'effet."
+        description: "Pendant ces dates, le site affiche « Fermé » et, dès 3 semaines avant, un bandeau prévient les clients. Google est prévenu aussi. Pour un seul jour, remplis seulement « du ». Les dates passées n'ont plus d'effet."
         type: date
         default: ""
         options:
           format: yyyy-MM-dd
       - name: fermetureAu
-        label: "au (inclus)"
+        label: "Fermeture exceptionnelle : au (inclus)"
+        description: "Vide = un seul jour (la date « du »)."
         type: date
         default: ""
         options:
           format: yyyy-MM-dd
       - name: annonce
         label: Bandeau d'annonce (facultatif)
-        description: "Une phrase courte, tout en haut du site, par exemple « Nouveau à la carte ! ». Vide = pas de bandeau."
+        description: "Une phrase courte, tout en haut de l'accueil, par exemple « Nouveau à la carte ! ». Pendant une fermeture exceptionnelle, elle s'affiche après l'annonce de la fermeture."
         type: string
 
   # ---------- 4. Photos ----------
@@ -221,16 +229,16 @@ content:
     fields:
       - name: image
         label: Photo
-        description: "JPG, PNG, WebP ou photo d'iPhone, en pleine taille : le site l'allège tout seul. Sujet bien centré, lumière du jour. La 1re photo est la plus grande et sert d'aperçu quand on partage le lien. Glisser pour changer l'ordre. Jusqu'à 16 photos : à partir de 6, elles défilent sur le côté."
+        description: "JPG, PNG, WebP ou photo d'iPhone, en pleine taille (au moins 1000 px de large) : le site l'allège tout seul. Sujet bien centré, lumière du jour. Glisse une photo pour changer sa place : la 1re sert d'image d'aperçu quand on partage le lien du site, et de photo du flyer si aucune n'y est choisie. 16 photos au plus. Sur ordinateur, jusqu'à 5 elles forment une mosaïque (la 1re en grand), à partir de 6 elles défilent ; sur téléphone, elles défilent toujours."
         type: image
         required: true
       - name: legende
         label: Légende affichée sur la photo (facultatif)
-        description: "Quelques mots, par exemple le nom du produit. Vide = pas de légende."
+        description: "Quelques mots, par exemple le nom du produit."
         type: string
       - name: description
-        label: Ce qu'on voit sur la photo (facultatif, non affiché)
-        description: "Quelques mots pour Google et les personnes malvoyantes. Si vide, la légende est utilisée."
+        label: Ce qu'on voit sur la photo (non affiché)
+        description: "Quelques mots pour Google et les personnes malvoyantes, par exemple « Pizza Reine ». Vide = la légende."
         type: string
 
   # ---------- 5. Textes de l'accueil (dans l'ordre de la page) ----------
@@ -242,22 +250,23 @@ content:
     fields:
       - name: titre
         label: "Haut de page : grand titre"
-        description: "Une phrase courte."
+        description: "Une phrase courte. Sert aussi d'accroche au flyer si aucune n'y est écrite. Vide = tes produits et le mode de vente (par exemple « Pizzas artisanales, à emporter ou livrées. »)."
         type: string
       - name: introduction
         label: "Haut de page : phrase d'introduction"
-        description: "Sous le grand titre, 2 lignes environ. La zone et les jours d'ouverture sont ajoutés automatiquement."
+        description: "Sous le grand titre, 2 lignes environ. La zone de livraison et les jours d'ouverture sont ajoutés automatiquement à la suite. Vide = « Des produits frais, préparés avec soin. »"
         type: text
       - name: pointFortTitre
-        label: "Bandeau : point fort (titre)"
-        description: "Le 3e point du bandeau sous le titre (les 2 premiers, vente et horaires, sont automatiques). Par exemple « Fait maison »."
+        label: "Sous le titre : 3e point fort (titre)"
+        description: "Les 3 points sous le grand titre : les 2 premiers (mode de vente, horaires) sont automatiques. Par exemple « Fait maison ». Vide = « Recette artisanale »."
         type: string
       - name: pointFortTexte
-        label: "Bandeau : point fort (texte)"
-        description: "Par exemple « Produits frais, préparés sur place »."
+        label: "Sous le titre : 3e point fort (texte)"
+        description: "Par exemple « Produits frais, préparés sur place ». Vide = « Produits frais, fait maison »."
         type: string
       - name: histoireTitre
         label: "La maison : titre"
+        description: "Vide = « Le goût des choses simples. »"
         type: string
       - name: histoire
         label: "La maison : paragraphes"
@@ -265,30 +274,31 @@ content:
         type: text
         list: true
       - name: histoireSignature
-        label: "La maison : signature"
+        label: "La maison : signature (facultatif)"
         description: "Sous le texte, par exemple « L'équipe »."
         type: string
       - name: photosTitre
         label: "Photos : titre"
-        description: "Au-dessus des photos."
+        description: "Au-dessus des photos. Vide = « En images. »"
         type: string
       - name: carteTexte
         label: "Bloc « La carte » : phrase"
-        description: "Après le nombre de produits et les prix (calculés automatiquement)."
+        description: "Après le nombre de produits et les prix (calculés automatiquement). Vide = « Toute la carte, avec le détail de chaque produit, est aussi disponible en PDF. »"
         type: text
       - name: piedDePage
-        label: "Pied de page : texte après le nom (facultatif)"
-        description: "Vide = le type d'établissement."
+        label: "Pied de page : texte après le nom"
+        description: "Vide = le type d'établissement (par exemple « Pizzeria »)."
         type: string
       - name: introuvableTitre
         label: "Page « adresse introuvable » : titre"
-        description: "Affichée si quelqu'un ouvre une mauvaise adresse du site."
+        description: "Affichée si quelqu'un ouvre une mauvaise adresse du site. Vide = « Cette page s'est égarée. »"
         type: string
       - name: introuvableTexte
         label: "Page « adresse introuvable » : texte"
+        description: "Vide = « L'adresse demandée n'existe pas ou plus. La carte, elle, est toujours là. »"
         type: text
 
-  # ---------- 6. Établissement : nom, activité, logo, couleurs, contact ----------
+  # ---------- 6. Établissement : identité, contact, vente, liens, logo et couleurs ----------
   - name: contact
     label: "Établissement : nom, logo, couleurs, contact"
     type: file
@@ -300,13 +310,94 @@ content:
         description: "À écrire exactement pareil partout (fiche Google, réseaux, plateformes de livraison…) : Google compare ces informations."
         type: string
         required: true
+      - name: activite
+        label: Type d'établissement
+        description: "Par exemple « Pizzeria », « Restaurant », « Boulangerie ». Affiché en haut de l'accueil (« … à [ville] »), sur le flyer et pour Google."
+        type: string
+        required: true
+      - name: produitSingulier
+        label: "Nom des produits, au singulier"
+        description: "En minuscules, par exemple « pizza artisanale » ou « burger maison ». Sert aux textes automatiques (« 1 … »)."
+        type: string
+        required: true
+      - name: produitPluriel
+        label: "Nom des produits, au pluriel"
+        description: "En minuscules, par exemple « pizzas artisanales ». Sert aux textes automatiques (« 13 … », « Nos … », titre par défaut), à la description pour Google et aux images d'aperçu des liens."
+        type: string
+        required: true
+      - name: telephone
+        label: Téléphone
+        description: "Écrit comme il doit s'afficher, par exemple 04 12 34 56 78. Sert aussi aux boutons « Appeler », à la carte PDF et au flyer."
+        type: string
+        required: true
+      - name: email
+        label: E-mail (facultatif)
+        description: "Affiché sur le site et la carte PDF, avec un lien pour écrire."
+        type: string
+        pattern:
+          regex: '^$|^[^@\s]+@[^@\s]+\.[^@\s]+$'
+          message: "Adresse e-mail incomplète, par exemple nom@gmail.com"
+      - name: adresse
+        label: Adresse
+        description: "Numéro et rue, par exemple 12 rue de la République. Affichée sur le site, la carte PDF et le flyer, et indiquée à Google."
+        type: string
+        required: true
+      - name: ville
+        label: Code postal et ville
+        description: "Par exemple 13001 Marseille."
+        type: string
+        required: true
+        pattern:
+          regex: '^\d{5}\s+\S.*$'
+          message: "Écris le code postal puis la ville, par exemple 13112 La Destrousse"
+      - name: emporter
+        label: Vente à emporter
+        description: "Cochée : « À emporter » et « Retrait des commandes sur place » apparaissent sur le site, la carte et le flyer. Si les deux cases sont décochées, « À emporter » est gardé."
+        type: boolean
+        default: true
+      - name: livraison
+        label: Livraison
+        description: "Cochée : la livraison et sa zone apparaissent sur le site, la carte, le flyer et pour Google. Décochée : tout est adapté pour « à emporter » seulement."
+        type: boolean
+        default: true
+      - name: zoneLivraison
+        label: Zone de livraison
+        description: "Avec une majuscule, par exemple « La Destrousse et alentours ». Affichée en haut de l'accueil, dans « Nous trouver » et sur le flyer, si la livraison est cochée. Vide = la ville."
+        type: string
+      - name: communesLivrees
+        label: Communes livrées, une par case (facultatif)
+        description: "Si elles sont renseignées : listées dans « Nous trouver » et indiquées à Google. Le haut de l'accueil et le flyer gardent la « Zone de livraison »."
+        type: string
+        list: true
+      - name: lienGoogle
+        label: Lien de la fiche Google Maps
+        description: "Sur Google Maps, ouvre la fiche de l'établissement, touche « Partager » puis « Copier le lien », et colle-le ici. Sert aux boutons « Itinéraire » et « Votre avis » (si le lien d'avis ci-dessous est vide) et à Google. Vide = recherche du nom et de l'adresse sur Google Maps."
+        type: string
+        pattern:
+          regex: '^$|^https?://\S+$'
+          message: "Le lien doit commencer par https://"
+      - name: lienAvis
+        label: Lien pour laisser un avis Google (conseillé)
+        description: "Dans Google Business Profile, « Demander des avis » donne un lien à copier ici : le bouton « Votre avis » ouvre alors directement la fenêtre pour noter. Vide = calculé depuis le lien de la fiche quand c'est possible (pas avec un lien court « Partager »), sinon « Votre avis » ouvre la fiche."
+        type: string
+        pattern:
+          regex: '^$|^https?://\S+$'
+          message: "Le lien doit commencer par https://"
+      - name: reseaux
+        label: Réseaux et commande en ligne
+        description: "Un lien vide n'apparaît pas sur le site. Uber Eats est aussi indiqué sur le flyer."
+        type: object
+        fields:
+          - { name: uberEats, label: Uber Eats, component: lien }
+          - { name: facebook, label: Facebook, component: lien }
+          - { name: instagram, label: Instagram, component: lien }
       - name: logo
-        label: Logo (facultatif)
-        description: "Image carrée, au moins 720 px de côté : elle est affichée dans un rond (site, carte, icône d'onglet). Vide = logo actuel."
+        label: Logo
+        description: "Image d'au moins 720 px de côté, recadrée en carré au centre et affichée dans un rond : site, carte, flyer, icône d'onglet, images d'aperçu des liens. Vide = logo d'origine."
         type: image
       - name: couleurPrincipale
         label: Couleur principale
-        description: "Code couleur, par exemple #6B1A14 (bordeaux) : boutons, titres, pied de la carte. Toutes les nuances du site, de la carte et du flyer en sont tirées. Pour trouver un code : taper « color picker » dans Google, choisir la teinte dans le sélecteur qui s'affiche, puis copier le code HEX. Vide = couleur d'origine."
+        description: "Code couleur, par exemple #6B1A14 (bordeaux) : boutons, titres, pied de la carte, bandeau du flyer. Toutes les nuances du site en sont tirées. Pour trouver un code : tape « color picker » dans Google, choisis la teinte dans le sélecteur qui s'affiche, puis copie le code HEX. Vide = couleur d'origine."
         type: string
         pattern:
           regex: '^$|^#[0-9A-Fa-f]{6}$'
@@ -318,81 +409,6 @@ content:
         pattern:
           regex: '^$|^#[0-9A-Fa-f]{6}$'
           message: "Un code couleur commence par # suivi de 6 chiffres ou lettres, par exemple #F6F0E6"
-      - name: activite
-        label: Type d'établissement
-        description: "Par exemple « Pizzeria », « Restaurant », « Boulangerie ». Affiché en haut de l'accueil (« … à [ville] ») et pour Google."
-        type: string
-        required: true
-      - name: produitSingulier
-        label: "Vos produits, au singulier"
-        description: "En minuscules, par exemple « pizza artisanale » ou « burger maison ». Sert aux textes automatiques (« 1 … »)."
-        type: string
-      - name: produitPluriel
-        label: "Vos produits, au pluriel"
-        description: "Par exemple « pizzas artisanales » ou « burgers maison » : sert aux textes automatiques (« 13 … »), aux titres pour Google et aux aperçus de liens."
-        type: string
-      - name: telephone
-        label: Téléphone
-        description: "Écrit comme il doit s'afficher, par exemple 04 12 34 56 78. Sert aussi aux boutons « Appeler »."
-        type: string
-        required: true
-      - name: email
-        label: E-mail (facultatif)
-        description: "Affiché sur le site et la carte PDF, avec un lien pour écrire. Vide = pas d'e-mail affiché."
-        type: string
-        pattern:
-          regex: '^$|^[^@\s]+@[^@\s]+\.[^@\s]+$'
-          message: "Adresse e-mail incomplète, par exemple nom@gmail.com"
-      - name: adresse
-        label: Adresse
-        description: "Numéro et rue, par exemple 12 rue de la République."
-        type: string
-      - name: ville
-        label: Code postal et ville
-        description: "Par exemple 13001 Marseille."
-        type: string
-        required: true
-      - name: lienGoogle
-        label: Lien de la fiche Google Maps
-        description: "Sur Google Maps, ouvre la fiche de l'établissement, touche « Partager » puis « Copier le lien », et colle-le ici. Sert aux boutons « Itinéraire » et « Votre avis ». Vide = recherche du nom et de l'adresse sur Google Maps."
-        type: string
-        pattern:
-          regex: '^$|^https?://\S+$'
-          message: "Le lien doit commencer par https://"
-      - name: lienAvis
-        label: Lien pour laisser un avis Google (facultatif)
-        description: "Dans Google Business Profile, « Demander des avis » donne un lien à copier ici. Vide = calculé à partir du lien de la fiche quand c'est possible, sinon le bouton « Votre avis » ouvre la fiche."
-        type: string
-        pattern:
-          regex: '^$|^https?://\S+$'
-          message: "Le lien doit commencer par https://"
-      - name: emporter
-        label: Vente à emporter
-        description: "Cochée : « À emporter » et « Retrait des commandes sur place » apparaissent sur le site et la carte."
-        type: boolean
-        default: true
-      - name: livraison
-        label: Livraison
-        description: "Cochée : la livraison et sa zone apparaissent sur le site, la carte et pour Google. Décochée : tout est adapté pour « à emporter » seulement."
-        type: boolean
-        default: true
-      - name: zoneLivraison
-        label: Zone de livraison
-        description: "Par exemple « la ville et ses alentours »."
-        type: string
-      - name: communesLivrees
-        label: Communes livrées, une par ligne (facultatif)
-        description: "Si elles sont renseignées, elles remplacent la zone de livraison sur le site et sont indiquées à Google."
-        type: string
-        list: true
-      - name: reseaux
-        label: Réseaux et commande en ligne
-        description: "Un lien vide n'apparaît pas sur le site."
-        type: object
-        fields:
-          - { name: uberEats, label: Uber Eats, component: lien }
-          - { name: facebook, label: Facebook, component: lien }
-          - { name: instagram, label: Instagram, component: lien }
 
   # ---------- 7. Flyer à imprimer ----------
   - name: flyer
@@ -402,20 +418,20 @@ content:
     format: json
     fields:
       - name: photo
-        label: Photo (facultatif)
-        description: "Le flyer (format A5) est sur le site : lien « Flyer à imprimer » en bas de page, avec le PDF à envoyer à l'imprimeur. Il reprend tout seul le nom, le logo, les couleurs, le téléphone et la livraison, et se met à jour 1 à 2 minutes après chaque enregistrement. Photo affichée dans un rond : sujet bien centré. Vide = la 1re photo de l'accueil."
+        label: Photo
+        description: "Le flyer (format A5) est sur le site : lien « Flyer à imprimer » en bas de page, avec le PDF à envoyer à l'imprimeur. Il reprend tout seul le nom, le logo, les couleurs, le téléphone et la livraison, et se met à jour 1 à 2 minutes après chaque enregistrement. La photo est affichée dans un rond : sujet bien centré. Vide = la 1re photo de l'accueil (ou le logo s'il n'y a aucune photo)."
         type: image
       - name: accroche
-        label: Accroche (facultatif)
-        description: "La phrase en gros sous la photo, en 2 lignes au plus de préférence. Vide = le titre de l'accueil."
+        label: Accroche
+        description: "La phrase en gros sous la photo, 2 lignes au plus de préférence (un texte plus long est un peu réduit). Vide = le grand titre de l'accueil."
         type: string
       - name: mention
         label: Phrase mise en avant (facultatif)
-        description: "Courte, sous l'accroche, par exemple une offre : « −10 % sur votre première commande ». Vide = rien."
+        description: "Courte, sous l'accroche, par exemple une offre : « −10 % sur votre première commande »."
         type: string
       - name: afficherHoraires
         label: Afficher les jours et horaires d'ouverture
-        description: "Décoché = rien d'affiché : le flyer reste valable si les horaires changent."
+        description: "Coché : les jours et heures d'ouverture sont imprimés sous l'accroche. Décoché (conseillé) : rien n'est indiqué, et le flyer reste valable si les horaires changent."
         type: boolean
         default: false
 
@@ -427,28 +443,28 @@ content:
     format: json
     fields:
       - name: seoTitreAccueil
-        label: "Accueil : titre de l'onglet et de Google (facultatif)"
-        description: "Vide = généré automatiquement à partir du nom, du type d'établissement, de la ville et du mode de vente (recommandé). Environ 60 caractères au plus."
+        label: "Accueil : titre de l'onglet et de Google"
+        description: "Environ 60 caractères au plus. Vide = généré à partir du nom, du type d'établissement, de la ville et du mode de vente (conseillé)."
         type: string
       - name: seoDescriptionAccueil
-        label: "Accueil : description pour Google et le partage de liens (facultatif)"
-        description: "Vide = générée automatiquement (produits, horaires, prix, téléphone). Environ 155 caractères au plus."
+        label: "Accueil : description pour Google et le partage de liens"
+        description: "Environ 155 caractères au plus. Vide = générée à partir des produits, des horaires, des prix et du téléphone (conseillé)."
         type: text
       - name: seoTitreCarte
-        label: "Carte : titre de l'onglet et de Google (facultatif)"
-        description: "Vide = « Carte et prix — nom, type d'établissement et ville »."
+        label: "Carte : titre de l'onglet et de Google"
+        description: "Environ 60 caractères au plus. Vide = « Carte et prix — nom, type d'établissement et ville » (conseillé)."
         type: string
       - name: seoDescriptionCarte
-        label: "Carte : description pour Google et le partage de liens (facultatif)"
-        description: "Vide = générée automatiquement (nombre de produits, prix, tailles, page 2)."
+        label: "Carte : description pour Google et le partage de liens"
+        description: "Environ 155 caractères au plus. Vide = générée à partir du nombre de produits, des prix, des tailles et de la page 2 (conseillé)."
         type: text
       - name: autresNoms
-        label: Autres noms connus, un par ligne (facultatif)
+        label: Autres noms connus, un par case (facultatif)
         description: "Noms sous lesquels les clients cherchent l'établissement (sur Uber Eats, Facebook…). Aide Google à faire le lien."
         type: string
         list: true
       - name: cuisine
-        label: Type de cuisine, un par ligne (facultatif)
+        label: Type de cuisine, un par case (facultatif)
         description: "Par exemple « Italienne ». Indiqué à Google."
         type: string
         list: true

@@ -294,8 +294,8 @@
     var erreurs = [], avert = [];
     C = C || {}; I = I || {};
     var tailles = Array.isArray(C.tailles) ? C.tailles : [];
-    if (!tailles.length) erreurs.push('La carte : il faut au moins une taille.');
-    tailles.forEach(function (t, i) { if (!t || !t.nom) avert.push('La carte : la taille n°' + (i + 1) + ' n’a pas de nom.'); });
+    if (!tailles.length) erreurs.push('Carte (page 1) : il faut au moins une taille.');
+    tailles.forEach(function (t, i) { if (!t || !t.nom) avert.push('Carte (page 1) : la taille n°' + (i + 1) + ' n’a pas de nom.'); });
     var liste = Array.isArray(C.produits) ? C.produits : [];
     if (!liste.filter(function (p) { return p && p.nom && !p.masque; }).length) erreurs.push('Carte (page 1) : il faut au moins un produit affiché.');
     liste.forEach(function (p, i) {
@@ -336,7 +336,7 @@
     });
     var r = I.reseaux && typeof I.reseaux === 'object' ? I.reseaux : {};
     Object.keys(r).forEach(function (k) {
-      if (r[k] && !/^https?:\/\//.test(r[k])) avert.push('Établissement : l’adresse « ' + k + ' » doit commencer par https:// (lien ignoré).');
+      if (r[k] && !/^https?:\/\//.test(r[k])) avert.push('Établissement : le lien ' + (RESEAUX[k] || k) + ' doit commencer par https:// (lien ignoré).');
     });
     return { erreurs: erreurs, avertissements: avert };
   }
@@ -504,7 +504,8 @@
       photosTitre: 'En images.'
     };
     Object.keys(defauts).forEach(function (k) { T[k] = fr(rempli(k) ? D[k] : defauts[k]); });
-    ['histoireSignature', 'adresse', 'ville', 'zoneLivraison', 'mention', 'telephone'].forEach(function (k) { if (typeof D[k] === 'string') T[k] = D[k]; });
+    /* Champs facultatifs : un champ vidé dans Pages CMS disparaît du fichier, il est alors simplement vide */
+    ['histoireSignature', 'adresse', 'ville', 'zoneLivraison', 'mention', 'telephone'].forEach(function (k) { T[k] = typeof D[k] === 'string' ? D[k] : ''; });
     Object.keys(TEXTES_DEFAUT).forEach(function (k) { T[k] = fr(rempli(k) ? D[k].trim() : TEXTES_DEFAUT[k]); });
     T.service = S.titre;
     T.enTeteSousTitre = rempli('enTeteSousTitre') ? D.enTeteSousTitre.trim() : cap(nomProduits(D, 2)) + ' · ' + cap(S.phrase);
@@ -536,7 +537,7 @@
     T.livraisonTexte = S.livraison ? (zoneLiv ? 'Livraison à ' + zoneLiv + '.' : 'Livraison possible.') : '';
     T.retraitTexte = S.emporter ? 'Retrait des commandes sur place.' : '';
     T.zoneService = S.livraison ? (D.zoneLivraison || villeSeule(D) || 'Livraison possible') : 'Retrait sur place' + aVille(D);
-    if (D.adresse) T.adresseCourte = D.adresse.replace(/\bavenue\b/i, 'av.') + (S.livraison ? ' · et alentours' : '');
+    T.adresseCourte = D.adresse ? D.adresse.replace(/\bavenue\b/i, 'av.') + (S.livraison ? ' · et alentours' : '') : (S.livraison ? 'Et alentours' : '');
     var rv = rubriquesVisibles(D);
     T.titrePage2 = titrePage2(D);
     T.suitePage2 = T.titrePage2 + ' en page 2';
