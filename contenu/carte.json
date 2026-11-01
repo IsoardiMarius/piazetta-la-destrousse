@@ -1,14 +1,25 @@
 {
   "pizzas": [
     {
-      "nom": "Pizza Saison",
-      "ingredients": "Légumes de saison\nTomate fraîche, champignons frais, mozzarella, jambon de Parme, crème de basilic, tomate cerise, olives",
+      "nom": "Classique (fromage)",
+      "ingredients": "Tomate fraîche, emmental, mozzarella, olives",
       "prix": [
-        14,
-        20,
-        29
+        9,
+        12,
+        18
       ],
-      "badge": "Pizza de la semaine",
+      "badge": "",
+      "masquee": false
+    },
+    {
+      "nom": "Moitié-moitié (anchois / fromage)",
+      "ingredients": "Une moitié aux anchois, une moitié fromage, sauce tomate, mozzarella, olives",
+      "prix": [
+        10,
+        13,
+        19
+      ],
+      "badge": "",
       "masquee": false
     },
     {
@@ -133,7 +144,7 @@
       "taille": "35 cm"
     },
     {
-      "nom": "Mega",
+      "nom": "Méga",
       "taille": "50 cm"
     }
   ],

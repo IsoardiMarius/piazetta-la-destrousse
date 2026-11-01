@@ -115,7 +115,8 @@ for (const cle of ['uberEats', 'facebook', 'instagram']) {
 /* Photos : nombre, ordre et fichiers */
 const photos = JSON.parse(lire('assets/photos.json'));
 const attendues = (contenu.photos || []).filter((p) => p && p.image && fs.existsSync(String(p.image).replace(/^\//, '')));
-verifier(photos.length === Math.min(attendues.length, 12), `Photos : ${photos.length} préparée(s) pour ${attendues.length} dans la liste`);
+const MAX_PHOTOS = 16;  /* même limite que scripts/preparer-photos.py */
+verifier(photos.length === Math.min(attendues.length, MAX_PHOTOS), `Photos : ${photos.length} préparée(s) pour ${attendues.length} dans la liste`);
 const galerie = contenuDe(accueil, 'data-gallery') || '';
 verifier((galerie.match(/class="ph reveal"/g) || []).length === photos.length, 'Accueil : la galerie ne contient pas toutes les photos');
 const legendes = photos.filter((p) => p.texte).map((p) => p.texte);

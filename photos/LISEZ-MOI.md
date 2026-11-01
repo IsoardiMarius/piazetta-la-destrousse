@@ -15,7 +15,7 @@ Ce dossier contient les photos d'origine. **Les photos affichées sur la page d'
 - retire la position GPS et les autres informations cachées du téléphone ;
 - utilise la **première photo** de la liste pour l'image d'aperçu quand on partage le lien du site.
 
-Formats acceptés : JPG, PNG, WebP et photos d'iPhone (HEIC). 12 photos au maximum : jusqu'à 5, mosaïque ; à partir de 6, carrousel qui défile sur le côté.
+Formats acceptés : JPG, PNG, WebP et photos d'iPhone (HEIC). 16 photos au maximum : jusqu'à 5, mosaïque ; à partir de 6, carrousel qui défile sur le côté.
 
 - **Taille** : la photo d'origine, au moins 1000 pixels de large (en dessous, elle risque d'être floue et la publication le signale). Si Pages CMS refuse une photo trop lourde, en envoyer une version plus légère.
 - **Cadrage** : le site recadre selon l'emplacement (rectangle sur ordinateur, plutôt vertical sur téléphone) : garder le sujet centré avec un peu de marge.

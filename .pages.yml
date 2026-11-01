@@ -62,7 +62,7 @@ content:
             type: text
           - name: prix
             label: Prix en euros, un par taille, dans l'ordre des tailles
-            description: "Même ordre que la liste « Tailles » plus bas (aujourd'hui : Petite, Big, Mega). Pour les centimes, un point : 12.5 s'affiche « 12,50 € »."
+            description: "Même ordre que la liste « Tailles » plus bas (aujourd'hui : Petite, Big, Méga). Pour les centimes, un point : 12.5 s'affiche « 12,50 € »."
             type: number
             list:
               min: 1
@@ -221,7 +221,7 @@ content:
     fields:
       - name: image
         label: Photo
-        description: "JPG, PNG, WebP ou photo d'iPhone, en pleine taille : le site l'allège tout seul. Pizza bien centrée, lumière du jour. La 1re photo est la plus grande et sert d'aperçu quand on partage le lien. Glisser pour changer l'ordre. Jusqu'à 12 photos : à partir de 6, elles défilent sur le côté."
+        description: "JPG, PNG, WebP ou photo d'iPhone, en pleine taille : le site l'allège tout seul. Pizza bien centrée, lumière du jour. La 1re photo est la plus grande et sert d'aperçu quand on partage le lien. Glisser pour changer l'ordre. Jusqu'à 16 photos : à partir de 6, elles défilent sur le côté."
         type: image
         required: true
       - name: legende

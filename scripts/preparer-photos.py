@@ -38,7 +38,7 @@ _args = sys.argv[2:] if MODE_LOGO else sys.argv[1:]
 SORTIE = Path(_args[0]).resolve() if _args else RACINE
 EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".heic", ".heif"}
 LARGEURS = (480, 800, 1200, 1600)
-MAX_PHOTOS = 12
+MAX_PHOTOS = 16  # même limite que scripts/controler-site.mjs
 
 
 def slug(texte):

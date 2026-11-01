@@ -1,22 +1,67 @@
 [
   {
-    "image": "/photos/1-atlantique.webp",
+    "image": "/photos/classique-fromage.webp",
+    "legende": "Classique (fromage)",
+    "description": "Pizza Classique au fromage"
+  },
+  {
+    "image": "/photos/moitie-moitie-anchois-et-fromage.webp",
+    "legende": "Moitié-moitié (anchois / fromage)",
+    "description": "Pizza moitié anchois, moitié fromage"
+  },
+  {
+    "image": "/photos/reine.webp",
+    "legende": "Reine",
+    "description": "Pizza Reine"
+  },
+  {
+    "image": "/photos/fermiere.webp",
+    "legende": "Fermière",
+    "description": "Pizza Fermière"
+  },
+  {
+    "image": "/photos/cherie.webp",
+    "legende": "Chérie",
+    "description": "Pizza Chérie"
+  },
+  {
+    "image": "/photos/5-fromages.webp",
+    "legende": "5 Fromages",
+    "description": "Pizza 5 Fromages"
+  },
+  {
+    "image": "/photos/provencale.webp",
+    "legende": "Provençale",
+    "description": "Pizza Provençale"
+  },
+  {
+    "image": "/photos/atlantique.webp",
+    "legende": "Atlantique",
     "description": "Pizza Atlantique"
   },
   {
-    "image": "/photos/2-royale.webp",
-    "legende": "Pizza Royale",
-    "description": "Pizza Royale"
+    "image": "/photos/chef.webp",
+    "legende": "Chef",
+    "description": "Pizza Chef"
   },
   {
-    "image": "/photos/3-yéyé.webp",
-    "description": "Pizza Yéyé"
-  },
-  {
-    "image": "/photos/4-orientale.webp",
+    "image": "/photos/orientale.webp",
+    "legende": "Orientale",
     "description": "Pizza Orientale"
   },
   {
-    "image": "/photos/5-pizza.webp"
+    "image": "/photos/royale.webp",
+    "legende": "Royale",
+    "description": "Pizza Royale"
+  },
+  {
+    "image": "/photos/grand-mere.webp",
+    "legende": "Grand-Mère",
+    "description": "Pizza Grand-Mère"
+  },
+  {
+    "image": "/photos/yeye.webp",
+    "legende": "Yéyé",
+    "description": "Pizza Yéyé"
   }
 ]
