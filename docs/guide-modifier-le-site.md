@@ -20,7 +20,7 @@ Tu peux changer toi-même la carte, les prix, les horaires, les congés, les pho
 | **Établissement : nom, logo, contact** | nom, logo, téléphone, e-mail, adresse, livraison ou à emporter, liens Uber Eats / Facebook / Instagram |
 | **Google et partage de liens** | rien à faire en temps normal : les titres et descriptions pour Google sont générés tout seuls |
 
-Sous chaque case, une petite aide dit où le texte apparaît. **Pour le voir directement sur le site**, ouvre l'adresse du site en ajoutant `?aide` à la fin (par exemple `piazzetta-ladestrousse.com/?aide`, et `piazzetta-ladestrousse.com/carte.html?aide` pour la carte) : chaque zone est encadrée avec le nom de la rubrique et de la case qui la modifie (en gris : les textes calculés automatiquement). Si tu vides un texte par erreur, le texte d'origine revient tout seul.
+Sous chaque case, une petite aide dit où le texte apparaît. Si tu vides un texte par erreur, le texte d'origine revient tout seul.
 
 Après chaque changement : clique sur **Enregistrer** (« Save »). **1 à 2 minutes plus tard**, le site, la carte et le PDF sont à jour tout seuls. Si tu ne vois pas le changement tout de suite, attends un peu et recharge la page.
 
