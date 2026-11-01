@@ -288,9 +288,9 @@ content:
         label: "Page « adresse introuvable » : texte"
         type: text
 
-  # ---------- 6. Établissement : nom, activité, logo, contact ----------
+  # ---------- 6. Établissement : nom, activité, logo, couleurs, contact ----------
   - name: contact
-    label: "Établissement : nom, logo, contact"
+    label: "Établissement : nom, logo, couleurs, contact"
     type: file
     path: contenu/contact.json
     format: json

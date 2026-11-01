@@ -17,7 +17,7 @@ Tu peux changer toi-même la carte, les prix, les horaires, les congés, les pho
 | **Horaires et fermetures** | changer les horaires, prévenir d'une fermeture (vacances, jour férié), afficher un message en haut du site |
 | **Photos de l'accueil** | ajouter, retirer ou réordonner les photos, ajouter une légende |
 | **Textes de l'accueil** | toutes les phrases de la page d'accueil, rangées dans l'ordre de la page |
-| **Établissement : nom, logo, contact** | nom, logo, téléphone, e-mail, adresse, livraison ou à emporter, liens Uber Eats / Facebook / Instagram |
+| **Établissement : nom, logo, couleurs, contact** | nom, logo, téléphone, e-mail, adresse, livraison ou à emporter, liens Uber Eats / Facebook / Instagram |
 | **Google et partage de liens** | rien à faire en temps normal : les titres et descriptions pour Google sont générés tout seuls |
 
 Sous chaque case, une petite aide dit où le texte apparaît. Si tu vides un texte par erreur, le texte d'origine revient tout seul.
@@ -55,10 +55,10 @@ Pendant ces dates, le site affiche « Fermé » et un bandeau prévient les clie
 Le badge « Ouvert / Fermé », le résumé des jours et des heures, la carte PDF et Google se mettent à jour tout seuls.
 
 **Arrêter (ou reprendre) la livraison**
-Établissement : nom, logo, contact › décoche **Livraison** › Enregistrer. Tout le site, la carte et Google passent en « à emporter » ; recoche pour revenir.
+Établissement : nom, logo, couleurs, contact › décoche **Livraison** › Enregistrer. Tout le site, la carte et Google passent en « à emporter » ; recoche pour revenir.
 
 **Changer le logo**
-Établissement : nom, logo, contact › **Logo** › choisis une image carrée (au moins 720 px de côté) › Enregistrer. Elle est affichée dans un rond partout, y compris l'icône de l'onglet.
+Établissement : nom, logo, couleurs, contact › **Logo** › choisis une image carrée (au moins 720 px de côté) › Enregistrer. Elle est affichée dans un rond partout, y compris l'icône de l'onglet.
 
 **Changer le lien Google Maps (boutons « Itinéraire » et « Votre avis »)**
 Établissement › **Lien de la fiche Google Maps** : sur Google Maps, ouvre la fiche, touche « Partager » › « Copier le lien », colle-le › Enregistrer.
